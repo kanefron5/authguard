@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -31,17 +32,18 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.3.2"
+        // https://developer.android.com/jetpack/androidx/releases/compose-kotlin
+        kotlinCompilerExtensionVersion = "1.4.6"
     }
     packagingOptions {
         resources {
@@ -54,6 +56,10 @@ dependencies {
     implementation(Dependencies.Androidx.Room.ROOM_KTX)
     kapt(Dependencies.Androidx.Room.ROOM_COMPILER)
 
+    implementation(Dependencies.Dagger.HILT_ANDROID)
+    kapt(Dependencies.Dagger.HILT_ANDROID_COMPILER)
+    kapt(Dependencies.Androidx.Hilt.COMPILER)
+    implementation(Dependencies.Androidx.Hilt.NAVIGATION_COMPOSE)
 
     implementation(Dependencies.Kotlin.COROUTINES_CORE)
     implementation(Dependencies.Kotlin.COROUTINES_ANDROID)
@@ -61,6 +67,7 @@ dependencies {
     implementation(Dependencies.Androidx.CORE_KTX)
     implementation(Dependencies.Androidx.Lifecycle.RUNTIME_KTX)
     implementation(Dependencies.Androidx.Lifecycle.VIEWMODEL_KTX)
+    implementation(Dependencies.Androidx.Lifecycle.LIVEDATA_KTX)
     implementation(Dependencies.Androidx.ACTIVITY_COMPOSE)
 
     implementation(platform(Dependencies.Androidx.Compose.COMPOSE_BOM))
@@ -68,6 +75,8 @@ dependencies {
     implementation(Dependencies.Androidx.Compose.UI_GRAPHICS)
     implementation(Dependencies.Androidx.Compose.UI_TOOLING_PREVIEW)
     implementation(Dependencies.Androidx.Compose.MATERIAL3)
+
+    implementation(Dependencies.APACHE_COMMONS_CODEC)
 
     testImplementation(Dependencies.Test.JUNIT)
     androidTestImplementation(Dependencies.AndroidTest.JUNIT)
