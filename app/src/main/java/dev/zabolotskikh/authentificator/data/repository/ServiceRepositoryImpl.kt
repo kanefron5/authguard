@@ -27,7 +27,8 @@ class ServiceRepositoryImpl @Inject constructor(
     override suspend fun insert(service: Service) = serviceDao.insert(
         ServiceEntity(
             service.name,
-            service.privateKey
+            service.privateKey,
+            service.generationMethod
         )
     )
 
@@ -35,7 +36,8 @@ class ServiceRepositoryImpl @Inject constructor(
         ServiceEntity(
             service.name,
             service.privateKey,
-            service.id
+            service.generationMethod,
+            service.id,
         )
     )
 }
