@@ -3,11 +3,10 @@ package dev.zabolotskikh.authentificator
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.zabolotskikh.authentificator.data.local.entities.ServiceEntity
 import dev.zabolotskikh.authentificator.domain.model.Service
 import dev.zabolotskikh.authentificator.domain.repository.ServiceRepository
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -15,6 +14,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.concurrent.timer
 
 @HiltViewModel
 class ServiceViewModel @Inject constructor(
@@ -35,12 +35,18 @@ class ServiceViewModel @Inject constructor(
         ServiceState()
     )
 
-    fun startGeneration() = viewModelScope.launch(Dispatchers.IO) {
-        while (true) {
-            _state.update { _state.value.copy(services = state.value.services) }
-            delay(1000)
+
+    private var generationJob: Job? = null
+
+    fun startGeneration() {
+        generationJob = viewModelScope.launch(Dispatchers.IO) {
+            timer(period = 1000) {
+                _state.update { it.copy(services = OtpInstance(_services.value).calculate()) }
+            }
         }
     }
+
+    fun stopGeneration() = generationJob?.cancel()
 
     fun onEvent(event: ServiceEvent) {
         when (event) {

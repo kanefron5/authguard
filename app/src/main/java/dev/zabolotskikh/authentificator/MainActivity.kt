@@ -22,6 +22,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -29,14 +30,19 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import dagger.hilt.android.AndroidEntryPoint
 import dev.zabolotskikh.authentificator.ui.theme.AuthentificatorTheme
 
@@ -61,8 +67,10 @@ class MainActivity : ComponentActivity() {
 
                             ServicesList(state, viewModel::onEvent, paddingValues)
 
-                            LaunchedEffect(true) {
+                            DisposableEffect(true) {
                                 viewModel.startGeneration()
+
+                                onDispose { viewModel.stopGeneration() }
                             }
                         },
                         floatingActionButtonPosition = FabPosition.End,
@@ -142,9 +150,12 @@ fun ServicesList(
     onEvent: (ServiceEvent) -> Unit,
     paddingValues: PaddingValues,
 ) {
-    fun formatCode(code: String): String {
-        return code.substring(0..2) + " " + code.substring(3..5)
+    fun formatCode(code: String) = try {
+        code.substring(0..2) + " " + code.substring(3..5)
+    } catch (e: Exception) {
+        ""
     }
+
     if (state.isAddingService) {
         AddServiceDialog(state, onEvent = onEvent)
     }
@@ -171,8 +182,8 @@ fun ServicesList(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(fontSize = 42.sp, text = formatCode(service.currentCode))
-                    CircularProgressIndicator(progress = ((service.codeTtl.toFloat() / service.timeoutTime)))
-//                    Text(text = "${service.codeTtl}/${service.timeoutTime}")
+                    if (service.timeoutTime > 0)
+                        CircularProgressIndicator(progress = ((service.codeTtl.toFloat() / service.timeoutTime)))
                 }
             }
         }
