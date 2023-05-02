@@ -42,17 +42,6 @@ class OtpInstance(
         codeTtl = getTtl()
     ) }
 
-    fun subscribeForCode() = flow {
-        while (true){
-            emit(services.map { it.copy(
-                timeoutTime = CODE_TTL_SECONDS,
-                currentCode = getCode(it.privateKey),
-                codeTtl = getTtl()
-            ) })
-            delay(1000)
-        }
-    }.flowOn(Dispatchers.IO)
-
     private fun hmacSha1(key: ByteArray, message: ByteArray): ByteArray {
         val hmacSha1 = Mac.getInstance("HmacSHA1")
         val secretKeySpec = SecretKeySpec(key, "HmacSHA1")

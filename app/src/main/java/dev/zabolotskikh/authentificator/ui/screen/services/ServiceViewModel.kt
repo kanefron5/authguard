@@ -1,8 +1,10 @@
-package dev.zabolotskikh.authentificator
+package dev.zabolotskikh.authentificator.ui.screen.services
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.zabolotskikh.authentificator.OtpInstance
+import dev.zabolotskikh.authentificator.domain.model.GenerationMethod
 import dev.zabolotskikh.authentificator.domain.model.Service
 import dev.zabolotskikh.authentificator.domain.repository.ServiceRepository
 import kotlinx.coroutines.Dispatchers
@@ -53,6 +55,7 @@ class ServiceViewModel @Inject constructor(
             is ServiceEvent.DeleteService -> viewModelScope.launch {
                 repository.delete(event.service)
             }
+
             is ServiceEvent.SetName -> _state.update { it.copy(name = event.name) }
             is ServiceEvent.SetPrivateKey -> _state.update { it.copy(privateKey = event.privateKey) }
             is ServiceEvent.SetMethod -> _state.update { it.copy(method = event.method) }
@@ -61,10 +64,10 @@ class ServiceViewModel @Inject constructor(
                 val method = state.value.method
                 val name = state.value.name
 
-                if (privateKey.isBlank() || method.isBlank() || name.isBlank()) return
+                if (privateKey.isBlank() || name.isBlank()) return
 
                 viewModelScope.launch {
-                    repository.insert(Service(name, privateKey))
+                    repository.insert(Service(name, privateKey, generationMethod = method))
                 }
 
                 _state.update {
@@ -72,7 +75,7 @@ class ServiceViewModel @Inject constructor(
                         isAddingService = false,
                         privateKey = "",
                         name = "",
-                        method = ""
+                        method = GenerationMethod.TIME
                     )
                 }
             }
