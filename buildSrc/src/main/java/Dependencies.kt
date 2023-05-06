@@ -41,6 +41,7 @@ object Dependencies {
             const val UI_TEST_MANIFEST = "androidx.compose.ui:ui-test-manifest"
             const val MATERIAL3 = "androidx.compose.material3:material3"
             const val UI_TEST = "androidx.compose.ui:ui-test-junit4"
+            const val NAVIGATION_COMPOSE = "androidx.navigation:navigation-compose:2.5.3"
         }
 
         // https://developer.android.com/jetpack/androidx/releases/room

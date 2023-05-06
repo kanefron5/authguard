@@ -3,7 +3,7 @@ package dev.zabolotskikh.authentificator.ui.screen.services
 import dev.zabolotskikh.authentificator.domain.model.GenerationMethod
 import dev.zabolotskikh.authentificator.domain.model.Service
 
-interface ServiceEvent {
+sealed interface ServiceEvent {
     object SaveService: ServiceEvent
     data class SetPrivateKey(val privateKey: String): ServiceEvent
     data class SetName(val name: String): ServiceEvent

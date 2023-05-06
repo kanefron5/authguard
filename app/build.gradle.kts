@@ -75,6 +75,7 @@ dependencies {
     implementation(Dependencies.Androidx.Compose.UI_GRAPHICS)
     implementation(Dependencies.Androidx.Compose.UI_TOOLING_PREVIEW)
     implementation(Dependencies.Androidx.Compose.MATERIAL3)
+    implementation(Dependencies.Androidx.Compose.NAVIGATION_COMPOSE)
 
     implementation(Dependencies.APACHE_COMMONS_CODEC)
 

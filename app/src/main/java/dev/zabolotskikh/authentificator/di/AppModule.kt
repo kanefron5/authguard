@@ -7,7 +7,9 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import dev.zabolotskikh.authentificator.data.local.ServiceRoomDatabase
+import dev.zabolotskikh.authentificator.data.repository.AppStateRepositoryImpl
 import dev.zabolotskikh.authentificator.data.repository.ServiceRepositoryImpl
+import dev.zabolotskikh.authentificator.domain.repository.AppStateRepository
 import dev.zabolotskikh.authentificator.domain.repository.ServiceRepository
 import javax.inject.Singleton
 
@@ -24,5 +26,11 @@ object AppModule {
     @Singleton
     fun provideServiceRepository(database: ServiceRoomDatabase): ServiceRepository {
         return ServiceRepositoryImpl(database.serviceDao())
+    }
+
+    @Provides
+    @Singleton
+    fun provideAppStateRepository(database: ServiceRoomDatabase): AppStateRepository {
+        return AppStateRepositoryImpl(database.appStateDao())
     }
 }
