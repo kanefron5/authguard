@@ -33,13 +33,14 @@ object Dependencies {
 
         // https://developer.android.com/jetpack/androidx/releases/compose
         object Compose {
-            const val COMPOSE_BOM = "androidx.compose:compose-bom:2023.04.01"
+            const val COMPOSE_BOM = "androidx.compose:compose-bom:2023.05.00"
             const val UI = "androidx.compose.ui:ui"
             const val UI_GRAPHICS = "androidx.compose.ui:ui-graphics"
+            const val ICONS = "androidx.compose.material:material-icons-extended"
             const val UI_TOOLING_PREVIEW = "androidx.compose.ui:ui-tooling-preview"
             const val UI_TOOLING = "androidx.compose.ui:ui-tooling"
             const val UI_TEST_MANIFEST = "androidx.compose.ui:ui-test-manifest"
-            const val MATERIAL3 = "androidx.compose.material3:material3"
+            const val MATERIAL3 = "androidx.compose.material3:material3:1.1.0-rc01"
             const val UI_TEST = "androidx.compose.ui:ui-test-junit4"
             const val NAVIGATION_COMPOSE = "androidx.navigation:navigation-compose:2.5.3"
         }

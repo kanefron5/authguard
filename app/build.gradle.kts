@@ -73,6 +73,7 @@ dependencies {
     implementation(platform(Dependencies.Androidx.Compose.COMPOSE_BOM))
     implementation(Dependencies.Androidx.Compose.UI)
     implementation(Dependencies.Androidx.Compose.UI_GRAPHICS)
+    implementation(Dependencies.Androidx.Compose.ICONS)
     implementation(Dependencies.Androidx.Compose.UI_TOOLING_PREVIEW)
     implementation(Dependencies.Androidx.Compose.MATERIAL3)
     implementation(Dependencies.Androidx.Compose.NAVIGATION_COMPOSE)

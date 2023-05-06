@@ -51,7 +51,8 @@ class OtpInstance(
 
     private fun remainingTime(time: Long): Long = CODE_TTL_SECONDS - (time % CODE_TTL_SECONDS)
 
-    private fun Long.toByteArray(): ByteArray = ByteBuffer.allocate(Long.SIZE_BYTES).putLong(this).array()
+    private fun Long.toByteArray(): ByteArray =
+        ByteBuffer.allocate(Long.SIZE_BYTES).putLong(this).array()
 
     private fun ByteArray.toHexString() = joinToString("") { byte -> "%02x".format(byte) }
 

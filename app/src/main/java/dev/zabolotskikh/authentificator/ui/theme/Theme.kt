@@ -47,7 +47,15 @@ fun AuthentificatorTheme(
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+            if (darkTheme){
+                dynamicDarkColorScheme(context)
+            } else{
+                val scheme = dynamicLightColorScheme(context)
+                scheme.copy(
+                    background = scheme.inverseOnSurface,
+                    surface = scheme.inverseOnSurface,
+                )
+            }
         }
 
         darkTheme -> DarkColorScheme
@@ -57,8 +65,8 @@ fun AuthentificatorTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.primary.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
+            window.statusBarColor = colorScheme.background.toArgb()
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
         }
     }
 

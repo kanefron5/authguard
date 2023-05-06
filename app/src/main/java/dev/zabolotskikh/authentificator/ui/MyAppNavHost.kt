@@ -3,6 +3,7 @@ package dev.zabolotskikh.authentificator.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -24,16 +25,16 @@ fun MyAppNavHost(
     startDestination: String = Screen.WELCOME_SCREEN.name
 ) {
     val viewModel = hiltViewModel<WelcomeViewModel>()
-    val state = viewModel.state.collectAsState()
+    val state by viewModel.state.collectAsState()
 
-    LaunchedEffect(state.value) {
-        state.value?.apply {
+    LaunchedEffect(state) {
+        state?.apply {
             if (isStarted) navController.navigate(Screen.MAIN_SCREEN.name)
             else navController.navigate(Screen.WELCOME_SCREEN.name)
         }
     }
 
-    if (state.value != null) {
+    if (state != null) {
         NavHost(
             modifier = modifier, navController = navController, startDestination = startDestination
         ) {
