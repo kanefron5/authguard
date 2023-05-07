@@ -2,23 +2,32 @@
 
 package dev.zabolotskikh.authenticator.ui.screen.services
 
+import androidx.camera.core.ExperimentalGetImage
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.ArrowDropDown
+import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.QrCode
 import androidx.compose.material.icons.outlined.StarRate
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -47,9 +56,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -62,6 +74,7 @@ import dev.zabolotskikh.authenticator.domain.model.Service
 import dev.zabolotskikh.authenticator.ui.Screen
 
 @Composable
+@ExperimentalGetImage
 fun ServiceScreen(
     onNavigate: (screen: Screen, clear: Boolean) -> Unit = { _, _ -> }
 ) {
@@ -69,8 +82,7 @@ fun ServiceScreen(
     val state by viewModel.state.collectAsState()
     Scaffold(
         topBar = {
-            CenterAlignedTopAppBar(
-                title = { Text(text = stringResource(id = R.string.app_name)) },
+            CenterAlignedTopAppBar(title = { Text(text = stringResource(id = R.string.app_name)) },
                 actions = {
                     IconButton(onClick = { onNavigate(Screen.Settings, false) }) {
                         Icon(
@@ -79,8 +91,7 @@ fun ServiceScreen(
                             tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
-                }
-            )
+                })
         },
         content = { paddingValues ->
             ServicesList(state, viewModel::onEvent, paddingValues)
@@ -97,6 +108,7 @@ fun ServiceScreen(
 
 
 @Composable
+@ExperimentalGetImage
 fun AddServiceDialog(
     state: ServiceState, onEvent: (ServiceEvent) -> Unit, modifier: Modifier = Modifier
 ) {
@@ -106,22 +118,53 @@ fun AddServiceDialog(
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                TextField(value = state.name,
-                    onValueChange = { onEvent(ServiceEvent.SetName(it)) },
-                    placeholder = {
-                        Text(text = stringResource(id = R.string.add_service_dialog_name))
-                    })
-                TextField(value = state.privateKey,
-                    onValueChange = { onEvent(ServiceEvent.SetPrivateKey(it)) },
-                    placeholder = {
-                        Text(text = stringResource(id = R.string.add_service_dialog_key))
-                    })
+                var isManualModeSelected by rememberSaveable { mutableStateOf(true) }
 
-                MethodSelector(GenerationMethod.values().asList(),
-                    GenerationMethod.TIME,
-                    onSelectionChanged = {
-                        onEvent(ServiceEvent.SetMethod(it))
-                    })
+                Button(modifier = Modifier.fillMaxWidth(), onClick = {
+                    isManualModeSelected = !isManualModeSelected
+                }) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Start,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = if (isManualModeSelected) Icons.Outlined.QrCode else Icons.Outlined.Edit,
+                            contentDescription = "icon"
+                        )
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Text(text = if (isManualModeSelected) "Сканировать QR код" else "Ввести вручную")
+                    }
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+
+                if (isManualModeSelected) {
+                    TextField(value = state.name,
+                        onValueChange = { onEvent(ServiceEvent.SetName(it)) },
+                        placeholder = {
+                            Text(text = stringResource(id = R.string.add_service_dialog_name))
+                        })
+                    TextField(value = state.privateKey,
+                        onValueChange = { onEvent(ServiceEvent.SetPrivateKey(it)) },
+                        placeholder = {
+                            Text(text = stringResource(id = R.string.add_service_dialog_key))
+                        })
+
+                    MethodSelector(GenerationMethod.values().asList(),
+                        GenerationMethod.TIME,
+                        onSelectionChanged = {
+                            onEvent(ServiceEvent.SetMethod(it))
+                        })
+                } else {
+                    Column(
+                        modifier = Modifier
+                            .width(300.dp)
+                            .height(300.dp)
+                    ) {
+                        PreviewViewComposable()
+                    }
+                }
+
             }
         },
         confirmButton = {
@@ -153,6 +196,7 @@ fun AddServiceButton(
 }
 
 @Composable
+@ExperimentalGetImage
 fun ServicesList(
     state: ServiceState,
     onEvent: (ServiceEvent) -> Unit,
@@ -255,7 +299,8 @@ fun MethodSelector(
                         },
                         text = {
                             Text(
-                                text = listEntry.name, modifier = Modifier
+                                text = listEntry.name,
+                                modifier = Modifier
                                     .fillMaxWidth()
                                     .align(Alignment.Start)
                             )
@@ -313,8 +358,7 @@ fun ServiceListItem(
                     ),
                 ) {
                     Icon(
-                        imageVector = Icons.Outlined.StarRate,
-                        contentDescription = "Star"
+                        imageVector = Icons.Outlined.StarRate, contentDescription = "Star"
                     )
                 }
             }
@@ -333,4 +377,15 @@ fun ServiceListItem(
             )
         }
     }
+}
+
+@Composable
+@ExperimentalGetImage
+fun PreviewViewComposable() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .clip(RoundedCornerShape(30.dp))
+            .background(Color.Black)
+    ) {}
 }

@@ -2,6 +2,7 @@ object Dependencies {
 
     const val APACHE_COMMONS_CODEC = "commons-codec:commons-codec:1.15"
     const val COMPOSE_SETTINGS = "com.github.alorma:compose-settings-ui-m3:0.26.0"
+    const val BARCODE_SCANNING = "com.google.mlkit:barcode-scanning:17.0.3"
 
     object Dagger {
         private const val version = "2.44"
@@ -60,6 +61,14 @@ object Dependencies {
             const val LIFECYCLE_VIEWMODEL = "androidx.hilt:hilt-lifecycle-viewmodel:$version"
             const val COMPILER = "androidx.hilt:hilt-compiler:$version"
             const val NAVIGATION_COMPOSE = "androidx.hilt:hilt-navigation-compose:$version"
+        }
+
+        // https://developer.android.com/jetpack/androidx/releases/camera
+        object Camera {
+            private const val version = "1.3.0-alpha06"
+            const val CAMERA2 = "androidx.camera:camera-camera2:$version"
+            const val LIFECYCLE = "androidx.camera:camera-lifecycle:$version"
+            const val CAMERA_VIEW = "androidx.camera:camera-view:$version"
         }
     }
 

@@ -71,6 +71,10 @@ dependencies {
     implementation(Dependencies.Androidx.Lifecycle.LIVEDATA_KTX)
     implementation(Dependencies.Androidx.ACTIVITY_COMPOSE)
 
+    implementation(Dependencies.Androidx.Camera.CAMERA2)
+    implementation(Dependencies.Androidx.Camera.CAMERA_VIEW)
+    implementation(Dependencies.Androidx.Camera.LIFECYCLE)
+
     implementation(platform(Dependencies.Androidx.Compose.COMPOSE_BOM))
     implementation(Dependencies.Androidx.Compose.UI)
     implementation(Dependencies.Androidx.Compose.UI_GRAPHICS)
@@ -81,6 +85,7 @@ dependencies {
 
     implementation(Dependencies.APACHE_COMMONS_CODEC)
     implementation(Dependencies.COMPOSE_SETTINGS)
+    implementation(Dependencies.BARCODE_SCANNING)
 
     testImplementation(Dependencies.Test.JUNIT)
     androidTestImplementation(Dependencies.AndroidTest.JUNIT)
