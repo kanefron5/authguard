@@ -1,6 +1,7 @@
 # android-authenticator
-It's app for android for generating OTP codes like as Google Authenticator
+It's an app for android for generating OTP codes like Google Authenticator
 
-![alt text](https://github.com/kanefron5/android-authenticator/blob/main/screenshots/welcome.png?raw=true)
-![alt text](https://github.com/kanefron5/android-authenticator/blob/main/screenshots/main_empty.png?raw=true)
-![alt text](https://github.com/kanefron5/android-authenticator/blob/main/screenshots/main.png?raw=true)
+<img src="https://github.com/kanefron5/android-authenticator/blob/main/screenshots/welcome.png?raw=true" width=50%>
+<img src="https://github.com/kanefron5/android-authenticator/blob/main/screenshots/main_empty.png?raw=true" width=50%>
+<img src="https://github.com/kanefron5/android-authenticator/blob/main/screenshots/main.png?raw=true" width=50%>
+
