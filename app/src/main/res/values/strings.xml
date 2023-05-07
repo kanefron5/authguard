@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Authenticator</string>
+    <string name="app_name" translatable="false">AuthGuard</string>
     <string name="settings">Settings</string>
     <string name="app_logo_content_description">Application logo</string>
     <string name="welcome">Welcome!</string>

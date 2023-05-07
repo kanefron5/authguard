@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "dev.zabolotskikh.authenticator"
+    namespace = "dev.zabolotskikh.authguard"
     compileSdk = Config.COMPILE_SDK
 
     defaultConfig {
-        applicationId = "dev.zabolotskikh.authenticator"
+        applicationId = "dev.zabolotskikh.authguard"
         minSdk = Config.MIN_SDK
         targetSdk = Config.TARGET_SDK
         versionCode = currentVersion().versionCode
