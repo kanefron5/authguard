@@ -6,7 +6,7 @@ object Config {
     const val MIN_SDK = 21
     const val TARGET_SDK = 33
 
-    const val GRADLE_PLUGIN = "com.android.tools.build:gradle:7.3.1"
+    const val GRADLE_PLUGIN = "com.android.tools.build:gradle:8.0.0"
 
     fun getProperty(file: String, name: String): String {
         try {
