@@ -20,6 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -62,7 +63,7 @@ fun Preferences(
     onResetData: () -> Unit,
     onBuildNumberClick: () -> Unit
 ) {
-    var resetConfirmationDialogShowed by remember { mutableStateOf(false) }
+    var resetConfirmationDialogShowed by rememberSaveable { mutableStateOf(false) }
 
     if (resetConfirmationDialogShowed) {
         AlertDialog(onDismissRequest = { resetConfirmationDialogShowed = false },
