@@ -40,6 +40,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         // https://developer.android.com/jetpack/androidx/releases/compose-kotlin
@@ -79,6 +80,7 @@ dependencies {
     implementation(Dependencies.Androidx.Compose.NAVIGATION_COMPOSE)
 
     implementation(Dependencies.APACHE_COMMONS_CODEC)
+    implementation(Dependencies.COMPOSE_SETTINGS)
 
     testImplementation(Dependencies.Test.JUNIT)
     androidTestImplementation(Dependencies.AndroidTest.JUNIT)

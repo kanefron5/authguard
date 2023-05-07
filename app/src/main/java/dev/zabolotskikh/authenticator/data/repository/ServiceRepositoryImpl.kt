@@ -40,4 +40,6 @@ class ServiceRepositoryImpl @Inject constructor(
             service.id,
         )
     )
+
+    override suspend fun clear() = serviceDao.deleteAll()
 }

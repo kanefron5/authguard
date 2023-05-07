@@ -1,6 +1,7 @@
 object Dependencies {
 
     const val APACHE_COMMONS_CODEC = "commons-codec:commons-codec:1.15"
+    const val COMPOSE_SETTINGS = "com.github.alorma:compose-settings-ui-m3:0.26.0"
 
     object Dagger {
         private const val version = "2.44"
