@@ -1,6 +1,7 @@
 package dev.zabolotskikh.authenticator.ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -30,16 +31,6 @@ fun MyAppNavHost(
     val viewModel = hiltViewModel<WelcomeViewModel>()
     val state by viewModel.state.collectAsState()
     val startDestination = if (state?.isStarted == true) Screen.Main.route else Screen.Welcome.route
-
-    LaunchedEffect(state) {
-        state?.apply {
-            if (isStarted) navController.navigate(Screen.Main.route) {
-                launchSingleTop = true
-            } else navController.navigate(Screen.Welcome.route) {
-                launchSingleTop = true
-            }
-        }
-    }
 
     fun onNavigate(screen: Screen, clear: Boolean) {
         navController.navigate(screen.route) {
