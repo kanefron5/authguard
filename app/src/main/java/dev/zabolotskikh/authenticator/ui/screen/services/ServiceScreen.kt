@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ManageAccounts
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.material.icons.outlined.StarRate
@@ -42,8 +41,13 @@ import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -52,7 +56,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavOptions
 import dev.zabolotskikh.authenticator.R
 import dev.zabolotskikh.authenticator.domain.model.GenerationMethod
 import dev.zabolotskikh.authenticator.domain.model.Service
@@ -98,7 +101,7 @@ fun AddServiceDialog(
     state: ServiceState, onEvent: (ServiceEvent) -> Unit, modifier: Modifier = Modifier
 ) {
     AlertDialog(onDismissRequest = { onEvent(ServiceEvent.HideDialog) },
-        title = { Text(text = "Add service") },
+        title = { Text(text = stringResource(id = R.string.add_service_dialog_title)) },
         text = {
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -106,12 +109,12 @@ fun AddServiceDialog(
                 TextField(value = state.name,
                     onValueChange = { onEvent(ServiceEvent.SetName(it)) },
                     placeholder = {
-                        Text(text = "Service name")
+                        Text(text = stringResource(id = R.string.add_service_dialog_name))
                     })
                 TextField(value = state.privateKey,
                     onValueChange = { onEvent(ServiceEvent.SetPrivateKey(it)) },
                     placeholder = {
-                        Text(text = "Private key")
+                        Text(text = stringResource(id = R.string.add_service_dialog_key))
                     })
 
                 MethodSelector(GenerationMethod.values().asList(),
@@ -123,12 +126,12 @@ fun AddServiceDialog(
         },
         confirmButton = {
             Button(onClick = { onEvent(ServiceEvent.SaveService) }) {
-                Text(text = "Save")
+                Text(text = stringResource(id = R.string.save))
             }
         },
         dismissButton = {
             Button(onClick = { onEvent(ServiceEvent.HideDialog) }) {
-                Text(text = "Cancel")
+                Text(text = stringResource(id = R.string.cancel))
             }
         },
         modifier = modifier
@@ -144,7 +147,7 @@ fun AddServiceButton(
         FloatingActionButton(onClick = {
             onEvent(ServiceEvent.ShowDialog)
         }) {
-            Text("Add")
+            Text(stringResource(id = R.string.add_service))
         }
     }
 }
@@ -171,7 +174,7 @@ fun ServicesList(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Здесь пока ничего нет",
+                text = stringResource(id = R.string.service_list_empty),
                 modifier = Modifier.fillMaxWidth(),
                 fontSize = 28.sp,
                 textAlign = TextAlign.Center,
@@ -179,7 +182,7 @@ fun ServicesList(
             )
             Image(
                 painter = painterResource(id = R.drawable.empty_list),
-                contentDescription = "Empty list"
+                contentDescription = stringResource(id = R.string.service_list_empty)
             )
             Button(
                 onClick = {
@@ -189,7 +192,7 @@ fun ServicesList(
                     contentColor = MaterialTheme.colorScheme.onPrimary
                 )
             ) {
-                Text(text = "Добавьте свой первый ключ")
+                Text(text = stringResource(id = R.string.service_list_add_first))
             }
         }
     } else {
@@ -217,7 +220,7 @@ fun MethodSelector(
 ) {
 
     var selected by remember { mutableStateOf(preselected) }
-    var expanded by remember { mutableStateOf(false) } // initial value
+    var expanded by remember { mutableStateOf(false) }
 
     OutlinedCard(modifier = modifier.clickable {
         expanded = !expanded
@@ -253,7 +256,6 @@ fun MethodSelector(
                         text = {
                             Text(
                                 text = listEntry.name, modifier = Modifier
-                                    //.wrapContentWidth()  //optional instad of fillMaxWidth
                                     .fillMaxWidth()
                                     .align(Alignment.Start)
                             )
