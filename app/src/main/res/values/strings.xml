@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Authentificator</string>
+    <string name="app_name">Authenticator</string>
     <string name="app_logo_content_description">Application logo</string>
     <string name="welcome">Добро пожаловать!</string>
     <string name="welcome_description">Сохраняйте доступ ко всем своим аккаунтам даже после смены устройства</string>
