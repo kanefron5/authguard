@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Аутентификатор</string>
+    <string name="settings">Настройки</string>
+    <string name="app_logo_content_description">Иконка приложения</string>
+    <string name="welcome">Добро пожаловать!</string>
+    <string name="welcome_description">Сохраняйте доступ ко всем своим аккаунтам даже после смены устройства</string>
+    <string name="login">Войти / Зарегистрироваться</string>
+    <string name="local_mode">Продолжить локально</string>
+    <string name="confirm_action">Подтвердите действие</string>
+    <string name="reset_warning">Это действие приведет к удалению кодов для авторизации во всех ваших сервисах.\nВосстановить их будет невозможно. \n\nВы уверены?</string>
+    <string name="delete">Удалить</string>
+    <string name="cancel">Отмена</string>
+    <string name="settings_title_data">Данные</string>
+    <string name="settings_title_about">О приложении</string>
+    <string name="settings_reset">Очистить все данные</string>
+    <string name="settings_app_version">Версия приложения</string>
+    <string name="settings_app_build_number">Номер сборки</string>
+    <string name="add_service_dialog_title">Введите данные</string>
+    <string name="add_service_dialog_name">Псевдоним</string>
+    <string name="add_service_dialog_key">Ключ</string>
+    <string name="save">Сохранить</string>
+    <string name="add_service">+</string>
+    <string name="service_list_empty">Здесь пока ничего нет</string>
+    <string name="service_list_add_first">Добавьте свой первый ключ</string>
+</resources>
