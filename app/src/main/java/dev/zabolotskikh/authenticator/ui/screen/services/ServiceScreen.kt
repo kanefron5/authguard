@@ -17,6 +17,8 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ManageAccounts
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.material.icons.outlined.StarRate
 import androidx.compose.material3.AlertDialog
@@ -24,12 +26,14 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.LinearProgressIndicator
@@ -48,17 +52,32 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavOptions
 import dev.zabolotskikh.authenticator.R
 import dev.zabolotskikh.authenticator.domain.model.GenerationMethod
 import dev.zabolotskikh.authenticator.domain.model.Service
+import dev.zabolotskikh.authenticator.ui.Screen
 
 @Composable
-fun ServiceScreen() {
+fun ServiceScreen(
+    onNavigate: (screen: Screen, clear: Boolean) -> Unit = { _, _ -> }
+) {
     val viewModel = hiltViewModel<ServiceViewModel>()
     val state by viewModel.state.collectAsState()
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text(text = stringResource(id = R.string.app_name)) })
+            CenterAlignedTopAppBar(
+                title = { Text(text = stringResource(id = R.string.app_name)) },
+                actions = {
+                    IconButton(onClick = { onNavigate(Screen.Settings, false) }) {
+                        Icon(
+                            imageVector = Icons.Default.Settings,
+                            contentDescription = "actionIconContentDescription",
+                            tint = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                }
+            )
         },
         content = { paddingValues ->
             ServicesList(state, viewModel::onEvent, paddingValues)
@@ -78,36 +97,41 @@ fun ServiceScreen() {
 fun AddServiceDialog(
     state: ServiceState, onEvent: (ServiceEvent) -> Unit, modifier: Modifier = Modifier
 ) {
-    AlertDialog(onDismissRequest = { /*TODO*/ }, title = { Text(text = "Add service") }, text = {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            TextField(value = state.name,
-                onValueChange = { onEvent(ServiceEvent.SetName(it)) },
-                placeholder = {
-                    Text(text = "Service name")
-                })
-            TextField(value = state.privateKey,
-                onValueChange = { onEvent(ServiceEvent.SetPrivateKey(it)) },
-                placeholder = {
-                    Text(text = "Private key")
-                })
+    AlertDialog(onDismissRequest = { onEvent(ServiceEvent.HideDialog) },
+        title = { Text(text = "Add service") },
+        text = {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                TextField(value = state.name,
+                    onValueChange = { onEvent(ServiceEvent.SetName(it)) },
+                    placeholder = {
+                        Text(text = "Service name")
+                    })
+                TextField(value = state.privateKey,
+                    onValueChange = { onEvent(ServiceEvent.SetPrivateKey(it)) },
+                    placeholder = {
+                        Text(text = "Private key")
+                    })
 
-            MethodSelector(GenerationMethod.values().asList(),
-                GenerationMethod.TIME,
-                onSelectionChanged = {
-                    onEvent(ServiceEvent.SetMethod(it))
-                })
-        }
-    }, confirmButton = {
-        Button(onClick = { onEvent(ServiceEvent.SaveService) }) {
-            Text(text = "Save")
-        }
-    }, dismissButton = {
-        Button(onClick = { onEvent(ServiceEvent.HideDialog) }) {
-            Text(text = "Cancel")
-        }
-    }, modifier = modifier
+                MethodSelector(GenerationMethod.values().asList(),
+                    GenerationMethod.TIME,
+                    onSelectionChanged = {
+                        onEvent(ServiceEvent.SetMethod(it))
+                    })
+            }
+        },
+        confirmButton = {
+            Button(onClick = { onEvent(ServiceEvent.SaveService) }) {
+                Text(text = "Save")
+            }
+        },
+        dismissButton = {
+            Button(onClick = { onEvent(ServiceEvent.HideDialog) }) {
+                Text(text = "Cancel")
+            }
+        },
+        modifier = modifier
     )
 }
 
@@ -272,7 +296,9 @@ fun ServiceListItem(
                 verticalAlignment = Alignment.Top
             ) {
                 Text(
-                    modifier = Modifier.weight(1f).basicMarquee(),
+                    modifier = Modifier
+                        .weight(1f)
+                        .basicMarquee(),
                     text = service.name,
                     color = MaterialTheme.colorScheme.secondary
                 )

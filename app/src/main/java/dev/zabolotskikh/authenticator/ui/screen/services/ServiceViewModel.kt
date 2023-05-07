@@ -81,7 +81,14 @@ class ServiceViewModel @Inject constructor(
             }
 
             ServiceEvent.ShowDialog -> _state.update { it.copy(isAddingService = true) }
-            ServiceEvent.HideDialog -> _state.update { it.copy(isAddingService = false) }
+            ServiceEvent.HideDialog -> _state.update {
+                it.copy(
+                    isAddingService = false,
+                    privateKey = "",
+                    name = "",
+                    method = GenerationMethod.TIME
+                )
+            }
         }
     }
 }

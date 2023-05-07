@@ -12,4 +12,6 @@ interface ServiceRepository {
     suspend fun insert(service: Service)
 
     suspend fun delete(service: Service)
+
+    suspend fun clear()
 }
