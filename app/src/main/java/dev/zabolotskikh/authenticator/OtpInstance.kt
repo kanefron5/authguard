@@ -18,6 +18,7 @@ class OtpInstance(
         val t = epochSeconds / CODE_TTL_SECONDS
 
         val hs = hmacSha1(secret.base32ToByteArray(), t.toByteArray()).toHexString()
+        if (hs.isBlank()) return ""
         val offset = hs.last().digitToInt(16)
         val dbc1 = hs.substring(offset * 2, offset * 2 + 8)
 
@@ -40,6 +41,7 @@ class OtpInstance(
     ) }
 
     private fun hmacSha1(key: ByteArray, message: ByteArray): ByteArray {
+        if (key.isEmpty()) return byteArrayOf()
         val hmacSha1 = Mac.getInstance("HmacSHA1")
         val secretKeySpec = SecretKeySpec(key, "HmacSHA1")
         hmacSha1.init(secretKeySpec)
