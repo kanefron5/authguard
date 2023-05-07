@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Аутентификатор</string>
     <string name="settings">Настройки</string>
     <string name="app_logo_content_description">Иконка приложения</string>
     <string name="welcome">Добро пожаловать!</string>
