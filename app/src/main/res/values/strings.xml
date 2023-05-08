@@ -2,7 +2,7 @@
     <string name="app_name" translatable="false">AuthGuard</string>
     <string name="settings">Settings</string>
     <string name="app_logo_content_description">Application logo</string>
-    <string name="welcome">Welcome!</string>
+    <string name="welcome">Welcome to AuthGuard!</string>
     <string name="welcome_description">Keep access to all your accounts even after switching devices</string>
     <string name="login">Log in / Sign up</string>
     <string name="local_mode">Continue locally</string>
