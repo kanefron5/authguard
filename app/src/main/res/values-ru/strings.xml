@@ -2,7 +2,7 @@
 <resources>
     <string name="settings">Настройки</string>
     <string name="app_logo_content_description">Иконка приложения</string>
-    <string name="welcome">Добро пожаловать!</string>
+    <string name="welcome">Добро пожаловать в AuthGuard!</string>
     <string name="welcome_description">Сохраняйте доступ ко всем своим аккаунтам даже после смены устройства</string>
     <string name="login">Войти / Зарегистрироваться</string>
     <string name="local_mode">Продолжить локально</string>
