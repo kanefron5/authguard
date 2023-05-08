@@ -14,7 +14,7 @@ import dev.zabolotskikh.authguard.data.local.entities.AppStateEntity
     version = 1,
     exportSchema = false
 )
-abstract class ServiceRoomDatabase() : RoomDatabase() {
+abstract class ServiceRoomDatabase : RoomDatabase() {
     abstract fun serviceDao(): ServiceDao
     abstract fun appStateDao(): AppStateDao
 

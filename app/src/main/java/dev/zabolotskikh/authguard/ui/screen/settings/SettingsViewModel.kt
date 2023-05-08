@@ -17,7 +17,7 @@ class SettingsViewModel @Inject constructor(
     private val serviceRepository: ServiceRepository
 ) : ViewModel() {
     fun resetData() = viewModelScope.launch(Dispatchers.IO) {
-        stateRepository.update(AppState(isStarted = false, isAuthenticated = false))
+        stateRepository.update(AppState(isStarted = false, isAuthenticated = false, isPrivateMode = false))
         serviceRepository.clear()
     }
 

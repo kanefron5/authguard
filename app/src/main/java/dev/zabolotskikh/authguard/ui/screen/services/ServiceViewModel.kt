@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.zabolotskikh.authguard.OtpInstance
 import dev.zabolotskikh.authguard.domain.model.GenerationMethod
 import dev.zabolotskikh.authguard.domain.model.Service
+import dev.zabolotskikh.authguard.domain.repository.AppStateRepository
 import dev.zabolotskikh.authguard.domain.repository.ServiceRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -20,21 +21,24 @@ import kotlin.concurrent.timer
 
 @HiltViewModel
 class ServiceViewModel @Inject constructor(
-    private val repository: ServiceRepository
+    private val repository: ServiceRepository,
+    private val stateRepository: AppStateRepository,
 ) : ViewModel() {
     private val _state = MutableStateFlow(ServiceState())
     private val _services = repository.getAllServices().stateIn(
-        viewModelScope,
-        SharingStarted.WhileSubscribed(),
-        emptyList()
+        viewModelScope, SharingStarted.WhileSubscribed(), emptyList()
+    )
+    private val _appState = stateRepository.getState().stateIn(
+        viewModelScope, SharingStarted.WhileSubscribed(), null
     )
 
-    val state = combine(_state, _services) { state, services ->
-        state.copy(services = OtpInstance(services).calculate())
+    val state = combine(_state, _services, _appState) { state, services, appState ->
+        state.copy(
+            services = OtpInstance(services).calculate(),
+            isPrivateMode = appState?.isPrivateMode ?: false
+        )
     }.stateIn(
-        viewModelScope,
-        SharingStarted.WhileSubscribed(5000),
-        ServiceState()
+        viewModelScope, SharingStarted.WhileSubscribed(5000), ServiceState()
     )
 
 
@@ -88,6 +92,22 @@ class ServiceViewModel @Inject constructor(
                     name = "",
                     method = GenerationMethod.TIME
                 )
+            }
+
+            ServiceEvent.PrivateModeOff -> {
+                viewModelScope.launch(Dispatchers.IO) {
+                    _appState.value?.apply {
+                        stateRepository.update(copy(isPrivateMode = false))
+                    }
+                }
+            }
+
+            ServiceEvent.PrivateModeOn -> {
+                viewModelScope.launch(Dispatchers.IO) {
+                    _appState.value?.apply {
+                        stateRepository.update(copy(isPrivateMode = true))
+                    }
+                }
             }
         }
     }
