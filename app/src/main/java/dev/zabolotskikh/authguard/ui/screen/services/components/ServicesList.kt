@@ -80,7 +80,14 @@ fun ServicesList(
                 ), verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(state.services) { service ->
-                ServiceListItem(service = service, state = state)
+                ServiceListItem(service = service, state = state, onChangeFavorite = {
+                    onEvent(
+                        if (service.isFavorite) ServiceEvent.RemoveFromFavorite(service)
+                        else ServiceEvent.AddToFavorite(service)
+                    )
+                }, onDelete = {
+                    onEvent(ServiceEvent.DeleteService(service))
+                })
             }
         }
     }

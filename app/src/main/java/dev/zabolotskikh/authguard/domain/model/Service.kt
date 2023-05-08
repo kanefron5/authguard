@@ -7,5 +7,6 @@ data class Service(
     val generationMethod: GenerationMethod = GenerationMethod.TIME,
     val timeoutTime: Long = 0,
     val codeTtl: Long = 0,
-    val currentCode: String = ""
+    val currentCode: String = "",
+    val isFavorite: Boolean = false
 )

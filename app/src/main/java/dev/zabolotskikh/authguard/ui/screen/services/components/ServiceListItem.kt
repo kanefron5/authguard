@@ -11,10 +11,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.StarRate
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.LinearProgressIndicator
@@ -33,7 +35,9 @@ import dev.zabolotskikh.authguard.ui.screen.services.ServiceState
 fun ServiceListItem(
     modifier: Modifier = Modifier,
     service: Service,
-    state: ServiceState
+    state: ServiceState,
+    onDelete: () -> Unit,
+    onChangeFavorite: (Boolean) -> Unit
 ) {
     fun formatCode(code: String) = try {
         if (state.isPrivateMode) "*** ***"
@@ -69,15 +73,27 @@ fun ServiceListItem(
                     color = MaterialTheme.colorScheme.secondary
                 )
                 IconToggleButton(
-                    checked = false,
-                    onCheckedChange = {},
+                    checked = service.isFavorite,
+                    onCheckedChange = onChangeFavorite,
                     colors = IconButtonDefaults.iconToggleButtonColors(
-                        containerColor = MaterialTheme.colorScheme.onPrimary,
-                        contentColor = MaterialTheme.colorScheme.secondary
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                        checkedContainerColor = MaterialTheme.colorScheme.secondary,
+                        checkedContentColor = MaterialTheme.colorScheme.onSecondary
                     ),
                 ) {
                     Icon(
                         imageVector = Icons.Outlined.StarRate, contentDescription = "Star"
+                    )
+                }
+                IconButton(
+                    colors = IconButtonDefaults.iconButtonColors(
+                        containerColor = MaterialTheme.colorScheme.errorContainer,
+                        contentColor = MaterialTheme.colorScheme.onErrorContainer
+                    ), onClick = onDelete
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Delete, contentDescription = "Delete"
                     )
                 }
             }

@@ -109,6 +109,14 @@ class ServiceViewModel @Inject constructor(
                     }
                 }
             }
+
+            is ServiceEvent.AddToFavorite -> viewModelScope.launch(Dispatchers.IO) {
+                repository.update(event.service.copy(isFavorite = true))
+            }
+
+            is ServiceEvent.RemoveFromFavorite -> viewModelScope.launch(Dispatchers.IO) {
+                repository.update(event.service.copy(isFavorite = false))
+            }
         }
     }
 }

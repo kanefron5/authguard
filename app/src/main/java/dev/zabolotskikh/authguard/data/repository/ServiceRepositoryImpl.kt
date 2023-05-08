@@ -2,6 +2,7 @@ package dev.zabolotskikh.authguard.data.repository
 
 import dev.zabolotskikh.authguard.data.local.dao.ServiceDao
 import dev.zabolotskikh.authguard.data.local.entities.ServiceEntity
+import dev.zabolotskikh.authguard.data.local.entities.toService
 import dev.zabolotskikh.authguard.domain.model.Service
 import dev.zabolotskikh.authguard.domain.repository.ServiceRepository
 import kotlinx.coroutines.flow.map
@@ -11,24 +12,16 @@ class ServiceRepositoryImpl @Inject constructor(
     private val serviceDao: ServiceDao
 ) : ServiceRepository {
     override fun getAllServices() = serviceDao.getServices().map {
-        it.map { entity ->
-            Service(
-                entity.name,
-                entity.privateKey,
-                entity.id
-            )
-        }
+        it.map { entity -> entity.toService() }
     }
 
     override fun getServiceById(id: Int) = serviceDao.getServiceById(id).map {
-        Service(it.name, it.privateKey, it.id)
+        it.toService()
     }
 
     override suspend fun insert(service: Service) = serviceDao.insert(
         ServiceEntity(
-            service.name,
-            service.privateKey,
-            service.generationMethod
+            service.name, service.privateKey, service.generationMethod, service.isFavorite
         )
     )
 
@@ -37,6 +30,17 @@ class ServiceRepositoryImpl @Inject constructor(
             service.name,
             service.privateKey,
             service.generationMethod,
+            service.isFavorite,
+            service.id,
+        )
+    )
+
+    override suspend fun update(service: Service) = serviceDao.update(
+        ServiceEntity(
+            service.name,
+            service.privateKey,
+            service.generationMethod,
+            service.isFavorite,
             service.id,
         )
     )
