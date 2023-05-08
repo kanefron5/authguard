@@ -11,7 +11,8 @@ sealed interface ServiceEvent {
     object ShowDialog : ServiceEvent
     object HideDialog : ServiceEvent
     data class DeleteService(val service: Service) : ServiceEvent
-
+    data class AddToFavorite(val service: Service) : ServiceEvent
+    data class RemoveFromFavorite(val service: Service) : ServiceEvent
     object PrivateModeOn : ServiceEvent
     object PrivateModeOff : ServiceEvent
 }
