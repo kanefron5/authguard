@@ -73,8 +73,7 @@ fun AddServiceDialog(
                             Text(text = stringResource(id = R.string.add_service_dialog_key))
                         })
 
-                    MethodSelector(
-                        GenerationMethod.values().asList(),
+                    MethodSelector(GenerationMethod.values().asList(),
                         GenerationMethod.TIME,
                         onSelectionChanged = {
                             onEvent(ServiceEvent.SetMethod(it))
@@ -85,7 +84,12 @@ fun AddServiceDialog(
                             .width(300.dp)
                             .height(300.dp)
                     ) {
-                        PreviewViewComposable()
+                        BarcodeScanner(onSuccess = {
+                            isManualModeSelected = true
+                            onEvent(ServiceEvent.SetMethod(GenerationMethod.TIME))
+                            onEvent(ServiceEvent.SetName(it.alias))
+                            onEvent(ServiceEvent.SetPrivateKey(it.secret))
+                        })
                     }
                 }
 
