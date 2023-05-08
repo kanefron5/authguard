@@ -5,6 +5,7 @@ import dev.zabolotskikh.authguard.domain.model.Service
 
 data class ServiceState(
     val services: List<Service> = emptyList(),
+    val isPrivateMode: Boolean = false,
     val isAddingService: Boolean = false,
     val privateKey: String = "",
     val name: String = "",

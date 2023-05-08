@@ -15,7 +15,9 @@ import dev.zabolotskikh.authguard.ui.screen.settings.SettingsScreen
 import dev.zabolotskikh.authguard.ui.screen.welcome.WelcomeScreen
 import dev.zabolotskikh.authguard.ui.screen.welcome.WelcomeViewModel
 
-sealed class Screen(val route: String) {
+sealed class Screen(private val route: String) {
+    operator fun invoke() = route
+
     object Welcome : Screen("welcome_screen")
     object Main : Screen("main_screen")
     object Settings : Screen("settings_screen")
@@ -28,10 +30,10 @@ fun MyAppNavHost(
 ) {
     val viewModel = hiltViewModel<WelcomeViewModel>()
     val state by viewModel.state.collectAsState()
-    val startDestination = if (state?.isStarted == true) Screen.Main.route else Screen.Welcome.route
+    val startDestination = if (state?.isStarted == true) Screen.Main() else Screen.Welcome()
 
     fun onNavigate(screen: Screen, clear: Boolean) {
-        navController.navigate(screen.route) {
+        navController.navigate(screen()) {
             if (clear) popUpTo(0)
         }
     }
@@ -40,7 +42,7 @@ fun MyAppNavHost(
         if (navController.previousBackStackEntry != null) {
             navController.navigateUp()
         } else {
-            navController.navigate(Screen.Main.route) {
+            navController.navigate(Screen.Main()) {
                 popUpTo(0)
             }
         }
@@ -50,9 +52,9 @@ fun MyAppNavHost(
         NavHost(
             modifier = modifier, navController = navController, startDestination = startDestination
         ) {
-            composable(Screen.Welcome.route) { WelcomeScreen() }
-            composable(Screen.Settings.route) { SettingsScreen(onNavigateBack = ::onNavigateBack) }
-            composable(Screen.Main.route) { ServiceScreen(onNavigate = ::onNavigate) }
+            composable(Screen.Welcome()) { WelcomeScreen() }
+            composable(Screen.Settings()) { SettingsScreen(onNavigateBack = ::onNavigateBack) }
+            composable(Screen.Main()) { ServiceScreen(onNavigate = ::onNavigate) }
         }
     }
 }
