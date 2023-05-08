@@ -8,6 +8,7 @@
     <string name="local_mode">Continue locally</string>
     <string name="confirm_action">Confirm action</string>
     <string name="reset_warning">This action will delete authorization codes in all your services.\nIt will be impossible to restore them. \n\nAre you sure?</string>
+    <string name="reset_service_warning">This action will delete the code for authorization in this service.\nIt will be impossible to restore it. \n\nAre you sure?</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
     <string name="settings_title_data">Application data</string>

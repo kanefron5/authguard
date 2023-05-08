@@ -13,6 +13,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.StarRate
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -23,11 +26,17 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.zabolotskikh.authguard.R
 import dev.zabolotskikh.authguard.domain.model.Service
 import dev.zabolotskikh.authguard.ui.screen.services.ServiceState
 
@@ -44,6 +53,31 @@ fun ServiceListItem(
         else code.substring(0..2) + " " + code.substring(3..5)
     } catch (e: Exception) {
         "ERROR"
+    }
+
+    var resetConfirmationDialogShowed by rememberSaveable { mutableStateOf(false) }
+
+    if (resetConfirmationDialogShowed) {
+        AlertDialog(onDismissRequest = { resetConfirmationDialogShowed = false },
+            title = { Text(text = stringResource(id = R.string.confirm_action)) },
+            text = {
+                Text(text = stringResource(id = R.string.reset_service_warning))
+            },
+            confirmButton = {
+                Button(
+                    onClick = onDelete, colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.errorContainer,
+                        contentColor = MaterialTheme.colorScheme.onErrorContainer
+                    )
+                ) {
+                    Text(text = stringResource(id = R.string.delete))
+                }
+            },
+            dismissButton = {
+                Button(onClick = { resetConfirmationDialogShowed = false }) {
+                    Text(text = stringResource(id = R.string.cancel))
+                }
+            })
     }
 
     Card(
@@ -90,7 +124,7 @@ fun ServiceListItem(
                     colors = IconButtonDefaults.iconButtonColors(
                         containerColor = MaterialTheme.colorScheme.errorContainer,
                         contentColor = MaterialTheme.colorScheme.onErrorContainer
-                    ), onClick = onDelete
+                    ), onClick = { resetConfirmationDialogShowed = true }
                 ) {
                     Icon(
                         imageVector = Icons.Outlined.Delete, contentDescription = "Delete"

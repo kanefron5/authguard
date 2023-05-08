@@ -8,6 +8,7 @@
     <string name="local_mode">Продолжить локально</string>
     <string name="confirm_action">Подтвердите действие</string>
     <string name="reset_warning">Это действие приведет к удалению кодов для авторизации во всех ваших сервисах.\nВосстановить их будет невозможно. \n\nВы уверены?</string>
+    <string name="reset_service_warning">Это действие приведет к удалению кода для авторизации в данном сервисе.\nВосстановить его будет невозможно. \n\nВы уверены?</string>
     <string name="delete">Удалить</string>
     <string name="cancel">Отмена</string>
     <string name="settings_title_data">Данные</string>
