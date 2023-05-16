@@ -4,6 +4,12 @@ object Dependencies {
     const val COMPOSE_SETTINGS = "com.github.alorma:compose-settings-ui-m3:0.26.0"
     const val BARCODE_SCANNING = "com.google.mlkit:barcode-scanning:17.0.3"
 
+    object Firebase {
+        const val FIREBASE_BOM = "com.google.firebase:firebase-bom:32.0.0"
+        const val ANALYTICS = "com.google.firebase:firebase-analytics-ktx"
+        const val AUTH = "com.google.firebase:firebase-auth"
+        const val CRASHLYTICS = "com.google.firebase:firebase-crashlytics"
+    }
     object Dagger {
         private const val version = "2.44"
         const val HILT_ANDROID = "com.google.dagger:hilt-android:$version"

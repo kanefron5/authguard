@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "559001462663",
+    "project_id": "authguard-android",
+    "storage_bucket": "authguard-android.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:559001462663:android:beb2a1fa947643c4f25522",
+        "android_client_info": {
+          "package_name": "dev.zabolotskikh.authguard"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "559001462663-do8hsocpq7n1qdv0ih21tookk8cghprh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVLLFk5Kg-Q57bCjUO86TeiDy6ygc70nY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "559001462663-do8hsocpq7n1qdv0ih21tookk8cghprh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
