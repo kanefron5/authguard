@@ -10,6 +10,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import dev.zabolotskikh.authguard.ui.screen.passkey.PasskeyScreen
 import dev.zabolotskikh.authguard.ui.screen.services.ServiceScreen
 import dev.zabolotskikh.authguard.ui.screen.settings.SettingsScreen
 import dev.zabolotskikh.authguard.ui.screen.welcome.WelcomeScreen
@@ -21,6 +22,7 @@ sealed class Screen(private val route: String) {
     object Welcome : Screen("welcome_screen")
     object Main : Screen("main_screen")
     object Settings : Screen("settings_screen")
+    object PassKey : Screen("password_screen")
 }
 
 @Composable
@@ -55,6 +57,7 @@ fun MyAppNavHost(
             composable(Screen.Welcome()) { WelcomeScreen() }
             composable(Screen.Settings()) { SettingsScreen(onNavigateBack = ::onNavigateBack) }
             composable(Screen.Main()) { ServiceScreen(onNavigate = ::onNavigate) }
+            composable(Screen.PassKey()) { PasskeyScreen() }
         }
     }
 }

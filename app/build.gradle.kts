@@ -3,6 +3,8 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 }
 
 android {
@@ -86,6 +88,11 @@ dependencies {
     implementation(Dependencies.APACHE_COMMONS_CODEC)
     implementation(Dependencies.COMPOSE_SETTINGS)
     implementation(Dependencies.BARCODE_SCANNING)
+
+    implementation(platform(Dependencies.Firebase.FIREBASE_BOM))
+    implementation(Dependencies.Firebase.ANALYTICS)
+    implementation(Dependencies.Firebase.AUTH)
+    implementation(Dependencies.Firebase.CRASHLYTICS)
 
     testImplementation(Dependencies.Test.JUNIT)
     androidTestImplementation(Dependencies.AndroidTest.JUNIT)

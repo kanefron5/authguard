@@ -68,6 +68,11 @@ fun Preferences(
                 Text(text = stringResource(id = R.string.settings_title_data))
             }) {
                 SettingsMenuLink(title = {
+                    Text(text = stringResource(id = R.string.settings_security_code))
+                }) {
+
+                }
+                SettingsMenuLink(title = {
                     Text(text = stringResource(id = R.string.settings_reset))
                 }) {
                     resetConfirmationDialogShowed = true
