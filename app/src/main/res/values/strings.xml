@@ -11,7 +11,7 @@
     <string name="reset_service_warning">This action will delete the code for authorization in this service.\nIt will be impossible to restore it. \n\nAre you sure?</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
-    <string name="settings_title_data">Application data</string>
+    <string name="settings_title_data">Data and security</string>
     <string name="settings_title_about">About</string>
     <string name="settings_reset">Reset all</string>
     <string name="settings_app_version">Application version</string>
@@ -23,4 +23,9 @@
     <string name="add_service">Add</string>
     <string name="service_list_empty">Nothing here yet</string>
     <string name="service_list_add_first">Add your first key</string>
+    <string name="settings_security_code">Change password</string>
+    <string name="add_service_qr">Scan QR code</string>
+    <string name="add_service_manual">Enter data manually</string>
+    <string name="code_generation_error" translatable="false">ERROR</string>
+    <string name="add_service_invalid_key">Key is invalid</string>
 </resources>

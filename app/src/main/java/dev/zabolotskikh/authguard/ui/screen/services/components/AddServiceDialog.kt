@@ -8,12 +8,15 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.QrCode
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -35,11 +38,13 @@ import dev.zabolotskikh.authguard.ui.screen.services.ServiceState
 fun AddServiceDialog(
     state: ServiceState, onEvent: (ServiceEvent) -> Unit, modifier: Modifier = Modifier
 ) {
-    AlertDialog(onDismissRequest = { onEvent(ServiceEvent.HideDialog) },
+    AlertDialog(
+        onDismissRequest = { onEvent(ServiceEvent.HideDialog) },
         title = { Text(text = stringResource(id = R.string.add_service_dialog_title)) },
         text = {
             Column(
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.verticalScroll(rememberScrollState())
             ) {
                 var isManualModeSelected by rememberSaveable { mutableStateOf(true) }
 
@@ -56,7 +61,10 @@ fun AddServiceDialog(
                             contentDescription = "icon"
                         )
                         Spacer(modifier = Modifier.width(16.dp))
-                        Text(text = if (isManualModeSelected) "Сканировать QR код" else "Ввести вручную")
+                        Text(
+                            text = if (isManualModeSelected) stringResource(id = R.string.add_service_manual)
+                            else stringResource(id = R.string.add_service_manual)
+                        )
                     }
                 }
                 Spacer(modifier = Modifier.height(16.dp))
@@ -72,6 +80,12 @@ fun AddServiceDialog(
                         placeholder = {
                             Text(text = stringResource(id = R.string.add_service_dialog_key))
                         })
+                    if (state.isBadSecret && state.privateKey.isNotEmpty()) {
+                        Text(
+                            text = stringResource(id = R.string.add_service_invalid_key),
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
 
                     MethodSelector(GenerationMethod.values().asList(),
                         GenerationMethod.TIME,
@@ -96,7 +110,10 @@ fun AddServiceDialog(
             }
         },
         confirmButton = {
-            Button(onClick = { onEvent(ServiceEvent.SaveService) }) {
+            Button(
+                onClick = { onEvent(ServiceEvent.SaveService) },
+                enabled = (state.name.isNotBlank() && state.privateKey.isNotBlank() && !state.isBadSecret)
+            ) {
                 Text(text = stringResource(id = R.string.save))
             }
         },

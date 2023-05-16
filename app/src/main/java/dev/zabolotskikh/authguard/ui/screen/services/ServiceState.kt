@@ -7,6 +7,7 @@ data class ServiceState(
     val services: List<Service> = emptyList(),
     val isPrivateMode: Boolean = false,
     val isAddingService: Boolean = false,
+    val isBadSecret: Boolean = false,
     val privateKey: String = "",
     val name: String = "",
     val method: GenerationMethod = GenerationMethod.TIME

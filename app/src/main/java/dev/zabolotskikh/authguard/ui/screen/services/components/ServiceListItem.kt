@@ -48,11 +48,11 @@ fun ServiceListItem(
     onDelete: () -> Unit,
     onChangeFavorite: (Boolean) -> Unit
 ) {
-    fun formatCode(code: String) = try {
+    fun formatCode(code: String): String? = try {
         if (state.isPrivateMode) "*** ***"
         else code.substring(0..2) + " " + code.substring(3..5)
     } catch (e: Exception) {
-        "ERROR"
+        null
     }
 
     var resetConfirmationDialogShowed by rememberSaveable { mutableStateOf(false) }
@@ -65,7 +65,10 @@ fun ServiceListItem(
             },
             confirmButton = {
                 Button(
-                    onClick = onDelete, colors = ButtonDefaults.buttonColors(
+                    onClick = {
+                        onDelete()
+                        resetConfirmationDialogShowed = false
+                    }, colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.errorContainer,
                         contentColor = MaterialTheme.colorScheme.onErrorContainer
                     )
@@ -134,7 +137,8 @@ fun ServiceListItem(
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 fontSize = 42.sp,
-                text = formatCode(service.currentCode),
+                text = formatCode(service.currentCode)
+                    ?: stringResource(id = R.string.code_generation_error),
                 color = MaterialTheme.colorScheme.primary,
                 textAlign = TextAlign.Center
             )
