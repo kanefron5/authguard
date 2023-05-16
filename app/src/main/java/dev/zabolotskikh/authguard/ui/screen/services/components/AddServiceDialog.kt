@@ -65,7 +65,7 @@ fun AddServiceDialog(
                         )
                         Spacer(modifier = Modifier.width(16.dp))
                         Text(
-                            text = if (isManualModeSelected) stringResource(id = R.string.add_service_manual)
+                            text = if (isManualModeSelected) stringResource(id = R.string.add_service_qr)
                             else stringResource(id = R.string.add_service_manual)
                         )
                     }
