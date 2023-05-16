@@ -61,7 +61,15 @@ class ServiceViewModel @Inject constructor(
             }
 
             is ServiceEvent.SetName -> _state.update { it.copy(name = event.name) }
-            is ServiceEvent.SetPrivateKey -> _state.update { it.copy(privateKey = event.privateKey) }
+            is ServiceEvent.SetPrivateKey -> {
+                _state.update {
+                    it.copy(
+                        privateKey = event.privateKey,
+                        isBadSecret = !OtpInstance.checkSecret(event.privateKey)
+                    )
+                }
+            }
+
             is ServiceEvent.SetMethod -> _state.update { it.copy(method = event.method) }
             ServiceEvent.SaveService -> {
                 val privateKey = state.value.privateKey
@@ -77,6 +85,7 @@ class ServiceViewModel @Inject constructor(
                 _state.update {
                     it.copy(
                         isAddingService = false,
+                        isBadSecret = false,
                         privateKey = "",
                         name = "",
                         method = GenerationMethod.TIME
@@ -88,6 +97,7 @@ class ServiceViewModel @Inject constructor(
             ServiceEvent.HideDialog -> _state.update {
                 it.copy(
                     isAddingService = false,
+                    isBadSecret = false,
                     privateKey = "",
                     name = "",
                     method = GenerationMethod.TIME

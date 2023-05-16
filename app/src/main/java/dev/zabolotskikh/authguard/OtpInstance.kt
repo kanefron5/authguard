@@ -11,7 +11,6 @@ private const val CODE_TTL_SECONDS = 30L
 class OtpInstance(
     private val services: List<Service>
 ) {
-
     private fun getCode(secret: String): String {
         val epochSeconds = System.currentTimeMillis() / 1000
 
@@ -34,11 +33,11 @@ class OtpInstance(
         return remainingTime(System.currentTimeMillis() / 1000)
     }
 
-    fun calculate() = services.map { it.copy(
-        timeoutTime = CODE_TTL_SECONDS,
-        currentCode = getCode(it.privateKey),
-        codeTtl = getTtl()
-    ) }
+    fun calculate() = services.map {
+        it.copy(
+            timeoutTime = CODE_TTL_SECONDS, currentCode = getCode(it.privateKey), codeTtl = getTtl()
+        )
+    }
 
     private fun hmacSha1(key: ByteArray, message: ByteArray): ByteArray {
         if (key.isEmpty()) return byteArrayOf()
@@ -55,5 +54,10 @@ class OtpInstance(
 
     private fun ByteArray.toHexString() = joinToString("") { byte -> "%02x".format(byte) }
 
-    private fun String.base32ToByteArray() = Base32().decode(this)
+
+    companion object {
+        private fun String.base32ToByteArray() = Base32().decode(this)
+
+        fun checkSecret(secret: String) = secret.base32ToByteArray().isNotEmpty()
+    }
 }
