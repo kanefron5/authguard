@@ -42,12 +42,15 @@ fun AddServiceDialog(
         onDismissRequest = { onEvent(ServiceEvent.HideDialog) },
         title = { Text(text = stringResource(id = R.string.add_service_dialog_title)) },
         text = {
+            var isManualModeSelected by rememberSaveable { mutableStateOf(true) }
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.verticalScroll(rememberScrollState())
+                modifier = Modifier.then(
+                    if (isManualModeSelected)
+                        Modifier.verticalScroll(rememberScrollState())
+                    else Modifier
+                )
             ) {
-                var isManualModeSelected by rememberSaveable { mutableStateOf(true) }
-
                 Button(modifier = Modifier.fillMaxWidth(), onClick = {
                     isManualModeSelected = !isManualModeSelected
                 }) {
