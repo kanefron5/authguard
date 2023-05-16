@@ -7,9 +7,9 @@ import dev.zabolotskikh.authguard.OtpInstance
 import dev.zabolotskikh.authguard.domain.model.GenerationMethod
 import dev.zabolotskikh.authguard.domain.model.Service
 import dev.zabolotskikh.authguard.domain.repository.AppStateRepository
+import dev.zabolotskikh.authguard.domain.repository.OtpRepository
 import dev.zabolotskikh.authguard.domain.repository.ServiceRepository
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -17,15 +17,15 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.concurrent.timer
 
 @HiltViewModel
 class ServiceViewModel @Inject constructor(
     private val repository: ServiceRepository,
     private val stateRepository: AppStateRepository,
+    otpRepository: OtpRepository,
 ) : ViewModel() {
     private val _state = MutableStateFlow(ServiceState())
-    private val _services = repository.getAllServices().stateIn(
+    private val _services = otpRepository.getAllServices().stateIn(
         viewModelScope, SharingStarted.WhileSubscribed(), emptyList()
     )
     private val _appState = stateRepository.getState().stateIn(
@@ -40,19 +40,6 @@ class ServiceViewModel @Inject constructor(
     }.stateIn(
         viewModelScope, SharingStarted.WhileSubscribed(5000), ServiceState()
     )
-
-
-    private var generationJob: Job? = null
-
-    fun startGeneration() {
-        generationJob = viewModelScope.launch(Dispatchers.IO) {
-            timer(period = 1000) {
-                _state.update { it.copy(services = OtpInstance(_services.value).calculate()) }
-            }
-        }
-    }
-
-    fun stopGeneration() = generationJob?.cancel()
 
     fun onEvent(event: ServiceEvent) {
         when (event) {
