@@ -8,8 +8,10 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import dev.zabolotskikh.authguard.data.local.ServiceRoomDatabase
 import dev.zabolotskikh.authguard.data.repository.AppStateRepositoryImpl
+import dev.zabolotskikh.authguard.data.repository.OtpRepositoryImpl
 import dev.zabolotskikh.authguard.data.repository.ServiceRepositoryImpl
 import dev.zabolotskikh.authguard.domain.repository.AppStateRepository
+import dev.zabolotskikh.authguard.domain.repository.OtpRepository
 import dev.zabolotskikh.authguard.domain.repository.ServiceRepository
 import javax.inject.Singleton
 
@@ -32,5 +34,11 @@ object AppModule {
     @Singleton
     fun provideAppStateRepository(database: ServiceRoomDatabase): AppStateRepository {
         return AppStateRepositoryImpl(database.appStateDao())
+    }
+
+    @Provides
+    @Singleton
+    fun provideOtpRepository(serviceRepository: ServiceRepository): OtpRepository {
+        return OtpRepositoryImpl(serviceRepository)
     }
 }

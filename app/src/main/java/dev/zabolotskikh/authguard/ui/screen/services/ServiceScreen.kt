@@ -64,11 +64,6 @@ fun ServiceScreen(
         },
         content = { paddingValues ->
             ServicesList(state, viewModel::onEvent, paddingValues)
-
-            DisposableEffect(true) {
-                viewModel.startGeneration()
-                onDispose { viewModel.stopGeneration() }
-            }
         },
         floatingActionButtonPosition = FabPosition.End,
         floatingActionButton = { AddServiceButton(state, viewModel::onEvent) },
