@@ -87,6 +87,8 @@ dependencies {
     implementation(Dependencies.COMPOSE_SETTINGS)
     implementation(Dependencies.BARCODE_SCANNING)
 
+    implementation(Dependencies.ACCOMPANIST_PERMISSIONS)
+
     testImplementation(Dependencies.Test.JUNIT)
     androidTestImplementation(Dependencies.AndroidTest.JUNIT)
     androidTestImplementation(Dependencies.AndroidTest.ESPRESSO_CORE)
