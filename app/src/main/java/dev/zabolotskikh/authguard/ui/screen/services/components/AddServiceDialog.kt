@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalPermissionsApi::class)
+
 package dev.zabolotskikh.authguard.ui.screen.services.components
 
 import androidx.camera.core.ExperimentalGetImage
@@ -28,10 +30,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import dev.zabolotskikh.authguard.R
 import dev.zabolotskikh.authguard.domain.model.GenerationMethod
 import dev.zabolotskikh.authguard.ui.screen.services.ServiceEvent
 import dev.zabolotskikh.authguard.ui.screen.services.ServiceState
+
 
 @Composable
 @ExperimentalGetImage
@@ -43,6 +47,7 @@ fun AddServiceDialog(
         title = { Text(text = stringResource(id = R.string.add_service_dialog_title)) },
         text = {
             var isManualModeSelected by rememberSaveable { mutableStateOf(true) }
+
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier.then(
@@ -96,18 +101,12 @@ fun AddServiceDialog(
                             onEvent(ServiceEvent.SetMethod(it))
                         })
                 } else {
-                    Column(
-                        modifier = Modifier
-                            .width(300.dp)
-                            .height(300.dp)
-                    ) {
-                        BarcodeScanner(onSuccess = {
-                            isManualModeSelected = true
-                            onEvent(ServiceEvent.SetMethod(GenerationMethod.TIME))
-                            onEvent(ServiceEvent.SetName(it.alias))
-                            onEvent(ServiceEvent.SetPrivateKey(it.secret))
-                        })
-                    }
+                    BarcodeScannerWrap(onSuccess = {
+                        isManualModeSelected = true
+                        onEvent(ServiceEvent.SetMethod(GenerationMethod.TIME))
+                        onEvent(ServiceEvent.SetName(it.alias))
+                        onEvent(ServiceEvent.SetPrivateKey(it.secret))
+                    })
                 }
 
             }

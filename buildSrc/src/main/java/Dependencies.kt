@@ -3,6 +3,7 @@ object Dependencies {
     const val APACHE_COMMONS_CODEC = "commons-codec:commons-codec:1.15"
     const val COMPOSE_SETTINGS = "com.github.alorma:compose-settings-ui-m3:0.26.0"
     const val BARCODE_SCANNING = "com.google.mlkit:barcode-scanning:17.0.3"
+    const val ACCOMPANIST_PERMISSIONS = "com.google.accompanist:accompanist-permissions:0.23.1"
 
     object Dagger {
         private const val version = "2.44"
