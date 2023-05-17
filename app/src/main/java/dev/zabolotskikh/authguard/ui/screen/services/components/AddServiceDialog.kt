@@ -31,11 +31,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.rememberPermissionState
 import dev.zabolotskikh.authguard.R
 import dev.zabolotskikh.authguard.domain.model.GenerationMethod
 import dev.zabolotskikh.authguard.ui.screen.services.ServiceEvent
 import dev.zabolotskikh.authguard.ui.screen.services.ServiceState
+
 
 @Composable
 @ExperimentalGetImage
@@ -47,7 +47,6 @@ fun AddServiceDialog(
         title = { Text(text = stringResource(id = R.string.add_service_dialog_title)) },
         text = {
             var isManualModeSelected by rememberSaveable { mutableStateOf(true) }
-            val cameraPermissions = rememberPermissionState(android.Manifest.permission.CAMERA)
 
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -102,38 +101,12 @@ fun AddServiceDialog(
                             onEvent(ServiceEvent.SetMethod(it))
                         })
                 } else {
-                    if (cameraPermissions.hasPermission) {
-                        Column(
-                            modifier = Modifier
-                                .width(300.dp)
-                                .height(300.dp)
-                        ) {
-                            BarcodeScanner(onSuccess = {
-                                isManualModeSelected = true
-                                onEvent(ServiceEvent.SetMethod(GenerationMethod.TIME))
-                                onEvent(ServiceEvent.SetName(it.alias))
-                                onEvent(ServiceEvent.SetPrivateKey(it.secret))
-                            })
-                        }
-                    } else {
-                        Column {
-                            val textToShow = if (cameraPermissions.shouldShowRationale) {
-                                // user has denied the permission
-                                // todo hardcoded string
-                                "The camera is important for this app. Please grant the permission."
-                            } else {
-                                // first time
-                                // todo hardcoded string
-                                "Camera permission required for this feature to be available. " +
-                                        "Please grant the permission"
-                            }
-                            Text(textToShow)
-                            Button(onClick = { cameraPermissions.launchPermissionRequest() }) {
-                                // todo hardcoded string
-                                Text("Request permission")
-                            }
-                        }
-                    }
+                    BarcodeScannerWrap(onSuccess = {
+                        isManualModeSelected = true
+                        onEvent(ServiceEvent.SetMethod(GenerationMethod.TIME))
+                        onEvent(ServiceEvent.SetName(it.alias))
+                        onEvent(ServiceEvent.SetPrivateKey(it.secret))
+                    })
                 }
 
             }
