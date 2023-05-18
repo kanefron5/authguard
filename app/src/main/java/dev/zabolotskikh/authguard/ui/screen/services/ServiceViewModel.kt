@@ -26,7 +26,7 @@ class ServiceViewModel @Inject constructor(
 ) : ViewModel() {
     private val _state = MutableStateFlow(ServiceState())
     private val _services = otpRepository.getAllServices().stateIn(
-        viewModelScope, SharingStarted.WhileSubscribed(), emptyList()
+        viewModelScope, SharingStarted.WhileSubscribed(), null
     )
     private val _appState = stateRepository.getState().stateIn(
         viewModelScope, SharingStarted.WhileSubscribed(), null
@@ -34,7 +34,8 @@ class ServiceViewModel @Inject constructor(
 
     val state = combine(_state, _services, _appState) { state, services, appState ->
         state.copy(
-            services = OtpInstance(services).calculate(),
+            isLoading = services == null,
+            services = services ?: emptyList(),
             isPrivateMode = appState?.isPrivateMode ?: false
         )
     }.stateIn(

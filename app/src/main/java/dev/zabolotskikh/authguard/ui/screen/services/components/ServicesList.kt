@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -48,26 +49,30 @@ fun ServicesList(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = stringResource(id = R.string.service_list_empty),
-                modifier = Modifier.fillMaxWidth(),
-                fontSize = 28.sp,
-                textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.primary
-            )
-            Image(
-                painter = painterResource(id = R.drawable.empty_list),
-                contentDescription = stringResource(id = R.string.service_list_empty)
-            )
-            Button(
-                onClick = {
-                    onEvent(ServiceEvent.ShowDialog)
-                }, colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary
+            if (state.isLoading) {
+                LinearProgressIndicator()
+            } else {
+                Text(
+                    text = stringResource(id = R.string.service_list_empty),
+                    modifier = Modifier.fillMaxWidth(),
+                    fontSize = 28.sp,
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.primary
                 )
-            ) {
-                Text(text = stringResource(id = R.string.service_list_add_first))
+                Image(
+                    painter = painterResource(id = R.drawable.empty_list),
+                    contentDescription = stringResource(id = R.string.service_list_empty)
+                )
+                Button(
+                    onClick = {
+                        onEvent(ServiceEvent.ShowDialog)
+                    }, colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
+                    )
+                ) {
+                    Text(text = stringResource(id = R.string.service_list_add_first))
+                }
             }
         }
     } else {
