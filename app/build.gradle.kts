@@ -1,3 +1,9 @@
+import java.util.Properties
+
+val signingKeyAlias: String by project
+val signingKeyPassword: String by project
+val signingStorePassword: String by project
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -22,7 +28,35 @@ android {
         }
     }
 
+    signingConfigs {
+        this.create("config") {
+            if (signingKeyAlias.isBlank() && signingKeyPassword.isBlank() && signingStorePassword.isBlank()) {
+                val propertiesFile = project.file("../signing.properties")
+                val properties = Properties()
+                properties.load(propertiesFile.inputStream())
+
+                val signingKeyAlias = properties.getProperty("signingKeyAlias")
+                val signingKeyPassword = properties.getProperty("signingKeyPassword")
+                val signingStorePassword = properties.getProperty("signingStorePassword")
+
+                keyAlias = signingKeyAlias
+                keyPassword = signingKeyPassword
+                storePassword = signingStorePassword
+            } else {
+                keyAlias = signingKeyAlias
+                keyPassword = signingKeyPassword
+                storePassword = signingStorePassword
+            }
+
+            storeFile = file("../keystore.jks")
+        }
+    }
+
     buildTypes {
+        all {
+            signingConfig = signingConfigs.getByName("config")
+        }
+
         release {
             isMinifyEnabled = false
             proguardFiles(
