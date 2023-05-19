@@ -3,6 +3,11 @@ import java.util.Properties
 val signingKeyAlias: String by project
 val signingKeyPassword: String by project
 val signingStorePassword: String by project
+val appCompileSdk: String by project
+val appMinSdk: String by project
+val appTargetSdk: String by project
+val appVersionName: String by rootProject.extra
+val appVersionCode: Int by rootProject.extra
 
 @Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
@@ -14,14 +19,14 @@ plugins {
 
 android {
     namespace = "dev.zabolotskikh.authguard"
-    compileSdk = Config.COMPILE_SDK
+    compileSdk = appCompileSdk.toInt()
 
     defaultConfig {
         applicationId = "dev.zabolotskikh.authguard"
-        minSdk = Config.MIN_SDK
-        targetSdk = Config.TARGET_SDK
-        versionCode = currentVersion().versionCode
-        versionName = currentVersion().versionName
+        minSdk = appMinSdk.toInt()
+        targetSdk = appTargetSdk.toInt()
+        versionCode = appVersionCode
+        versionName = appVersionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
