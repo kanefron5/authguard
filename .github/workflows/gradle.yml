@@ -16,6 +16,7 @@ jobs:
         with:
           java-version: '17'
           distribution: 'corretto'
+          cache: gradle
       - name: Build with Gradle
         run: ./gradlew -PsigningKeyAlias='${{secrets.SIGNING_KEY_ALIAS}}' -PsigningStorePassword='${{secrets.SIGNING_STORE_PASSWORD}}' -PsigningKeyPassword='${{secrets.SIGNING_KEY_PASSWORD}}' :app:assembleRelease
       - name: Set env
