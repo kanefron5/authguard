@@ -1,5 +1,6 @@
 package dev.zabolotskikh.authguard.ui.screen.settings.components
 
+import androidx.camera.core.ExperimentalGetImage
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,11 +18,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.alorma.compose.settings.ui.SettingsGroup
 import com.alorma.compose.settings.ui.SettingsMenuLink
 import dev.zabolotskikh.authguard.BuildConfig
 import dev.zabolotskikh.authguard.R
+import dev.zabolotskikh.authguard.ui.screen.services.ServiceScreen
 
 @Composable
 fun Preferences(
@@ -33,26 +37,10 @@ fun Preferences(
     var resetConfirmationDialogShowed by rememberSaveable { mutableStateOf(false) }
 
     if (resetConfirmationDialogShowed) {
-        AlertDialog(onDismissRequest = { resetConfirmationDialogShowed = false },
-            title = { Text(text = stringResource(id = R.string.confirm_action)) },
-            text = {
-                Text(text = stringResource(id = R.string.reset_warning))
-            },
-            confirmButton = {
-                Button(
-                    onClick = onResetData, colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.errorContainer,
-                        contentColor = MaterialTheme.colorScheme.onErrorContainer
-                    )
-                ) {
-                    Text(text = stringResource(id = R.string.delete))
-                }
-            },
-            dismissButton = {
-                Button(onClick = { resetConfirmationDialogShowed = false }) {
-                    Text(text = stringResource(id = R.string.cancel))
-                }
-            })
+        ResetConfirmationDialog(
+            onDismiss = { resetConfirmationDialogShowed = false },
+            onConfirm = onResetData
+        )
     }
 
     LazyColumn(
@@ -92,4 +80,14 @@ fun Preferences(
             }
         }
     }
+}
+
+@Preview(device = Devices.PIXEL_4, showSystemUi = true)
+@Composable
+fun PreferencesPreview() {
+    Preferences(
+        paddingValues = PaddingValues(16.dp),
+        onResetData = {},
+        onBuildNumberClick = {}
+    )
 }
