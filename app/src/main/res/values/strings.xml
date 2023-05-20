@@ -28,4 +28,8 @@
     <string name="add_service_manual">Enter data manually</string>
     <string name="code_generation_error" translatable="false">ERROR</string>
     <string name="add_service_invalid_key">Key is invalid</string>
+    <string name="camera_permission_first">Camera permissions are required to use this feature. Please submit them by clicking the button below</string>
+    <string name="camera_permission_denied">Camera permissions are required to use this feature. Please go to settings and give permissions manually</string>
+    <string name="camera_permission_btn_first">Request Permissions</string>
+    <string name="camera_permission_btn_denied">Go to settings</string>
 </resources>
