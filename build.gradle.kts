@@ -4,6 +4,8 @@ import java.util.Properties
 buildscript {
     dependencies {
         classpath(libs.dagger.hilt.plugin)
+        classpath(libs.firebase.gradle)
+        classpath(libs.firebase.services)
     }
 }
 
@@ -15,6 +17,9 @@ plugins {
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.kotlin.kapt) apply false
     alias(libs.plugins.dagger) apply false
+    alias(libs.plugins.firebase.crashlytics) apply false
+    alias(libs.plugins.firebase.services) apply false
+
 }
 
 ext {
