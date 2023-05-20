@@ -34,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.zabolotskikh.authguard.R
@@ -150,4 +151,48 @@ fun ServiceListItem(
             )
         }
     }
+}
+
+@Preview(name = "Preview not favorite", widthDp = 400, heightDp = 150)
+@Composable
+fun ServiceListItemPreview1() {
+    ServiceListItem(
+        service = Service(name = "name of service", privateKey = "123", currentCode = "123123", codeTtl = 15, timeoutTime = 30),
+        state = ServiceState(),
+        onDelete = {},
+        onChangeFavorite = {}
+    )
+}
+
+@Preview(name = "Preview favorite", widthDp = 400, heightDp = 150)
+@Composable
+fun ServiceListItemPreview2() {
+    ServiceListItem(
+        service = Service(isFavorite = true, name = "name of service", privateKey = "123", currentCode = "123123", codeTtl = 15, timeoutTime = 30),
+        state = ServiceState(),
+        onDelete = {},
+        onChangeFavorite = {}
+    )
+}
+
+@Preview(name = "Preview long name", widthDp = 400, heightDp = 150)
+@Composable
+fun ServiceListItemPreview3() {
+    ServiceListItem(
+        service = Service(name = "servicenameservicenameservicenameservicenameservicenameservicename", privateKey = "123", currentCode = "123123", codeTtl = 15, timeoutTime = 30),
+        state = ServiceState(),
+        onDelete = {},
+        onChangeFavorite = {}
+    )
+}
+
+@Preview(name = "Preview private mode", widthDp = 400, heightDp = 150)
+@Composable
+fun ServiceListItemPreview4() {
+    ServiceListItem(
+        service = Service(name = "name of service", privateKey = "123", currentCode = "123123", codeTtl = 15000, timeoutTime = 30000),
+        state = ServiceState(isPrivateMode = true),
+        onDelete = {},
+        onChangeFavorite = {}
+    )
 }

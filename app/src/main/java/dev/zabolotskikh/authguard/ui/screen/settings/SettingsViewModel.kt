@@ -6,7 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.zabolotskikh.authguard.domain.model.AppState
 import dev.zabolotskikh.authguard.domain.repository.AppStateRepository
 import dev.zabolotskikh.authguard.domain.repository.ServiceRepository
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -14,9 +14,10 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val stateRepository: AppStateRepository,
-    private val serviceRepository: ServiceRepository
+    private val serviceRepository: ServiceRepository,
+    private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
-    fun resetData() = viewModelScope.launch(Dispatchers.IO) {
+    fun resetData() = viewModelScope.launch(ioDispatcher) {
         stateRepository.update(AppState(isStarted = false, isAuthenticated = false, isPrivateMode = false))
         serviceRepository.clear()
     }

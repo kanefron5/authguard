@@ -13,6 +13,8 @@ import dev.zabolotskikh.authguard.data.repository.ServiceRepositoryImpl
 import dev.zabolotskikh.authguard.domain.repository.AppStateRepository
 import dev.zabolotskikh.authguard.domain.repository.OtpRepository
 import dev.zabolotskikh.authguard.domain.repository.ServiceRepository
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Singleton
 
 @Module
@@ -41,4 +43,9 @@ object AppModule {
     fun provideOtpRepository(serviceRepository: ServiceRepository): OtpRepository {
         return OtpRepositoryImpl(serviceRepository)
     }
+
+    @Singleton
+    @Provides
+    fun provideDispatchers(): CoroutineDispatcher = Dispatchers.IO
+
 }

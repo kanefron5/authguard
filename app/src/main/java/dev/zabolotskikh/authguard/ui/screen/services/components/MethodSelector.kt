@@ -1,5 +1,6 @@
 package dev.zabolotskikh.authguard.ui.screen.services.components
 
+import androidx.camera.core.ExperimentalGetImage
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -20,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.zabolotskikh.authguard.domain.model.GenerationMethod
 
@@ -79,4 +81,15 @@ fun MethodSelector(
 
         }
     }
+}
+
+@Preview
+@Composable
+@ExperimentalGetImage
+fun MethodSelectorPreview1() {
+    MethodSelector(
+        list = listOf(GenerationMethod.COUNTER, GenerationMethod.TIME),
+        preselected = GenerationMethod.COUNTER,
+        onSelectionChanged = {}
+    )
 }

@@ -27,4 +27,8 @@
     <string name="add_service_qr">Сканировать QR код</string>
     <string name="add_service_manual">Ввести вручную</string>
     <string name="add_service_invalid_key">Ключ недействителен</string>
+    <string name="camera_permission_first">Для использования этой функции необходимы разрешения на использование камеры. Пожалуйста, выдайте их, нажав кнопку ниже</string>
+    <string name="camera_permission_denied">Для использования этой функции необходимы разрешения на использование камеры. Пожалуйста, перейдите в настройки и выдайте разрешения вручную</string>
+    <string name="camera_permission_btn_first">Запросить разрешения</string>
+    <string name="camera_permission_btn_denied">Перейти в настройки</string>
 </resources>

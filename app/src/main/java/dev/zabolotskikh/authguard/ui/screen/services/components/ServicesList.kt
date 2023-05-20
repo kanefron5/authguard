@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,9 +21,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.zabolotskikh.authguard.R
+import dev.zabolotskikh.authguard.domain.model.Service
 import dev.zabolotskikh.authguard.ui.screen.services.ServiceEvent
 import dev.zabolotskikh.authguard.ui.screen.services.ServiceState
 
@@ -48,26 +52,30 @@ fun ServicesList(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = stringResource(id = R.string.service_list_empty),
-                modifier = Modifier.fillMaxWidth(),
-                fontSize = 28.sp,
-                textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.primary
-            )
-            Image(
-                painter = painterResource(id = R.drawable.empty_list),
-                contentDescription = stringResource(id = R.string.service_list_empty)
-            )
-            Button(
-                onClick = {
-                    onEvent(ServiceEvent.ShowDialog)
-                }, colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary
+            if (state.isLoading) {
+                LinearProgressIndicator()
+            } else {
+                Text(
+                    text = stringResource(id = R.string.service_list_empty),
+                    modifier = Modifier.fillMaxWidth(),
+                    fontSize = 28.sp,
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.primary
                 )
-            ) {
-                Text(text = stringResource(id = R.string.service_list_add_first))
+                Image(
+                    painter = painterResource(id = R.drawable.empty_list),
+                    contentDescription = stringResource(id = R.string.service_list_empty)
+                )
+                Button(
+                    onClick = {
+                        onEvent(ServiceEvent.ShowDialog)
+                    }, colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
+                    )
+                ) {
+                    Text(text = stringResource(id = R.string.service_list_add_first))
+                }
             }
         }
     } else {
@@ -91,4 +99,79 @@ fun ServicesList(
             }
         }
     }
+}
+
+@Preview(device = Devices.PIXEL_4, showSystemUi = true, name = "Preview with list")
+@Composable
+@ExperimentalGetImage
+fun ServicesListPreview1() {
+    ServicesList(
+        state = ServiceState(
+            services = listOf(
+                Service(
+                    isFavorite = true,
+                    name = "name of service",
+                    privateKey = "123",
+                    currentCode = "123123",
+                    codeTtl = 15000,
+                    timeoutTime = 30000
+                ),
+                Service(
+                    name = "name of service",
+                    privateKey = "123",
+                    currentCode = "123123",
+                    codeTtl = 15000,
+                    timeoutTime = 30000
+                ),
+                Service(
+                    name = "name of service",
+                    privateKey = "123",
+                    currentCode = "123123",
+                    codeTtl = 15000,
+                    timeoutTime = 30000
+                ),
+                Service(
+                    name = "name of service",
+                    privateKey = "123",
+                    currentCode = "123123",
+                    codeTtl = 15000,
+                    timeoutTime = 30000
+                ),
+            )
+        ), onEvent = {}, paddingValues = PaddingValues(16.dp)
+    )
+}
+
+@Preview(device = Devices.PIXEL_4, showSystemUi = true, name = "Preview with loading")
+@Composable
+@ExperimentalGetImage
+fun ServicesListPreview2() {
+    ServicesList(
+        state = ServiceState(
+            isLoading = true,
+        ), onEvent = {}, paddingValues = PaddingValues(16.dp)
+    )
+}
+
+@Preview(device = Devices.PIXEL_4, showSystemUi = true, name = "Preview with empty list")
+@Composable
+@ExperimentalGetImage
+fun ServicesListPreview3() {
+    ServicesList(
+        state = ServiceState(
+            isLoading = false,
+        ), onEvent = {}, paddingValues = PaddingValues(16.dp)
+    )
+}
+
+@Preview(device = Devices.PIXEL_4, showSystemUi = true, name = "Preview with adding service")
+@Composable
+@ExperimentalGetImage
+fun ServicesListPreview4() {
+    ServicesList(
+        state = ServiceState(
+            isLoading = false,
+            isAddingService = true,
+        ), onEvent = {}, paddingValues = PaddingValues(16.dp)
+    )
 }

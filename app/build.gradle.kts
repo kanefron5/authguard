@@ -1,22 +1,32 @@
+import java.util.Properties
+
+val signingKeyAlias: String by project
+val signingKeyPassword: String by project
+val signingStorePassword: String by project
+val appCompileSdk: String by project
+val appMinSdk: String by project
+val appTargetSdk: String by project
+val appVersionName: String by rootProject.extra
+val appVersionCode: Int by rootProject.extra
+
+@Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id("kotlin-kapt")
-    id("dagger.hilt.android.plugin")
-    id("com.google.gms.google-services")
-    id("com.google.firebase.crashlytics")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.dagger)
 }
 
 android {
     namespace = "dev.zabolotskikh.authguard"
-    compileSdk = Config.COMPILE_SDK
+    compileSdk = appCompileSdk.toInt()
 
     defaultConfig {
         applicationId = "dev.zabolotskikh.authguard"
-        minSdk = Config.MIN_SDK
-        targetSdk = Config.TARGET_SDK
-        versionCode = currentVersion().versionCode
-        versionName = currentVersion().versionName
+        minSdk = appMinSdk.toInt()
+        targetSdk = appTargetSdk.toInt()
+        versionCode = appVersionCode
+        versionName = appVersionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -24,9 +34,38 @@ android {
         }
     }
 
+    signingConfigs {
+        this.create("config") {
+            if (signingKeyAlias.isBlank() && signingKeyPassword.isBlank() && signingStorePassword.isBlank()) {
+                val propertiesFile = project.file("../signing.properties")
+                val properties = Properties()
+                properties.load(propertiesFile.inputStream())
+
+                val signingKeyAlias = properties.getProperty("signingKeyAlias")
+                val signingKeyPassword = properties.getProperty("signingKeyPassword")
+                val signingStorePassword = properties.getProperty("signingStorePassword")
+
+                keyAlias = signingKeyAlias
+                keyPassword = signingKeyPassword
+                storePassword = signingStorePassword
+            } else {
+                keyAlias = signingKeyAlias
+                keyPassword = signingKeyPassword
+                storePassword = signingStorePassword
+            }
+
+            storeFile = file("../keystore.jks")
+        }
+    }
+
     buildTypes {
+        all {
+            signingConfig = signingConfigs.getByName("config")
+        }
+
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -56,51 +95,41 @@ android {
 }
 
 dependencies {
-    implementation(Dependencies.Androidx.Room.ROOM_KTX)
-    kapt(Dependencies.Androidx.Room.ROOM_COMPILER)
+    implementation(libs.androidx.room.ktx)
+    kapt(libs.androidx.room.compiler)
 
-    implementation(Dependencies.Dagger.HILT_ANDROID)
-    kapt(Dependencies.Dagger.HILT_ANDROID_COMPILER)
-    kapt(Dependencies.Androidx.Hilt.COMPILER)
-    implementation(Dependencies.Androidx.Hilt.NAVIGATION_COMPOSE)
+    implementation(libs.dagger.hilt.hilt)
+    kapt(libs.dagger.hilt.compiler)
+    kapt(libs.dagger.hilt.androidx.compiler)
 
-    implementation(Dependencies.Kotlin.COROUTINES_CORE)
-    implementation(Dependencies.Kotlin.COROUTINES_ANDROID)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.android)
 
-    implementation(Dependencies.Androidx.CORE_KTX)
-    implementation(Dependencies.Androidx.Lifecycle.RUNTIME_KTX)
-    implementation(Dependencies.Androidx.Lifecycle.VIEWMODEL_KTX)
-    implementation(Dependencies.Androidx.Lifecycle.LIVEDATA_KTX)
-    implementation(Dependencies.Androidx.ACTIVITY_COMPOSE)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.lifecycle.runtime)
+    implementation(libs.androidx.lifecycle.viewmodel)
+    implementation(libs.androidx.lifecycle.livedata)
+    implementation(libs.androidx.activity.compose)
 
-    implementation(Dependencies.Androidx.Camera.CAMERA2)
-    implementation(Dependencies.Androidx.Camera.CAMERA_VIEW)
-    implementation(Dependencies.Androidx.Camera.LIFECYCLE)
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.view)
+    implementation(libs.androidx.camera.lifecycle)
 
-    implementation(platform(Dependencies.Androidx.Compose.COMPOSE_BOM))
-    implementation(Dependencies.Androidx.Compose.UI)
-    implementation(Dependencies.Androidx.Compose.UI_GRAPHICS)
-    implementation(Dependencies.Androidx.Compose.ICONS)
-    implementation(Dependencies.Androidx.Compose.UI_TOOLING_PREVIEW)
-    implementation(Dependencies.Androidx.Compose.MATERIAL3)
-    implementation(Dependencies.Androidx.Compose.NAVIGATION_COMPOSE)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.compose.ui.ui)
+    implementation(libs.androidx.compose.graphics)
+    implementation(libs.androidx.compose.icons)
+    implementation(libs.androidx.compose.ui.tooling.tooling)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.navigation)
+    implementation(libs.androidx.compose.hilt.navigation)
+    implementation(libs.androidx.compose.settings)
 
-    implementation(Dependencies.APACHE_COMMONS_CODEC)
-    implementation(Dependencies.COMPOSE_SETTINGS)
-    implementation(Dependencies.BARCODE_SCANNING)
+    implementation(libs.apache.commons.codec)
+    implementation(libs.google.barcode.scanning)
+    implementation(libs.google.accompanist.permissions)
 
-    implementation(platform(Dependencies.Firebase.FIREBASE_BOM))
-    implementation(Dependencies.Firebase.ANALYTICS)
-    implementation(Dependencies.Firebase.AUTH)
-    implementation(Dependencies.Firebase.CRASHLYTICS)
 
-    testImplementation(Dependencies.Test.JUNIT)
-    androidTestImplementation(Dependencies.AndroidTest.JUNIT)
-    androidTestImplementation(Dependencies.AndroidTest.ESPRESSO_CORE)
-    androidTestImplementation(Dependencies.Androidx.Compose.COMPOSE_BOM)
-    androidTestImplementation(Dependencies.Androidx.Compose.UI_TEST)
-    androidTestImplementation(Dependencies.Androidx.Compose.UI_TOOLING)
-    androidTestImplementation(Dependencies.Androidx.Compose.UI_TEST_MANIFEST)
-    androidTestImplementation(Dependencies.Androidx.Room.ROOM_TESTING)
-
+    testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
 }
