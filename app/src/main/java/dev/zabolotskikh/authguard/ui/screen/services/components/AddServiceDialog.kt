@@ -29,10 +29,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import dev.zabolotskikh.authguard.R
 import dev.zabolotskikh.authguard.domain.model.GenerationMethod
+import dev.zabolotskikh.authguard.domain.model.Service
 import dev.zabolotskikh.authguard.ui.screen.services.ServiceEvent
 import dev.zabolotskikh.authguard.ui.screen.services.ServiceState
 
@@ -42,17 +44,14 @@ import dev.zabolotskikh.authguard.ui.screen.services.ServiceState
 fun AddServiceDialog(
     state: ServiceState, onEvent: (ServiceEvent) -> Unit, modifier: Modifier = Modifier
 ) {
-    AlertDialog(
-        onDismissRequest = { onEvent(ServiceEvent.HideDialog) },
+    AlertDialog(onDismissRequest = { onEvent(ServiceEvent.HideDialog) },
         title = { Text(text = stringResource(id = R.string.add_service_dialog_title)) },
         text = {
             var isManualModeSelected by rememberSaveable { mutableStateOf(true) }
 
             Column(
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.then(
-                    if (isManualModeSelected)
-                        Modifier.verticalScroll(rememberScrollState())
+                verticalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.then(
+                    if (isManualModeSelected) Modifier.verticalScroll(rememberScrollState())
                     else Modifier
                 )
             ) {
@@ -126,4 +125,26 @@ fun AddServiceDialog(
         },
         modifier = modifier
     )
+}
+
+@Preview(name = "Preview with empty fields")
+@Composable
+@ExperimentalGetImage
+fun AddServiceDialogPreview1() {
+    AddServiceDialog(state = ServiceState(), onEvent = {})
+}
+
+@Preview(name = "Preview with ready to save")
+@Composable
+@ExperimentalGetImage
+fun AddServiceDialogPreview2() {
+    AddServiceDialog(state = ServiceState(privateKey = "123", name = "123"), onEvent = {})
+}
+
+@Preview(name = "Preview with bad service")
+@Composable
+@ExperimentalGetImage
+fun AddServiceDialogPreview3() {
+    AddServiceDialog(state = ServiceState(privateKey = "123", name = "1", isBadSecret = true),
+        onEvent = {})
 }
