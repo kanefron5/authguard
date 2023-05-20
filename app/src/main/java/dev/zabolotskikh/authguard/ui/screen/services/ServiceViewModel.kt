@@ -9,7 +9,7 @@ import dev.zabolotskikh.authguard.domain.model.Service
 import dev.zabolotskikh.authguard.domain.repository.AppStateRepository
 import dev.zabolotskikh.authguard.domain.repository.OtpRepository
 import dev.zabolotskikh.authguard.domain.repository.ServiceRepository
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -23,6 +23,7 @@ class ServiceViewModel @Inject constructor(
     private val repository: ServiceRepository,
     private val stateRepository: AppStateRepository,
     otpRepository: OtpRepository,
+    private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
     private val _state = MutableStateFlow(ServiceState())
     private val _services = otpRepository.getAllServices().stateIn(
@@ -93,7 +94,7 @@ class ServiceViewModel @Inject constructor(
             }
 
             ServiceEvent.PrivateModeOff -> {
-                viewModelScope.launch(Dispatchers.IO) {
+                viewModelScope.launch(ioDispatcher) {
                     _appState.value?.apply {
                         stateRepository.update(copy(isPrivateMode = false))
                     }
@@ -101,18 +102,18 @@ class ServiceViewModel @Inject constructor(
             }
 
             ServiceEvent.PrivateModeOn -> {
-                viewModelScope.launch(Dispatchers.IO) {
+                viewModelScope.launch(ioDispatcher) {
                     _appState.value?.apply {
                         stateRepository.update(copy(isPrivateMode = true))
                     }
                 }
             }
 
-            is ServiceEvent.AddToFavorite -> viewModelScope.launch(Dispatchers.IO) {
+            is ServiceEvent.AddToFavorite -> viewModelScope.launch(ioDispatcher) {
                 repository.update(event.service.copy(isFavorite = true))
             }
 
-            is ServiceEvent.RemoveFromFavorite -> viewModelScope.launch(Dispatchers.IO) {
+            is ServiceEvent.RemoveFromFavorite -> viewModelScope.launch(ioDispatcher) {
                 repository.update(event.service.copy(isFavorite = false))
             }
         }
