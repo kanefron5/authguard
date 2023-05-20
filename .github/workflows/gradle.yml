@@ -19,7 +19,7 @@ jobs:
           java-version: '17'
           distribution: 'corretto'
           cache: gradle
-      - name: Rut Unit tests
+      - name: Run Unit tests
         run: ./gradlew -PsigningKeyAlias='${{secrets.SIGNING_KEY_ALIAS}}' -PsigningStorePassword='${{secrets.SIGNING_STORE_PASSWORD}}' -PsigningKeyPassword='${{secrets.SIGNING_KEY_PASSWORD}}' :app:testDebugUnitTest
 
 
