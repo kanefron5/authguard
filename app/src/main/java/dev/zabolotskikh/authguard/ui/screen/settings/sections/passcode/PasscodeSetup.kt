@@ -1,7 +1,8 @@
-package dev.zabolotskikh.authguard.ui.screen.settings.sections.passcode.components
+package dev.zabolotskikh.authguard.ui.screen.settings.sections.passcode
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,7 +14,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -27,12 +27,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.zabolotskikh.authguard.R
+import dev.zabolotskikh.authguard.ui.screen.settings.SettingsEvent
+import dev.zabolotskikh.authguard.ui.screen.settings.SettingsState
+import dev.zabolotskikh.authguard.ui.screen.settings.sections.passcode.components.SettingsPasscodeCheck
 
 @Composable
-fun SettingsPasscodeInfo(
+fun PasscodeSetup(
     modifier: Modifier = Modifier,
-    onDismiss: () -> Unit = {},
-    onConfirm: () -> Unit = {},
+    paddingValues: PaddingValues,
+    state: SettingsState = SettingsState(),
+    onEvent: (SettingsEvent) -> Unit = {},
+    onDismiss: () -> Unit = {}
 ) {
     var check1 by rememberSaveable { mutableStateOf(false) }
     var check2 by rememberSaveable { mutableStateOf(false) }
@@ -42,9 +47,12 @@ fun SettingsPasscodeInfo(
 
     Column(
         modifier = modifier
+            .padding(
+                bottom = paddingValues.calculateBottomPadding(),
+                top = paddingValues.calculateTopPadding()
+            )
             .fillMaxSize()
-            .padding(32.dp),
-        verticalArrangement = Arrangement.SpaceBetween
+            .padding(32.dp), verticalArrangement = Arrangement.SpaceBetween
     ) {
         Column {
             Text(
@@ -90,7 +98,9 @@ fun SettingsPasscodeInfo(
             TextButton(onClick = onDismiss) {
                 Text(text = stringResource(id = R.string.cancel))
             }
-            Button(onClick = onConfirm, enabled = isChecksCompleted) {
+            Button(onClick = {
+                onEvent(SettingsEvent.SetPasscode)
+            }, enabled = isChecksCompleted) {
                 Text(text = stringResource(id = R.string.action_continue))
             }
         }
@@ -100,5 +110,5 @@ fun SettingsPasscodeInfo(
 @Preview(device = Devices.PIXEL_4, showSystemUi = true)
 @Composable
 private fun SettingsPasscodeInfoPreview() {
-    SettingsPasscodeInfo()
+    PasscodeSetup(paddingValues = PaddingValues(16.dp))
 }
