@@ -7,22 +7,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.alorma.compose.settings.ui.SettingsGroup
 import com.alorma.compose.settings.ui.SettingsMenuLink
-import dev.zabolotskikh.authguard.BuildConfig
 import dev.zabolotskikh.authguard.R
+import dev.zabolotskikh.authguard.ui.screen.settings.PreferenceSection
 import dev.zabolotskikh.authguard.ui.screen.settings.SettingsEvent
 import dev.zabolotskikh.authguard.ui.screen.settings.SettingsState
-import dev.zabolotskikh.authguard.ui.screen.settings.sections.main.components.ResetConfirmationDialog
 
 @Composable
 fun PasscodePreferences(
@@ -64,7 +58,7 @@ fun PasscodePreferences(
                 SettingsMenuLink(title = {
                     Text(text = stringResource(id = R.string.set_passcode))
                 }) {
-                    onEvent(SettingsEvent.SetPasscode)
+                    onEvent(SettingsEvent.ChangeSection(PreferenceSection.PasscodeSetup))
                 }
             }
         }

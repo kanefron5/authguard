@@ -23,6 +23,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dev.zabolotskikh.authguard.ui.screen.settings.sections.main.Preferences
 import dev.zabolotskikh.authguard.ui.screen.settings.sections.passcode.PasscodePreferences
+import dev.zabolotskikh.authguard.ui.screen.settings.sections.passcode.PasscodeSetup
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
@@ -41,12 +42,8 @@ fun SettingsScreen(
         CenterAlignedTopAppBar(title = { Text(text = stringResource(id = state.currentSection.title)) },
             navigationIcon = {
                 IconButton(onClick = {
-                    if (navController.previousBackStackEntry != null) {
-                        navController.popBackStack()
-                        state.currentSection.back?.apply {
-                            viewModel.onEvent(SettingsEvent.ChangeSection(this))
-                        }
-                    } else onNavigateBack()
+                    if (navController.previousBackStackEntry != null) navController.popBackStack()
+                    else onNavigateBack()
                 }) {
                     Icon(
                         imageVector = Icons.Default.ArrowBack,
@@ -79,6 +76,14 @@ fun SettingsScreen(
             composable(PreferenceSection.Passcode()) {
                 PasscodePreferences(
                     paddingValues = paddingValues, state = state, onEvent = viewModel::onEvent
+                )
+            }
+            composable(PreferenceSection.PasscodeSetup()) {
+                PasscodeSetup(
+                    paddingValues = paddingValues,
+                    state = state,
+                    onEvent = viewModel::onEvent,
+                    onDismiss = navController::popBackStack
                 )
             }
         }
