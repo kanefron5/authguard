@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name" translatable="false">AuthGuard</string>
-    <string name="settings">Settings</string>
+    <string name="settings_title_main">Settings</string>
     <string name="app_logo_content_description">Application logo</string>
     <string name="welcome">Welcome to AuthGuard!</string>
     <string name="welcome_description">Keep access to all your accounts even after switching devices</string>
@@ -32,4 +32,13 @@
     <string name="camera_permission_denied">Camera permissions are required to use this feature. Please go to settings and give permissions manually</string>
     <string name="camera_permission_btn_first">Request Permissions</string>
     <string name="camera_permission_btn_denied">Go to settings</string>
+    <string name="set_passcode">Set passcode</string>
+    <string name="action_continue">Continue</string>
+    <string name="passcode_check_restore">I understand that if I forget my passcode, it will not be possible to recover it.</string>
+    <string name="passcode_check_restore_developer">I understand that the developer will not be able to help me recover the passcode</string>
+    <string name="passcode_check_lost_data">I understand that I will lose access to all my authorization codes if I fail to enter my passcode</string>
+    <string name="passcode_settings_info">You will now be prompted to password protect the app code. Please read the information below before performing this action:</string>
+    <string name="settings_title_passcode">Passcode</string>
+    <string name="edit_passcode">Edit passcode</string>
+    <string name="delete_passcode">Delete passcode</string>
 </resources>
