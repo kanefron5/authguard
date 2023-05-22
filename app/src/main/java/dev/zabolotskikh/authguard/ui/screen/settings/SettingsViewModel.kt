@@ -31,8 +31,6 @@ class SettingsViewModel @Inject constructor(
     )
 
     val state = combine(_appState, _state) { appState, settingsState ->
-        println(appState)
-        println(settingsState)
         settingsState.copy(isPasscodeEnabled = appState?.passcode != null)
     }.stateIn(
         viewModelScope, SharingStarted.WhileSubscribed(5000), SettingsState()
@@ -42,7 +40,7 @@ class SettingsViewModel @Inject constructor(
         when (event) {
             SettingsEvent.BuildNumberClick -> {}
             SettingsEvent.ResetData -> resetData()
-            is SettingsEvent.ChangeSection -> _state.update { it.copy(currentSection = PreferenceSection.Passcode) }
+            is SettingsEvent.ChangeSection -> _state.update { it.copy(currentSection = event.section) }
             SettingsEvent.DeletePasscode -> viewModelScope.launch(ioDispatcher) {
                 _appState.value?.apply {
                     stateRepository.update(copy(passcode = null))
