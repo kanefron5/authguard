@@ -12,8 +12,9 @@ import kotlinx.coroutines.flow.onStart
 class TestAppStateRepositoryImpl(
     var state: AppState = AppState(
         isStarted = false,
-        isAuthenticated = false,
-        isPrivateMode = false
+        isRemoteMode = false,
+        isPrivateMode = false,
+        passcode = null
     )
 ): AppStateRepository {
     private val flow = MutableSharedFlow<AppState>()

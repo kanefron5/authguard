@@ -11,23 +11,25 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
-import dev.zabolotskikh.authguard.R
-import dev.zabolotskikh.authguard.ui.screen.settings.components.Preferences
+import dev.zabolotskikh.authguard.ui.screen.settings.sections.main.Preferences
+import dev.zabolotskikh.authguard.ui.screen.settings.sections.passcode.PasscodePreferences
 
 @Composable
 fun SettingsScreen(
     onNavigateBack: () -> Unit = {}
 ) {
     val viewModel = hiltViewModel<SettingsViewModel>()
+    val state by viewModel.state.collectAsState()
 
     Scaffold(topBar = {
-        CenterAlignedTopAppBar(title = { Text(text = stringResource(id = R.string.settings)) },
+        CenterAlignedTopAppBar(title = { Text(text = stringResource(id = state.currentSection.title)) },
             navigationIcon = {
-                IconButton(onClick = { onNavigateBack() }) {
+                IconButton(onClick = { viewModel.onNavigateBack(onNavigateBack) }) {
                     Icon(
                         imageVector = Icons.Default.ArrowBack,
                         contentDescription = "actionIconContentDescription",
@@ -36,11 +38,20 @@ fun SettingsScreen(
                 }
             })
     }, content = { paddingValues ->
-        Preferences(
-            paddingValues = paddingValues,
-            onResetData = viewModel::resetData,
-            onBuildNumberClick = viewModel::easterEgg
-        )
+
+        when (state.currentSection) {
+            PreferenceSection.Main -> {
+                Preferences(
+                    paddingValues = paddingValues, onEvent = viewModel::onEvent
+                )
+            }
+
+            PreferenceSection.Passcode -> {
+                PasscodePreferences(
+                    paddingValues = paddingValues, state = state, onEvent = viewModel::onEvent
+                )
+            }
+        }
     })
 }
 
