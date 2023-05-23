@@ -25,15 +25,6 @@ fun PasscodePreferences(
     state: SettingsState = SettingsState(),
     onEvent: (SettingsEvent) -> Unit = {},
 ) {
-    /*
-    SettingsPasscodeInfo(
-                    modifier = Modifier.padding(
-                        bottom = paddingValues.calculateBottomPadding(),
-                        top = paddingValues.calculateTopPadding()
-                    )
-                )
-     */
-
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -47,7 +38,7 @@ fun PasscodePreferences(
                 SettingsMenuLink(title = {
                     Text(text = stringResource(id = R.string.edit_passcode))
                 }) {
-                    onEvent(SettingsEvent.SetPasscode)
+//                    onEvent(SettingsEvent.SetPasscode)
                 }
                 SettingsMenuLink(title = {
                     Text(text = stringResource(id = R.string.delete_passcode))
@@ -69,8 +60,7 @@ fun PasscodePreferences(
 @Composable
 private fun PasscodePreferencesPreview1() {
     PasscodePreferences(
-        paddingValues = PaddingValues(16.dp),
-        state = SettingsState()
+        paddingValues = PaddingValues(16.dp), state = SettingsState()
     )
 }
 
@@ -78,7 +68,6 @@ private fun PasscodePreferencesPreview1() {
 @Composable
 private fun PasscodePreferencesPreview2() {
     PasscodePreferences(
-        paddingValues = PaddingValues(16.dp),
-        state = SettingsState(isPasscodeEnabled = true)
+        paddingValues = PaddingValues(16.dp), state = SettingsState(isPasscodeEnabled = true)
     )
 }
