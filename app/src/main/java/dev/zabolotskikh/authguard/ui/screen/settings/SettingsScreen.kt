@@ -2,6 +2,7 @@
 
 package dev.zabolotskikh.authguard.ui.screen.settings
 
+import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -25,9 +26,11 @@ import dev.zabolotskikh.authguard.ui.screen.settings.sections.main.Preferences
 import dev.zabolotskikh.authguard.ui.screen.settings.sections.passcode.PasscodePreferences
 import dev.zabolotskikh.authguard.ui.screen.settings.sections.passcode.PasscodeSetup
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import java.util.Objects
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 
@@ -53,14 +56,19 @@ fun SettingsScreen(
                 }
             })
     }, content = { paddingValues ->
-        navController.currentBackStackEntryFlow.collectAsEffect {
+        navController.currentBackStackEntryFlow.collectAsEffect(comparator = { o1, o2 ->
+            if (o1.destination.route == o2.destination.route) 0
+            else -1
+        }) {
             it.destination.route?.apply {
                 val preferenceSection = toPreferenceSection()
                 viewModel.onEvent(SettingsEvent.ChangeSection(preferenceSection))
             }
         }
 
-        viewModel.state.collectAsEffect {
+        viewModel.state.collectAsEffect(comparator = { o1, o2 ->
+            o1.currentSection().compareTo(o2.currentSection())
+        }) {
             navController.navigate(it.currentSection()) {
                 it.currentSection.back?.apply { popUpTo(this()) }
                 launchSingleTop = true
@@ -92,9 +100,15 @@ fun SettingsScreen(
 
 @Composable
 private fun <T> Flow<T>.collectAsEffect(
-    context: CoroutineContext = EmptyCoroutineContext, block: (T) -> Unit
+    context: CoroutineContext = EmptyCoroutineContext,
+    comparator: Comparator<T>? = null,
+    block: (T) -> Unit,
 ) {
     LaunchedEffect(key1 = Unit) {
-        onEach(block).flowOn(context).launchIn(this)
+        distinctUntilChanged { old, new ->
+            comparator?.compare(old, new) == 0
+        }.onEach {
+            block.invoke(it)
+        }.flowOn(context).launchIn(this)
     }
 }

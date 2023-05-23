@@ -4,7 +4,8 @@ sealed interface SettingsEvent {
 
     data class ChangeSection(val section: PreferenceSection): SettingsEvent
     object ResetData : SettingsEvent
-    object SetPasscode : SettingsEvent
+    object StartPasscodeSetting : SettingsEvent
+    data class OnEnterPasscode(val passcode: String) : SettingsEvent
     object DeletePasscode : SettingsEvent
     object BuildNumberClick: SettingsEvent
 }
