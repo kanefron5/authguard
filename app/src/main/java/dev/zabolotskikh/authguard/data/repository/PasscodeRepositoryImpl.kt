@@ -1,28 +1,26 @@
 package dev.zabolotskikh.authguard.data.repository
 
+import dev.zabolotskikh.authguard.data.local.dao.PasscodeDao
 import dev.zabolotskikh.authguard.domain.model.Passcode
-import dev.zabolotskikh.authguard.domain.repository.AppStateRepository
 import dev.zabolotskikh.authguard.domain.repository.PasscodeRepository
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.last
 import javax.inject.Inject
 
 class PasscodeRepositoryImpl @Inject constructor(
-    private val appStateRepository: AppStateRepository
+    private val passcodeDao: PasscodeDao
 ) : PasscodeRepository {
     override suspend fun checkPasscode(hash: String): Boolean {
-        val state = appStateRepository.getState().last()
-        return state.passcode?.passcodeHash == hash
+        val passcode = passcodeDao.getPasscode().first()
+        return passcode?.passcodeHash == hash
     }
 
     override suspend fun updatePasscode(passcode: String) {
-        val appState = appStateRepository.getState().first()
-        appStateRepository.update(
-            appState.copy(
-                passcode = Passcode(passcodeHash = calculateHash(passcode))
-            )
-        )
+        val (lastAuthorizedTimestamp, passcodeHash) = Passcode(passcodeHash = calculateHash(passcode))
+        passcodeDao.updateState(passcodeHash, lastAuthorizedTimestamp)
     }
+
+    override suspend fun deletePasscode() = passcodeDao.resetPasscode()
+
 
     private fun calculateHash(passcode: String): String {
         // TODO("Not yet implemented")

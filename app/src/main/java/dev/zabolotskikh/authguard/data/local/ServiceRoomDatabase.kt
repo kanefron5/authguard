@@ -5,6 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import dev.zabolotskikh.authguard.data.local.dao.AppStateDao
+import dev.zabolotskikh.authguard.data.local.dao.PasscodeDao
 import dev.zabolotskikh.authguard.data.local.entities.ServiceEntity
 import dev.zabolotskikh.authguard.data.local.dao.ServiceDao
 import dev.zabolotskikh.authguard.data.local.entities.AppStateEntity
@@ -17,6 +18,7 @@ import dev.zabolotskikh.authguard.data.local.entities.AppStateEntity
 abstract class ServiceRoomDatabase : RoomDatabase() {
     abstract fun serviceDao(): ServiceDao
     abstract fun appStateDao(): AppStateDao
+    abstract fun passcodeDao(): PasscodeDao
 
     companion object {
         @Volatile
