@@ -27,17 +27,11 @@ import dev.zabolotskikh.authguard.ui.theme.AuthGuardTheme
 import java.io.Serializable
 
 class PasscodeActivity : ComponentActivity() {
-    private inline fun <reified T : Serializable> Intent.getExtra(name: String): T? {
-        return if (Build.VERSION.SDK_INT >= 33) getSerializableExtra(name, T::class.java)
-        else getSerializableExtra(name) as T?
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val options = intent.getExtra<PasscodeOptions>(OPTIONS_EXTRA)
             ?: throw IllegalArgumentException()
-
 
         val code = "123456"
         setContent {
@@ -98,19 +92,8 @@ class PasscodeActivity : ComponentActivity() {
         ): SynchronousResult<PasscodeResult?>? = null
 
         override fun parseResult(resultCode: Int, intent: Intent?): PasscodeResult? {
-            if (resultCode == Activity.RESULT_OK && intent != null) {
-                val serializableExtra = if (Build.VERSION.SDK_INT >= 33) {
-                    intent.getSerializableExtra(
-                        STATUS_EXTRA,
-                        PasscodeResult::class.java
-                    )
-                } else {
-                    @Suppress("DEPRECATION")
-                    intent.getSerializableExtra(STATUS_EXTRA) as PasscodeResult
-                }
-                return serializableExtra
-            }
-            return null
+            return intent?.takeIf { resultCode == Activity.RESULT_OK }
+                ?.getExtra<PasscodeResult>(STATUS_EXTRA)
         }
     }
 
@@ -118,6 +101,10 @@ class PasscodeActivity : ComponentActivity() {
         private const val STATUS_EXTRA = "status"
         private const val OPTIONS_EXTRA = "options"
 
-
+        private inline fun <reified T : Serializable> Intent.getExtra(name: String): T? {
+            @Suppress("DEPRECATION")
+            return if (Build.VERSION.SDK_INT >= 33) getSerializableExtra(name, T::class.java)
+            else getSerializableExtra(name) as T?
+        }
     }
 }
