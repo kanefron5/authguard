@@ -48,8 +48,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providePasscodeRepository(appStateRepository: AppStateRepository): PasscodeRepository {
-        return PasscodeRepositoryImpl(appStateRepository)
+    fun providePasscodeRepository(database: ServiceRoomDatabase): PasscodeRepository {
+        return PasscodeRepositoryImpl(database.passcodeDao())
     }
 
     @Singleton

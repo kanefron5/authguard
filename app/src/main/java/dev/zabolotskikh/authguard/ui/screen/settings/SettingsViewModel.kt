@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.zabolotskikh.authguard.domain.model.AppState
 import dev.zabolotskikh.authguard.domain.repository.AppStateRepository
+import dev.zabolotskikh.authguard.domain.repository.PasscodeRepository
 import dev.zabolotskikh.authguard.domain.repository.ServiceRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,6 +20,7 @@ import javax.inject.Inject
 class SettingsViewModel @Inject constructor(
     private val stateRepository: AppStateRepository,
     private val serviceRepository: ServiceRepository,
+    private val passcodeRepository: PasscodeRepository,
     private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
     private val _state = MutableStateFlow(SettingsState())
@@ -38,20 +40,14 @@ class SettingsViewModel @Inject constructor(
             SettingsEvent.ResetData -> resetData()
             is SettingsEvent.ChangeSection -> _state.update { it.copy(currentSection = event.section) }
             SettingsEvent.DeletePasscode -> viewModelScope.launch(ioDispatcher) {
-                _appState.value?.apply {
-                    stateRepository.update(copy(passcode = null))
-                }
+                passcodeRepository.deletePasscode()
             }
         }
     }
 
 
     private fun resetData() = viewModelScope.launch(ioDispatcher) {
-        stateRepository.update(
-            AppState(
-                isStarted = false, isRemoteMode = false, isPrivateMode = false, passcode = null
-            )
-        )
+        stateRepository.update(AppState())
         serviceRepository.clear()
     }
 }

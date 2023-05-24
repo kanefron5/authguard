@@ -1,4 +1,4 @@
-package dev.zabolotskikh.authguard
+package dev.zabolotskikh.authguard.domain
 
 import dev.zabolotskikh.authguard.domain.model.Service
 import org.apache.commons.codec.binary.Base32
