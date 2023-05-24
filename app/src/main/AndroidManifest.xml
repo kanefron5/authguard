@@ -17,7 +17,7 @@
         android:theme="@style/Theme.AuthGuard"
         tools:targetApi="31">
         <activity
-            android:name=".PasscodeActivity"
+            android:name=".ui.screen.passcode.PasscodeActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
