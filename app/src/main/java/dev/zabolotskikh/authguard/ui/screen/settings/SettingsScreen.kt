@@ -2,7 +2,6 @@
 
 package dev.zabolotskikh.authguard.ui.screen.settings
 
-import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -30,7 +29,6 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import java.util.Objects
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 
@@ -88,10 +86,7 @@ fun SettingsScreen(
             }
             composable(PreferenceSection.PasscodeSetup()) {
                 PasscodeSetup(
-                    paddingValues = paddingValues,
-                    state = state,
-                    onEvent = viewModel::onEvent,
-                    onDismiss = navController::popBackStack
+                    paddingValues = paddingValues, onDismiss = navController::popBackStack
                 )
             }
         }

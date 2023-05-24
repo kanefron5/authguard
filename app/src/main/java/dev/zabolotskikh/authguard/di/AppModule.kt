@@ -9,9 +9,11 @@ import dagger.hilt.components.SingletonComponent
 import dev.zabolotskikh.authguard.data.local.ServiceRoomDatabase
 import dev.zabolotskikh.authguard.data.repository.AppStateRepositoryImpl
 import dev.zabolotskikh.authguard.data.repository.OtpRepositoryImpl
+import dev.zabolotskikh.authguard.data.repository.PasscodeRepositoryImpl
 import dev.zabolotskikh.authguard.data.repository.ServiceRepositoryImpl
 import dev.zabolotskikh.authguard.domain.repository.AppStateRepository
 import dev.zabolotskikh.authguard.domain.repository.OtpRepository
+import dev.zabolotskikh.authguard.domain.repository.PasscodeRepository
 import dev.zabolotskikh.authguard.domain.repository.ServiceRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -42,6 +44,12 @@ object AppModule {
     @Singleton
     fun provideOtpRepository(serviceRepository: ServiceRepository): OtpRepository {
         return OtpRepositoryImpl(serviceRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun providePasscodeRepository(appStateRepository: AppStateRepository): PasscodeRepository {
+        return PasscodeRepositoryImpl(appStateRepository)
     }
 
     @Singleton

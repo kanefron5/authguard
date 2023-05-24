@@ -1,4 +1,4 @@
-package dev.zabolotskikh.authguard.ui.screen.settings.sections.passcode.components
+package dev.zabolotskikh.authguard.ui.screen.passcode.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

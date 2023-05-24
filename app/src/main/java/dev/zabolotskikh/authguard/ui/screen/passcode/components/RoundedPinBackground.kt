@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalFoundationApi::class)
 
-package dev.zabolotskikh.authguard.ui.screen.settings.sections.passcode.components
+package dev.zabolotskikh.authguard.ui.screen.passcode.components
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
