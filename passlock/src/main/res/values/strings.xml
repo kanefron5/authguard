@@ -4,4 +4,7 @@
     <string name="passcode_enter_new">Enter a new passcode</string>
     <string name="passcode_reenter_new">Re-enter your passcode</string>
     <string name="passcode_not_match">The entered passcodes don\'t match</string>
+    <string name="passcode_enter">Enter passcode</string>
+    <string name="passcode_limit_reached">Retries exceeded. Come back later</string>
+    <string name="passcode_rejected">Wrong password entered. Try again</string>
 </resources>
