@@ -42,8 +42,14 @@ internal class PasscodeViewModel @Inject constructor(
             }
 
             PasscodeEvent.Cancel -> state.update { it.copy(isCancelled = true) }
-            is PasscodeEvent.EnterPasscode -> state.update { it.copy(isSucceed = true) }
-
+            is PasscodeEvent.EnterPasscode -> viewModelScope.launch(ioDispatcher) {
+                val checkPasscode = passcodeRepository.checkPasscode(event.passcode)
+                state.update {
+                    it.copy(
+                        isSucceed = checkPasscode, attemptCount = state.value.attemptCount + 1
+                    )
+                }
+            }
         }
     }
 }

@@ -22,9 +22,11 @@ private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(na
 internal class PasscodeRepositoryImpl @Inject constructor(
     private val context: Context
 ) : PasscodeRepository {
-    override suspend fun checkPasscode(hash: String): Boolean {
+    override suspend fun checkPasscode(passcode: String): Boolean {
         val preferences = context.dataStore.data.first()
-        return preferences[PASSCODE_HASH_NAME] == hash
+        println(preferences[PASSCODE_HASH_NAME])
+        if (preferences[PASSCODE_HASH_NAME] == null) return true
+        return preferences[PASSCODE_HASH_NAME] == calculateHash(passcode)
     }
 
     override fun hasPasscode(): Flow<Boolean> {
@@ -49,6 +51,6 @@ internal class PasscodeRepositoryImpl @Inject constructor(
 
     private fun calculateHash(passcode: String): String {
         // TODO("Not yet implemented")
-        return "---$passcode$passcode---"
+        return passcode.hashCode().toString()
     }
 }

@@ -7,12 +7,20 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.LifecycleEventObserver
 import dev.zabolotskikh.passlock.ui.activity.PasscodeActivity
+
+@Composable
+fun rememberPasscodeEnabled(): Boolean {
+    val viewModel = hiltViewModel<ProviderViewModel>()
+    val state by viewModel.state.collectAsState()
+    return state?.hasPasscode == true
+}
 
 @Composable
 fun PassLockProvider(
