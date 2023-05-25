@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalFoundationApi::class)
 
-package dev.zabolotskikh.authguard.ui.screen.passcode.components
+package dev.zabolotskikh.passlock.ui.activity.components
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun RoundedPinBackground(
+internal fun RoundedPinBackground(
     modifier: Modifier = Modifier,
     size: Dp = 80.dp,
     backgroundColor: Color = MaterialTheme.colorScheme.surfaceVariant,

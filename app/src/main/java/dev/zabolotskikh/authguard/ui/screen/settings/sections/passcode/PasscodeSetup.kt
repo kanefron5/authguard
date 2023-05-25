@@ -28,11 +28,10 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.zabolotskikh.authguard.ui.screen.passcode.PasscodeActivity
 import dev.zabolotskikh.authguard.R
-import dev.zabolotskikh.authguard.ui.screen.settings.SettingsEvent
-import dev.zabolotskikh.authguard.ui.screen.settings.SettingsState
 import dev.zabolotskikh.authguard.ui.screen.settings.sections.passcode.components.SettingsPasscodeCheck
+import dev.zabolotskikh.passlock.ui.activity.PasscodeActivity.PasscodeAction.SetupPasscode
+import dev.zabolotskikh.passlock.ui.activity.PasscodeActivity.PasscodeResultContract
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -48,7 +47,7 @@ fun PasscodeSetup(
 
     val isChecksCompleted = check1 && check2 && check3
 
-    val launcher = rememberLauncherForActivityResult(PasscodeActivity.PasscodeResultContract()) {}
+    val launcher = rememberLauncherForActivityResult(PasscodeResultContract()) {}
 
 
     Column(
@@ -106,7 +105,7 @@ fun PasscodeSetup(
             }
             val rememberCoroutineScope = rememberCoroutineScope()
             Button(onClick = {
-                launcher.launch(PasscodeActivity.PasscodeAction.SetupPasscode(2, null))
+                launcher.launch(SetupPasscode(2, null))
                 rememberCoroutineScope.launch {
                     // UI
                     delay(300)

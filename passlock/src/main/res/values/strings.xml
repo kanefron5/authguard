@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cancel">Cancel</string>
+    <string name="passcode_enter_new">Enter a new passcode</string>
+    <string name="passcode_reenter_new">Re-enter your passcode</string>
+    <string name="passcode_not_match">The entered passcodes don\'t match</string>
+</resources>

@@ -1,9 +1,10 @@
-package dev.zabolotskikh.authguard.ui.screen.passcode
+package dev.zabolotskikh.passlock.ui.activity
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.zabolotskikh.authguard.domain.repository.PasscodeRepository
+import dev.zabolotskikh.passlock.di.LibraryScope
+import dev.zabolotskikh.passlock.domain.repository.PasscodeRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -11,9 +12,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class PasscodeViewModel @Inject constructor(
+internal class PasscodeViewModel @Inject constructor(
     private val passcodeRepository: PasscodeRepository,
-    private val ioDispatcher: CoroutineDispatcher,
+    @LibraryScope private val ioDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
     val state = MutableStateFlow(PasscodeState())
 
@@ -41,6 +42,8 @@ class PasscodeViewModel @Inject constructor(
             }
 
             PasscodeEvent.Cancel -> state.update { it.copy(isCancelled = true) }
+            is PasscodeEvent.EnterPasscode -> state.update { it.copy(isSucceed = true) }
+
         }
     }
 }

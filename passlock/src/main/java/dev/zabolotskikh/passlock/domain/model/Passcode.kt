@@ -1,6 +1,6 @@
-package dev.zabolotskikh.authguard.domain.model
+package dev.zabolotskikh.passlock.domain.model
 
-data class Passcode(
+internal data class Passcode(
     val lastAuthorizedTimestamp: Long = System.currentTimeMillis(),
     val passcodeHash: String
 )

@@ -1,4 +1,4 @@
-package dev.zabolotskikh.authguard.ui.screen.passcode.components
+package dev.zabolotskikh.passlock.ui.activity.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun PasscodeKeyboard(
+internal fun PasscodeKeyboard(
     modifier: Modifier = Modifier, space: Dp = 20.dp, onKey: (Char) -> Unit = {}
 ) {
     Column(

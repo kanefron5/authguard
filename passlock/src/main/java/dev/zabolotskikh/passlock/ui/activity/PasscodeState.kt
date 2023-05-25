@@ -1,6 +1,6 @@
-package dev.zabolotskikh.authguard.ui.screen.passcode
+package dev.zabolotskikh.passlock.ui.activity
 
-data class PasscodeState(
+internal data class PasscodeState(
     val isConfirmed: Boolean = false,
     val isLimitReached: Boolean = false,
     val isSucceed: Boolean = false,
