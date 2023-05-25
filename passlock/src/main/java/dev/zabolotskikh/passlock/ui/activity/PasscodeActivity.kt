@@ -1,14 +1,15 @@
-package dev.zabolotskikh.authguard.ui.screen.passcode
+package dev.zabolotskikh.passlock.ui.activity
 
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.window.OnBackInvokedDispatcher
 import androidx.activity.ComponentActivity
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContract
-import androidx.activity.viewModels
 import androidx.annotation.CallSuper
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -19,21 +20,31 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import dev.zabolotskikh.authguard.ui.screen.passcode.components.EnterPasscodeScreen
-import dev.zabolotskikh.authguard.ui.screen.passcode.components.SetupPasscodeScreen
-import dev.zabolotskikh.authguard.ui.theme.AuthGuardTheme
+import dev.zabolotskikh.passlock.ui.activity.components.EnterPasscodeScreen
+import dev.zabolotskikh.passlock.ui.activity.components.SetupPasscodeScreen
+import dev.zabolotskikh.passlock.ui.theme.PassLockTheme
 import java.io.Serializable
 
 @AndroidEntryPoint
 class PasscodeActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         val options =
             intent.getExtra<PasscodeAction>(ACTION_EXTRA) ?: throw IllegalArgumentException()
 
+        onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (options.cancellable) {
+                    this.remove()
+                } else {
+                    finishAffinity()
+                }
+            }
+        })
+
         setContent {
-            AuthGuardTheme {
+            PassLockTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
@@ -96,9 +107,14 @@ class PasscodeActivity : ComponentActivity() {
         }
     }
 
-    sealed interface PasscodeAction : Serializable {
-        data class SetupPasscode(val count: Int, val length: Int?) : PasscodeAction
-        data class EnterPasscode(val maxAttemptCount: Int) : PasscodeAction
+    sealed class PasscodeAction(open val cancellable: Boolean = true) : Serializable {
+        data class SetupPasscode(
+            val count: Int, val length: Int?, override val cancellable: Boolean = true
+        ) : PasscodeAction(cancellable)
+
+        data class EnterPasscode(
+            val maxAttemptCount: Int, override val cancellable: Boolean = true
+        ) : PasscodeAction(cancellable)
     }
 
     enum class PasscodeResult : Serializable {

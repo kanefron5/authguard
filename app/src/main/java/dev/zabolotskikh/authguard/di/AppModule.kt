@@ -5,15 +5,14 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.android.scopes.ViewModelScoped
 import dagger.hilt.components.SingletonComponent
 import dev.zabolotskikh.authguard.data.local.ServiceRoomDatabase
 import dev.zabolotskikh.authguard.data.repository.AppStateRepositoryImpl
 import dev.zabolotskikh.authguard.data.repository.OtpRepositoryImpl
-import dev.zabolotskikh.authguard.data.repository.PasscodeRepositoryImpl
 import dev.zabolotskikh.authguard.data.repository.ServiceRepositoryImpl
 import dev.zabolotskikh.authguard.domain.repository.AppStateRepository
 import dev.zabolotskikh.authguard.domain.repository.OtpRepository
-import dev.zabolotskikh.authguard.domain.repository.PasscodeRepository
 import dev.zabolotskikh.authguard.domain.repository.ServiceRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -48,12 +47,6 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providePasscodeRepository(database: ServiceRoomDatabase): PasscodeRepository {
-        return PasscodeRepositoryImpl(database.passcodeDao())
-    }
-
-    @Singleton
-    @Provides
     fun provideDispatchers(): CoroutineDispatcher = Dispatchers.IO
 
 }

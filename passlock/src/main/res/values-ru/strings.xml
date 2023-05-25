@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cancel">Отмена</string>
+    <string name="passcode_enter_new">Введите новый пароль</string>
+    <string name="passcode_reenter_new">Повторите пароль</string>
+    <string name="passcode_not_match">Введенные пароли не совпадают</string>
+</resources>

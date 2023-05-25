@@ -41,8 +41,5 @@
     <string name="settings_title_passcode">Passcode</string>
     <string name="edit_passcode">Edit passcode</string>
     <string name="delete_passcode">Delete passcode</string>
-    <string name="passcode_enter_new">Enter a new passcode</string>
-    <string name="passcode_reenter_new">Re-enter your passcode</string>
-    <string name="passcode_not_match">The entered passcodes don\'t match</string>
     <string name="caution">Caution</string>
 </resources>

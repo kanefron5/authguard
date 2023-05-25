@@ -1,4 +1,4 @@
-package dev.zabolotskikh.authguard.ui.screen.passcode.components
+package dev.zabolotskikh.passlock.ui.activity.components
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -17,13 +16,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.zabolotskikh.authguard.R
-import dev.zabolotskikh.authguard.ui.screen.passcode.PasscodeActivity
-import dev.zabolotskikh.authguard.ui.screen.passcode.PasscodeEvent
-import dev.zabolotskikh.authguard.ui.screen.passcode.PasscodeState
+import dev.zabolotskikh.passlock.R
+import dev.zabolotskikh.passlock.ui.activity.PasscodeActivity
+import dev.zabolotskikh.passlock.ui.activity.PasscodeEvent
+import dev.zabolotskikh.passlock.ui.activity.PasscodeState
 
 @Composable
-fun SetupPasscodeScreen(
+internal fun SetupPasscodeScreen(
     modifier: Modifier = Modifier,
     options: PasscodeActivity.PasscodeAction.SetupPasscode,
     state: PasscodeState = PasscodeState(),

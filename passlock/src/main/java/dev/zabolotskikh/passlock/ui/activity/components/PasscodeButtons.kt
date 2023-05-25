@@ -1,4 +1,4 @@
-package dev.zabolotskikh.authguard.ui.screen.passcode.components
+package dev.zabolotskikh.passlock.ui.activity.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -7,10 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Close
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -33,10 +29,10 @@ import androidx.compose.ui.tooling.preview.Devices.PIXEL_4
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.zabolotskikh.authguard.R
+import dev.zabolotskikh.passlock.R
 
 @Composable
-fun PasscodeButtons(
+internal fun PasscodeButtons(
     modifier: Modifier = Modifier,
     title: @Composable (() -> Unit)? = null,
     onSubmit: (String) -> Unit = {},

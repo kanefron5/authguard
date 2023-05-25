@@ -1,7 +1,5 @@
-package dev.zabolotskikh.authguard.ui.screen.passcode.components
+package dev.zabolotskikh.passlock.ui.activity.components
 
-import android.content.Intent
-import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,11 +11,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.zabolotskikh.authguard.ui.screen.passcode.PasscodeActivity
-import dev.zabolotskikh.authguard.ui.screen.passcode.PasscodeEvent
+import dev.zabolotskikh.passlock.ui.activity.PasscodeActivity
+import dev.zabolotskikh.passlock.ui.activity.PasscodeEvent
 
 @Composable
-fun EnterPasscodeScreen(
+internal fun EnterPasscodeScreen(
     modifier: Modifier = Modifier,
     options: PasscodeActivity.PasscodeAction.EnterPasscode,
     onEvent: (PasscodeEvent) -> Unit = {}
@@ -42,7 +40,7 @@ fun EnterPasscodeScreen(
             )
         },
         onSubmit = {
-//            onEvent()
+            onEvent(PasscodeEvent.EnterPasscode(it))
         }
     )
 }

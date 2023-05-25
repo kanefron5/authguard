@@ -2,7 +2,6 @@ package dev.zabolotskikh.authguard.data.repository
 
 import dev.zabolotskikh.authguard.data.local.dao.AppStateDao
 import dev.zabolotskikh.authguard.data.local.entities.AppStateEntity
-import dev.zabolotskikh.authguard.data.local.entities.PasscodeEntity
 import dev.zabolotskikh.authguard.data.local.entities.toAppState
 import dev.zabolotskikh.authguard.domain.model.AppState
 import dev.zabolotskikh.authguard.domain.repository.AppStateRepository
@@ -15,13 +14,9 @@ class AppStateRepositoryImpl @Inject constructor(
     override fun getState() = appStateDao.getState().map { it.toAppState() }
 
     override suspend fun update(appState: AppState) {
-        var passcode: PasscodeEntity? = null
-        appState.passcode?.apply {
-            passcode = PasscodeEntity(lastAuthorizedTimestamp, passcodeHash)
-        }
         appStateDao.updateState(
             AppStateEntity(
-                appState.isStarted, appState.isRemoteMode, appState.isPrivateMode, passcode
+                appState.isStarted, appState.isRemoteMode, appState.isPrivateMode
             )
         )
     }
