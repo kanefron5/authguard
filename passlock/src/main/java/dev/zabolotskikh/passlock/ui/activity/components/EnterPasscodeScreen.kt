@@ -11,12 +11,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Devices.PIXEL_4
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.zabolotskikh.passlock.R
 import dev.zabolotskikh.passlock.ui.activity.PasscodeActivity
 import dev.zabolotskikh.passlock.ui.activity.PasscodeEvent
+import dev.zabolotskikh.passlock.ui.activity.PasscodeResult
+import dev.zabolotskikh.passlock.ui.activity.PasscodeResult.BLOCKED
+import dev.zabolotskikh.passlock.ui.activity.PasscodeResult.REJECTED
 import dev.zabolotskikh.passlock.ui.activity.PasscodeState
+import java.text.SimpleDateFormat
+import java.util.Locale
+
+private fun Long.toFormattedDate(): String {
+    return SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(this)
+}
 
 @Composable
 internal fun EnterPasscodeScreen(
@@ -25,45 +36,72 @@ internal fun EnterPasscodeScreen(
     state: PasscodeState = PasscodeState(),
     onEvent: (PasscodeEvent) -> Unit = {}
 ) {
-    PasscodeButtons(
-        modifier = modifier.fillMaxSize(),
-        title = {
+
+    PasscodeButtons(modifier = modifier.fillMaxSize(), title = {
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 32.dp),
+            text = stringResource(id = R.string.passcode_enter),
+            fontSize = 24.sp,
+            color = MaterialTheme.colorScheme.primary,
+            textAlign = TextAlign.Center
+        )
+        Spacer(modifier = Modifier.height(24.dp))
+        if (state.passcodeCheckStatus == PasscodeResult.BLOCKED) {
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 32.dp),
-                text = stringResource(id = R.string.passcode_enter),
-                fontSize = 24.sp,
-                color = MaterialTheme.colorScheme.primary,
+                text = stringResource(
+                    id = R.string.passcode_limit_reached, state.isBlockedUntil.toFormattedDate()
+                ),
+                fontSize = 16.sp,
+                color = MaterialTheme.colorScheme.error,
                 textAlign = TextAlign.Center
             )
-            Spacer(modifier = Modifier.height(24.dp))
-            if (state.isLimitReached) {
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 32.dp),
-                    text = stringResource(R.string.passcode_limit_reached),
-                    fontSize = 16.sp,
-                    color = MaterialTheme.colorScheme.error,
-                    textAlign = TextAlign.Center
-                )
-            }
-
-            if (state.isRejected) {
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 32.dp),
-                    text = stringResource(R.string.passcode_rejected),
-                    fontSize = 16.sp,
-                    color = MaterialTheme.colorScheme.error,
-                    textAlign = TextAlign.Center
-                )
-            }
-        },
-        onSubmit = {
-            onEvent(PasscodeEvent.EnterPasscode(it, options.maxAttemptCount))
+        } else if (state.passcodeCheckStatus != PasscodeResult.SUCCEED) {
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 32.dp),
+                text = if (state.passcodeCheckStatus == REJECTED) stringResource(
+                    id = R.string.passcode_rejected, state.remainingAttemptsCount
+                ) else stringResource(
+                    id = R.string.passcode_attempts_remaining, state.remainingAttemptsCount
+                ),
+                fontSize = 16.sp,
+                color = if (state.passcodeCheckStatus == REJECTED) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.secondary,
+                textAlign = TextAlign.Center
+            )
         }
+    }, onSubmit = {
+        onEvent(PasscodeEvent.EnterPasscode(it))
+    })
+}
+
+@Composable
+@Preview(showSystemUi = true, device = PIXEL_4)
+private fun EnterPasscodeScreenPreview1() {
+    EnterPasscodeScreen(
+        options = PasscodeActivity.PasscodeAction.EnterPasscode(), state = PasscodeState()
+    )
+}
+
+@Composable
+@Preview(showSystemUi = true, device = PIXEL_4)
+private fun EnterPasscodeScreenPreview2() {
+    EnterPasscodeScreen(
+        options = PasscodeActivity.PasscodeAction.EnterPasscode(),
+        state = PasscodeState(passcodeCheckStatus = REJECTED)
+    )
+}
+
+@Composable
+@Preview(showSystemUi = true, device = PIXEL_4)
+private fun EnterPasscodeScreenPreview3() {
+    EnterPasscodeScreen(
+        options = PasscodeActivity.PasscodeAction.EnterPasscode(),
+        state = PasscodeState(isBlockedUntil = 1685050000000, passcodeCheckStatus = BLOCKED)
     )
 }

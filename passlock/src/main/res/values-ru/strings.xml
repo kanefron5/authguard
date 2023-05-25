@@ -5,6 +5,7 @@
     <string name="passcode_reenter_new">Повторите пароль</string>
     <string name="passcode_not_match">Введенные пароли не совпадают</string>
     <string name="passcode_enter">Введите пароль</string>
-    <string name="passcode_limit_reached">Превышено количество попыток. Вернитесь позже</string>
-    <string name="passcode_rejected">Введен неправильный пароль. Повторите попытку</string>
+    <string name="passcode_limit_reached">Превышено количество вводов кода. Повторите попытку в %s</string>
+    <string name="passcode_rejected">Введен неправильный пароль. Попыток осталось: %d</string>
+    <string name="passcode_attempts_remaining">Попыток осталось: %d</string>
 </resources>

@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.window.OnBackInvokedDispatcher
 import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
@@ -50,29 +49,28 @@ class PasscodeActivity : ComponentActivity() {
                 ) {
                     val viewModel = hiltViewModel<PasscodeViewModel>()
                     val state by viewModel.state.collectAsState()
-                    val fallbackOnError = (options is PasscodeAction.EnterPasscode) && options.fallbackOnError
+                    val fallbackOnError =
+                        (options is PasscodeAction.EnterPasscode) && options.fallbackOnError
 
-                    LaunchedEffect(state) {
-                        if (state.isSucceed) {
-                            setResult(RESULT_OK, Intent().apply {
-                                putExtra(STATUS_EXTRA, PasscodeResult.Succeed)
-                            })
-                            finish()
-                        } else if (state.isConfirmed) {
-                            setResult(RESULT_OK, Intent().apply {
-                                putExtra(STATUS_EXTRA, PasscodeResult.Confirmed)
-                            })
-                            finish()
-                        } else if (state.isLimitReached && fallbackOnError) {
-                            setResult(RESULT_OK, Intent().apply {
-                                putExtra(STATUS_EXTRA, PasscodeResult.LimitReached)
-                            })
-                            finish()
-                        } else if (state.isCancelled) {
-                            setResult(RESULT_OK, Intent().apply {
-                                putExtra(STATUS_EXTRA, PasscodeResult.Cancelled)
-                            })
-                            finish()
+                    LaunchedEffect(state.passcodeCheckStatus) {
+                        when (state.passcodeCheckStatus) {
+                            PasscodeResult.CONFIRMED, PasscodeResult.SUCCEED, PasscodeResult.CANCELLED -> {
+                                setResult(RESULT_OK, Intent().apply {
+                                    putExtra(STATUS_EXTRA, state.passcodeCheckStatus)
+                                })
+                                finish()
+                            }
+
+                            PasscodeResult.BLOCKED -> {
+                                if (fallbackOnError) {
+                                    setResult(RESULT_OK, Intent().apply {
+                                        putExtra(STATUS_EXTRA, state.passcodeCheckStatus)
+                                    })
+                                    finish()
+                                }
+                            }
+
+                            else -> {}
                         }
                     }
 
@@ -114,14 +112,8 @@ class PasscodeActivity : ComponentActivity() {
         ) : PasscodeAction(cancellable)
 
         data class EnterPasscode(
-            val maxAttemptCount: Int,
-            override val cancellable: Boolean = true,
-            val fallbackOnError: Boolean = false
+            override val cancellable: Boolean = true, val fallbackOnError: Boolean = false
         ) : PasscodeAction(cancellable)
-    }
-
-    enum class PasscodeResult : Serializable {
-        Succeed, Confirmed, LimitReached, Cancelled
     }
 
     companion object {
