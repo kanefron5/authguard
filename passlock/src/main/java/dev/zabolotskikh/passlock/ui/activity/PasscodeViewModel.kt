@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.zabolotskikh.passlock.di.LibraryScope
+import dev.zabolotskikh.passlock.domain.model.PasscodeCheckStatus
 import dev.zabolotskikh.passlock.domain.repository.PasscodeRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -43,11 +44,22 @@ internal class PasscodeViewModel @Inject constructor(
 
             PasscodeEvent.Cancel -> state.update { it.copy(isCancelled = true) }
             is PasscodeEvent.EnterPasscode -> viewModelScope.launch(ioDispatcher) {
-                val checkPasscode = passcodeRepository.checkPasscode(event.passcode)
-                state.update {
-                    it.copy(
-                        isSucceed = checkPasscode, attemptCount = state.value.attemptCount + 1
-                    )
+                when (passcodeRepository.checkPasscode(event.passcode, event.maxAttemptCount)) {
+                    is PasscodeCheckStatus.BlockedUntil -> state.update {
+                        it.reset().copy(isLimitReached = true)
+                    }
+
+                    PasscodeCheckStatus.NoPasscode -> state.update {
+                        it.reset().copy(isCancelled = true)
+                    }
+
+                    PasscodeCheckStatus.NotMatch -> state.update {
+                        it.reset().copy(isRejected = true)
+                    }
+
+                    PasscodeCheckStatus.Success -> state.update {
+                        it.reset().copy(isSucceed = true)
+                    }
                 }
             }
         }

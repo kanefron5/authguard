@@ -50,6 +50,7 @@ class PasscodeActivity : ComponentActivity() {
                 ) {
                     val viewModel = hiltViewModel<PasscodeViewModel>()
                     val state by viewModel.state.collectAsState()
+                    val fallbackOnError = (options is PasscodeAction.EnterPasscode) && options.fallbackOnError
 
                     LaunchedEffect(state) {
                         if (state.isSucceed) {
@@ -62,7 +63,7 @@ class PasscodeActivity : ComponentActivity() {
                                 putExtra(STATUS_EXTRA, PasscodeResult.Confirmed)
                             })
                             finish()
-                        } else if (state.isLimitReached) {
+                        } else if (state.isLimitReached && fallbackOnError) {
                             setResult(RESULT_OK, Intent().apply {
                                 putExtra(STATUS_EXTRA, PasscodeResult.LimitReached)
                             })
@@ -77,7 +78,7 @@ class PasscodeActivity : ComponentActivity() {
 
                     when (options) {
                         is PasscodeAction.EnterPasscode -> EnterPasscodeScreen(
-                            options = options, onEvent = viewModel::onEvent
+                            state = state, options = options, onEvent = viewModel::onEvent
                         )
 
                         is PasscodeAction.SetupPasscode -> SetupPasscodeScreen(
@@ -113,7 +114,9 @@ class PasscodeActivity : ComponentActivity() {
         ) : PasscodeAction(cancellable)
 
         data class EnterPasscode(
-            val maxAttemptCount: Int, override val cancellable: Boolean = true
+            val maxAttemptCount: Int,
+            override val cancellable: Boolean = true,
+            val fallbackOnError: Boolean = false
         ) : PasscodeAction(cancellable)
     }
 
