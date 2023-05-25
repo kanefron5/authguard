@@ -6,18 +6,22 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.zabolotskikh.passlock.domain.repository.PasscodeRepository
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private const val LOG_TAG = "PassLockProvider"
 
 @HiltViewModel
 internal class ProviderViewModel @Inject constructor(
-    passcodeRepository: PasscodeRepository
+    private val passcodeRepository: PasscodeRepository,
+    private val ioDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
     private val _state = MutableStateFlow(ProviderState())
     private val _hasPasscode = passcodeRepository.hasPasscode().stateIn(
@@ -33,7 +37,10 @@ internal class ProviderViewModel @Inject constructor(
             is ProviderEvent.ChangeLifecycle -> {
                 Log.d(LOG_TAG, "Event: ${event.event}; Has passcode: ${state.value?.hasPasscode}")
                 if (event.event == Lifecycle.Event.ON_CREATE) {
-                    _state.update { it.copy(isLocked = true) }
+                    viewModelScope.launch(ioDispatcher) {
+                        val isLocked = passcodeRepository.hasPasscode().first()
+                        if (isLocked) _state.update { it.copy(isLocked = true) }
+                    }
                 }
             }
 

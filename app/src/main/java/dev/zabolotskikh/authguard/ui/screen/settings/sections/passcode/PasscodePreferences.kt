@@ -17,6 +17,7 @@ import dev.zabolotskikh.authguard.R
 import dev.zabolotskikh.authguard.ui.screen.settings.PreferenceSection
 import dev.zabolotskikh.authguard.ui.screen.settings.SettingsEvent
 import dev.zabolotskikh.authguard.ui.screen.settings.SettingsState
+import dev.zabolotskikh.passlock.ui.provider.rememberPasscodeEnabled
 
 @Composable
 fun PasscodePreferences(
@@ -34,7 +35,8 @@ fun PasscodePreferences(
             ), verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         item {
-            if (state.isPasscodeEnabled) {
+            val isPasscodeEnabled = rememberPasscodeEnabled()
+            if (isPasscodeEnabled) {
                 SettingsMenuLink(title = {
                     Text(text = stringResource(id = R.string.edit_passcode))
                 }) {
