@@ -5,6 +5,7 @@
     <string name="passcode_reenter_new">Re-enter your passcode</string>
     <string name="passcode_not_match">The entered passcodes don\'t match</string>
     <string name="passcode_enter">Enter passcode</string>
-    <string name="passcode_limit_reached">Retries exceeded. Come back later</string>
-    <string name="passcode_rejected">Wrong password entered. Try again</string>
+    <string name="passcode_limit_reached">The number of password entries has been exceeded. Please try again at %s</string>
+    <string name="passcode_rejected">Wrong password entered. Attempts left: %d</string>
+    <string name="passcode_attempts_remaining">Attempts left: %d</string>
 </resources>

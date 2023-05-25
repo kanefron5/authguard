@@ -6,59 +6,101 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.zabolotskikh.passlock.di.LibraryScope
 import dev.zabolotskikh.passlock.domain.model.PasscodeCheckStatus
 import dev.zabolotskikh.passlock.domain.repository.PasscodeRepository
+import dev.zabolotskikh.passlock.ui.activity.PasscodeResult.BLOCKED
+import dev.zabolotskikh.passlock.ui.activity.PasscodeResult.CANCELLED
+import dev.zabolotskikh.passlock.ui.activity.PasscodeResult.CONFIRMED
+import dev.zabolotskikh.passlock.ui.activity.PasscodeResult.REJECTED
+import dev.zabolotskikh.passlock.ui.activity.PasscodeResult.SUCCEED
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.coroutines.coroutineContext
 
 @HiltViewModel
 internal class PasscodeViewModel @Inject constructor(
     private val passcodeRepository: PasscodeRepository,
     @LibraryScope private val ioDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
-    val state = MutableStateFlow(PasscodeState())
+    private val _state = MutableStateFlow(PasscodeState())
+    private val _remainingAttemptsCount = passcodeRepository.getRemainingAttempts().stateIn(
+        viewModelScope, SharingStarted.WhileSubscribed(), 0
+    )
+    private val _blockEndTime = passcodeRepository.getBlockEndTime().stateIn(
+        viewModelScope, SharingStarted.WhileSubscribed(), 0
+    )
+    private val _currentTime = flow {
+        while (coroutineContext.isActive) {
+            emit(System.currentTimeMillis())
+            delay(1000)
+        }
+    }.stateIn(
+        viewModelScope, SharingStarted.WhileSubscribed(), System.currentTimeMillis()
+    )
+
+    val state = combine(
+        _state, _remainingAttemptsCount, _blockEndTime, _currentTime
+    ) { state, remainingAttemptsCount, blockEndTime, currentTime ->
+        var newPasscodeCheckStatus: PasscodeResult? = state.passcodeCheckStatus
+        if (newPasscodeCheckStatus == BLOCKED) {
+            if (currentTime > blockEndTime) newPasscodeCheckStatus = null
+        } else {
+            if (currentTime < blockEndTime) newPasscodeCheckStatus = BLOCKED
+        }
+        state.copy(
+            remainingAttemptsCount = remainingAttemptsCount,
+            isBlockedUntil = blockEndTime,
+            passcodeCheckStatus = newPasscodeCheckStatus
+        )
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), PasscodeState())
 
     fun onEvent(event: PasscodeEvent) {
         when (event) {
             PasscodeEvent.SavePasscode -> viewModelScope.launch(ioDispatcher) {
-                passcodeRepository.updatePasscode(state.value.passcode)
-                state.update { it.copy(isConfirmed = true) }
+                passcodeRepository.updatePasscode(_state.value.passcode)
+                _state.update { it.copy(passcodeCheckStatus = CONFIRMED) }
             }
 
             is PasscodeEvent.SetPasscode -> {
                 if (event.passcode.isNotBlank()) {
-                    if (state.value.passcode.isNotBlank() && state.value.passcode != event.passcode) {
+                    if (_state.value.passcode.isNotBlank() && _state.value.passcode != event.passcode) {
                         // show error
                         println("error")
                     } else {
-                        state.update {
+                        _state.update {
                             it.copy(
                                 passcode = event.passcode,
-                                attemptCount = state.value.attemptCount + 1
+                                attemptCount = _state.value.attemptCount + 1
                             )
                         }
                     }
                 }
             }
 
-            PasscodeEvent.Cancel -> state.update { it.copy(isCancelled = true) }
+            PasscodeEvent.Cancel -> _state.update { it.copy(passcodeCheckStatus = CANCELLED) }
             is PasscodeEvent.EnterPasscode -> viewModelScope.launch(ioDispatcher) {
-                when (passcodeRepository.checkPasscode(event.passcode, event.maxAttemptCount)) {
-                    is PasscodeCheckStatus.BlockedUntil -> state.update {
-                        it.reset().copy(isLimitReached = true)
+                when (passcodeRepository.checkPasscode(event.passcode)) {
+                    is PasscodeCheckStatus.BlockedUntil -> _state.update {
+                        it.copy(passcodeCheckStatus = BLOCKED)
                     }
 
-                    PasscodeCheckStatus.NoPasscode -> state.update {
-                        it.reset().copy(isCancelled = true)
+                    PasscodeCheckStatus.NoPasscode -> _state.update {
+                        it.copy(passcodeCheckStatus = CANCELLED)
                     }
 
-                    PasscodeCheckStatus.NotMatch -> state.update {
-                        it.reset().copy(isRejected = true)
+                    PasscodeCheckStatus.NotMatch -> _state.update {
+                        it.copy(passcodeCheckStatus = REJECTED)
                     }
 
-                    PasscodeCheckStatus.Success -> state.update {
-                        it.reset().copy(isSucceed = true)
+                    PasscodeCheckStatus.Success -> _state.update {
+                        it.copy(passcodeCheckStatus = SUCCEED)
                     }
                 }
             }

@@ -14,6 +14,7 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.LifecycleEventObserver
 import dev.zabolotskikh.passlock.ui.activity.PasscodeActivity
+import dev.zabolotskikh.passlock.ui.activity.PasscodeResult
 
 @Composable
 fun rememberPasscodeEnabled(): Boolean {
@@ -35,9 +36,7 @@ fun PassLockProvider(
         isActivityLaunched = false
         println(it)
         when (it) {
-            PasscodeActivity.PasscodeResult.Succeed -> viewModel.onEvent(ProviderEvent.OnValidate)
-            PasscodeActivity.PasscodeResult.LimitReached -> {}
-            PasscodeActivity.PasscodeResult.Cancelled -> {}
+            PasscodeResult.SUCCEED -> viewModel.onEvent(ProviderEvent.OnValidate)
             else -> {}
         }
     }
@@ -55,7 +54,7 @@ fun PassLockProvider(
     LaunchedEffect(true) {
         if (state?.isLocked == true && !isActivityLaunched) {
             isActivityLaunched = true
-            launcher.launch(PasscodeActivity.PasscodeAction.EnterPasscode(5, false))
+            launcher.launch(PasscodeActivity.PasscodeAction.EnterPasscode(false))
         }
     }
     if (state?.isLocked == false) content()
