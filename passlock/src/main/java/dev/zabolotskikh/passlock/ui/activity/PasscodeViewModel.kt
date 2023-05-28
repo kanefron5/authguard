@@ -36,28 +36,14 @@ internal class PasscodeViewModel @Inject constructor(
     private val _blockEndTime = passcodeRepository.getBlockEndTime().stateIn(
         viewModelScope, SharingStarted.WhileSubscribed(), 0
     )
-    private val _currentTime = flow {
-        while (coroutineContext.isActive) {
-            emit(System.currentTimeMillis())
-            delay(1000)
-        }
-    }.stateIn(
-        viewModelScope, SharingStarted.WhileSubscribed(), System.currentTimeMillis()
-    )
 
     val state = combine(
-        _state, _remainingAttemptsCount, _blockEndTime, _currentTime
-    ) { state, remainingAttemptsCount, blockEndTime, currentTime ->
-        var newPasscodeCheckStatus: PasscodeResult? = state.passcodeCheckStatus
-        if (newPasscodeCheckStatus == BLOCKED) {
-            if (currentTime > blockEndTime) newPasscodeCheckStatus = null
-        } else {
-            if (currentTime < blockEndTime) newPasscodeCheckStatus = BLOCKED
-        }
+        _state, _remainingAttemptsCount, _blockEndTime
+    ) { state, remainingAttemptsCount, blockEndTime ->
         state.copy(
             remainingAttemptsCount = remainingAttemptsCount,
             isBlockedUntil = blockEndTime,
-            passcodeCheckStatus = newPasscodeCheckStatus
+            passcodeCheckStatus = if (blockEndTime > System.currentTimeMillis()) BLOCKED else state.passcodeCheckStatus
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), PasscodeState())
 

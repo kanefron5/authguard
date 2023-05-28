@@ -20,7 +20,7 @@ jobs:
           distribution: 'corretto'
           cache: gradle
       - name: Run Unit tests
-        run: ./gradlew -PsigningKeyAlias='${{secrets.SIGNING_KEY_ALIAS}}' -PsigningStorePassword='${{secrets.SIGNING_STORE_PASSWORD}}' -PsigningKeyPassword='${{secrets.SIGNING_KEY_PASSWORD}}' :app:testDebugUnitTest
+        run: ./gradlew -PsigningKeyAlias='${{secrets.SIGNING_KEY_ALIAS}}' -PsigningStorePassword='${{secrets.SIGNING_STORE_PASSWORD}}' -PsigningKeyPassword='${{secrets.SIGNING_KEY_PASSWORD}}' -PpasswordEncryptionSecret='${{secrets.PASSWORD_ENCRYPTION_SECRET}}' :app:testDebugUnitTest
 
 
   build:
@@ -37,7 +37,7 @@ jobs:
           distribution: 'corretto'
           cache: gradle
       - name: Build with Gradle
-        run: ./gradlew -PsigningKeyAlias='${{secrets.SIGNING_KEY_ALIAS}}' -PsigningStorePassword='${{secrets.SIGNING_STORE_PASSWORD}}' -PsigningKeyPassword='${{secrets.SIGNING_KEY_PASSWORD}}' :app:assembleRelease
+        run: ./gradlew -PsigningKeyAlias='${{secrets.SIGNING_KEY_ALIAS}}' -PsigningStorePassword='${{secrets.SIGNING_STORE_PASSWORD}}' -PsigningKeyPassword='${{secrets.SIGNING_KEY_PASSWORD}}' -PpasswordEncryptionSecret='${{secrets.PASSWORD_ENCRYPTION_SECRET}}' :app:assembleRelease
       - name: Set env
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
       - name: Create release and upload artifacts
