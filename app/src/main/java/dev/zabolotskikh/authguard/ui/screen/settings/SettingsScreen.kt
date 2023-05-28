@@ -17,6 +17,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -54,19 +55,14 @@ fun SettingsScreen(
                 }
             })
     }, content = { paddingValues ->
-        navController.currentBackStackEntryFlow.collectAsEffect(comparator = { o1, o2 ->
-            if (o1.destination.route == o2.destination.route) 0
-            else -1
-        }) {
+        navController.currentBackStackEntryFlow.collectAsEffect(comparator = backStackComparator) {
             it.destination.route?.apply {
                 val preferenceSection = toPreferenceSection()
                 viewModel.onEvent(SettingsEvent.ChangeSection(preferenceSection))
             }
         }
 
-        viewModel.state.collectAsEffect(comparator = { o1, o2 ->
-            o1.currentSection().compareTo(o2.currentSection())
-        }) {
+        viewModel.state.collectAsEffect(comparator = preferenceSectionComparator) {
             navController.navigate(it.currentSection()) {
                 it.currentSection.back?.apply { popUpTo(this()) }
                 launchSingleTop = true
@@ -91,6 +87,15 @@ fun SettingsScreen(
             }
         }
     })
+}
+
+private val preferenceSectionComparator = { o1: SettingsState, o2: SettingsState ->
+    o1.currentSection().compareTo(o2.currentSection())
+}
+
+private val backStackComparator = { o1: NavBackStackEntry, o2: NavBackStackEntry ->
+    if (o1.destination.route == o2.destination.route) 0
+    else -1
 }
 
 @Composable
