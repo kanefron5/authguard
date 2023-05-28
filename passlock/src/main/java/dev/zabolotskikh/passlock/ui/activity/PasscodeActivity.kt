@@ -58,27 +58,18 @@ class PasscodeActivity : ComponentActivity() {
                     LaunchedEffect(state.passcodeCheckStatus) {
                         when (state.passcodeCheckStatus) {
                             PasscodeResult.CONFIRMED, PasscodeResult.CANCELLED -> {
-                                setResult(RESULT_OK, Intent().apply {
-                                    putExtra(STATUS_EXTRA, state.passcodeCheckStatus)
-                                })
-                                finish()
+                                setResultAndFinish(state.passcodeCheckStatus)
                             }
 
                             PasscodeResult.SUCCEED -> {
                                 if (options !is PasscodeAction.EditPasscode) {
-                                    setResult(RESULT_OK, Intent().apply {
-                                        putExtra(STATUS_EXTRA, state.passcodeCheckStatus)
-                                    })
-                                    finish()
+                                    setResultAndFinish(state.passcodeCheckStatus)
                                 }
                             }
 
                             PasscodeResult.BLOCKED -> {
                                 if (fallbackOnError) {
-                                    setResult(RESULT_OK, Intent().apply {
-                                        putExtra(STATUS_EXTRA, state.passcodeCheckStatus)
-                                    })
-                                    finish()
+                                    setResultAndFinish(state.passcodeCheckStatus)
                                 }
                             }
 
@@ -106,6 +97,11 @@ class PasscodeActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    private fun setResultAndFinish(result: PasscodeResult?) {
+        setResult(RESULT_OK, Intent().apply { putExtra(STATUS_EXTRA, result) })
+        finish()
     }
 
     class PasscodeResultContract : ActivityResultContract<PasscodeAction, PasscodeResult?>() {
