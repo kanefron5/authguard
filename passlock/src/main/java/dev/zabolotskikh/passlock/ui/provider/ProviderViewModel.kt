@@ -35,7 +35,6 @@ internal class ProviderViewModel @Inject constructor(
     fun onEvent(event: ProviderEvent) {
         when (event) {
             is ProviderEvent.ChangeLifecycle -> {
-                Log.d(LOG_TAG, "Event: ${event.event}; Has passcode: ${state.value?.hasPasscode}")
                 if (event.event == Lifecycle.Event.ON_CREATE) {
                     viewModelScope.launch(ioDispatcher) {
                         val isLocked = passcodeRepository.hasPasscode().first()

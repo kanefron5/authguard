@@ -8,7 +8,7 @@ import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
 
-class PasscodeEncoderImpl(
+internal class PasscodeEncoderImpl(
     private val password: String
 ): PasscodeEncoder {
     override fun encode(input: String): ByteArray? {

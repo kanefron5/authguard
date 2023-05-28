@@ -20,7 +20,7 @@ internal fun DeletePasscodeScreen(
             options = EnterPasscode(), state = state, modifier = modifier, onEvent = onEvent
         )
 
-        PasscodeResult.SUCCEED -> onEvent(PasscodeEvent.SetPasscode(null))
+        PasscodeResult.SUCCEED -> onEvent(PasscodeEvent.DeletePasscode)
 
         else -> {}
     }

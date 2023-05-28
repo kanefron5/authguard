@@ -1,6 +1,6 @@
 package dev.zabolotskikh.passlock.domain.model
 
-sealed interface PasscodeCheckStatus {
+internal sealed interface PasscodeCheckStatus {
     object Success: PasscodeCheckStatus
     object NotMatch: PasscodeCheckStatus
     object NoPasscode: PasscodeCheckStatus
