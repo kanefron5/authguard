@@ -8,7 +8,6 @@ import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import dev.zabolotskikh.passlock.BuildConfig
 import dev.zabolotskikh.passlock.domain.PasscodeEncoder
-import dev.zabolotskikh.passlock.domain.model.Passcode
 import dev.zabolotskikh.passlock.domain.model.PasscodeCheckStatus
 import dev.zabolotskikh.passlock.domain.repository.PasscodeRepository
 import kotlinx.coroutines.flow.Flow
@@ -100,10 +99,9 @@ internal class PasscodeRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updatePasscode(passcode: String) {
-        val (lastAuthorizedTimestamp, passcodeHash) = Passcode(passcodeHash = calculateHash(passcode))
         dataStore.edit { prefs ->
-            prefs[PASSCODE_HASH_NAME] = passcodeHash
-            prefs[PASSCODE_TIME_NAME] = lastAuthorizedTimestamp
+            prefs[PASSCODE_HASH_NAME] = calculateHash(passcode)
+            prefs[PASSCODE_TIME_NAME] = System.currentTimeMillis()
         }
     }
 
