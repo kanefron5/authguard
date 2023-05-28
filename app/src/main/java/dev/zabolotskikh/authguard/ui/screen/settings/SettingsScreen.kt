@@ -64,7 +64,7 @@ fun SettingsScreen(
 
         viewModel.state.collectAsEffect(comparator = preferenceSectionComparator) {
             navController.navigate(it.currentSection()) {
-                it.currentSection.back?.apply { popUpTo(this()) }
+                it.currentSection.back?.let { route -> popUpTo(route()) }
                 launchSingleTop = true
             }
         }

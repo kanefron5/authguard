@@ -21,22 +21,13 @@ class SettingsViewModel @Inject constructor(
     private val serviceRepository: ServiceRepository,
     private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
-    private val _state = MutableStateFlow(SettingsState())
-    private val _appState = stateRepository.getState().stateIn(
-        viewModelScope, SharingStarted.WhileSubscribed(), null
-    )
-
-    val state = combine(_appState, _state) { appState, settingsState ->
-        settingsState.copy(isPasscodeEnabled = false)
-    }.stateIn(
-        viewModelScope, SharingStarted.WhileSubscribed(5000), SettingsState()
-    )
+    val state = MutableStateFlow(SettingsState())
 
     fun onEvent(event: SettingsEvent) {
         when (event) {
             SettingsEvent.BuildNumberClick -> {}
             SettingsEvent.ResetData -> resetData()
-            is SettingsEvent.ChangeSection -> _state.update { it.copy(currentSection = event.section) }
+            is SettingsEvent.ChangeSection -> state.update { it.copy(currentSection = event.section) }
         }
     }
 

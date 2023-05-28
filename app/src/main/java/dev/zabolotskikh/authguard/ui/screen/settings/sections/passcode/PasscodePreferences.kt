@@ -64,18 +64,10 @@ fun PasscodePreferences(
     }
 }
 
-@Preview(device = Devices.PIXEL_4, showSystemUi = true, name = "Without passcode")
+@Preview(device = Devices.PIXEL_4, showSystemUi = true)
 @Composable
 private fun PasscodePreferencesPreview1() {
     PasscodePreferences(
         paddingValues = PaddingValues(16.dp), state = SettingsState()
-    )
-}
-
-@Preview(device = Devices.PIXEL_4, showSystemUi = true, name = "With passcode")
-@Composable
-private fun PasscodePreferencesPreview2() {
-    PasscodePreferences(
-        paddingValues = PaddingValues(16.dp), state = SettingsState(isPasscodeEnabled = true)
     )
 }
