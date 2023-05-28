@@ -27,8 +27,8 @@ internal class ProviderViewModel @Inject constructor(
     private val _hasPasscode = passcodeRepository.hasPasscode().stateIn(
         viewModelScope, SharingStarted.WhileSubscribed(), false
     )
-    val state = combine(_state, _hasPasscode) { _state, hasPasscode ->
-        _state.copy(hasPasscode = hasPasscode)
+    val state = combine(_state, _hasPasscode) { state, hasPasscode ->
+        state.copy(hasPasscode = hasPasscode)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
 

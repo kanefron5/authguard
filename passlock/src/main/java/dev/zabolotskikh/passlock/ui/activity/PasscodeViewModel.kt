@@ -58,7 +58,6 @@ internal class PasscodeViewModel @Inject constructor(
                 if (event.passcode.isNotBlank()) {
                     if (_state.value.passcode.isNotBlank() && _state.value.passcode != event.passcode) {
                         // show error
-                        println("error")
                     } else {
                         _state.update {
                             it.copy(
