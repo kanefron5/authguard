@@ -66,7 +66,6 @@ android {
 }
 
 dependencies {
-    // todo вычистить зависимости
     implementation(libs.androidx.datastore.preferences)
 
     implementation(libs.dagger.hilt.hilt)
@@ -77,25 +76,14 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
 
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime)
-    implementation(libs.androidx.lifecycle.viewmodel)
-    implementation(libs.androidx.lifecycle.livedata)
-    implementation(libs.androidx.activity.compose)
-
-    implementation(libs.androidx.camera.camera2)
-    implementation(libs.androidx.camera.view)
-    implementation(libs.androidx.camera.lifecycle)
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui.ui)
-    implementation(libs.androidx.compose.graphics)
     implementation(libs.androidx.compose.icons)
     implementation(libs.androidx.compose.ui.tooling.tooling)
     implementation(libs.androidx.compose.material3)
-    implementation(libs.androidx.compose.navigation)
     implementation(libs.androidx.compose.hilt.navigation)
-    implementation(libs.androidx.compose.settings)
-    implementation(libs.androidx.core.ktx)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
