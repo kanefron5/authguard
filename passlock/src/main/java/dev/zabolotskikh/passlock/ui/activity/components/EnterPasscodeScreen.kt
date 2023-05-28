@@ -48,7 +48,7 @@ internal fun EnterPasscodeScreen(
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(24.dp))
-        if (state.passcodeCheckStatus == PasscodeResult.BLOCKED) {
+        if (state.passcodeCheckStatus == BLOCKED) {
             Text(
                 modifier = Modifier
                     .fillMaxWidth()

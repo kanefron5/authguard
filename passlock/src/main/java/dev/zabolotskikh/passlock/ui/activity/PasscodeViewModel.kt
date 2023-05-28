@@ -55,6 +55,12 @@ internal class PasscodeViewModel @Inject constructor(
             }
 
             is PasscodeEvent.SetPasscode -> {
+                if (event.passcode == null) {
+                    viewModelScope.launch(ioDispatcher) {
+                        passcodeRepository.deletePasscode()
+                    }
+                    return
+                }
                 if (event.passcode.isNotBlank()) {
                     if (_state.value.passcode.isNotBlank() && _state.value.passcode != event.passcode) {
                         // show error

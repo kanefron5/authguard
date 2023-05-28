@@ -19,6 +19,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import dev.zabolotskikh.passlock.ui.activity.components.DeletePasscodeScreen
+import dev.zabolotskikh.passlock.ui.activity.components.EditPasscodeScreen
 import dev.zabolotskikh.passlock.ui.activity.components.EnterPasscodeScreen
 import dev.zabolotskikh.passlock.ui.activity.components.SetupPasscodeScreen
 import dev.zabolotskikh.passlock.ui.theme.PassLockTheme
@@ -35,6 +37,7 @@ class PasscodeActivity : ComponentActivity() {
         onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (options.cancellable) {
+                    finish()
                     this.remove()
                 } else {
                     finishAffinity()
@@ -54,11 +57,20 @@ class PasscodeActivity : ComponentActivity() {
 
                     LaunchedEffect(state.passcodeCheckStatus) {
                         when (state.passcodeCheckStatus) {
-                            PasscodeResult.CONFIRMED, PasscodeResult.SUCCEED, PasscodeResult.CANCELLED -> {
+                            PasscodeResult.CONFIRMED, PasscodeResult.CANCELLED -> {
                                 setResult(RESULT_OK, Intent().apply {
                                     putExtra(STATUS_EXTRA, state.passcodeCheckStatus)
                                 })
                                 finish()
+                            }
+
+                            PasscodeResult.SUCCEED -> {
+                                if (options !is PasscodeAction.EditPasscode) {
+                                    setResult(RESULT_OK, Intent().apply {
+                                        putExtra(STATUS_EXTRA, state.passcodeCheckStatus)
+                                    })
+                                    finish()
+                                }
                             }
 
                             PasscodeResult.BLOCKED -> {
@@ -81,6 +93,14 @@ class PasscodeActivity : ComponentActivity() {
 
                         is PasscodeAction.SetupPasscode -> SetupPasscodeScreen(
                             state = state, options = options, onEvent = viewModel::onEvent
+                        )
+
+                        is PasscodeAction.EditPasscode -> EditPasscodeScreen(
+                            state = state, onEvent = viewModel::onEvent
+                        )
+
+                        is PasscodeAction.DeletePasscode -> DeletePasscodeScreen(
+                            state = state, onEvent = viewModel::onEvent
                         )
                     }
                 }
@@ -113,6 +133,14 @@ class PasscodeActivity : ComponentActivity() {
 
         data class EnterPasscode(
             override val cancellable: Boolean = true, val fallbackOnError: Boolean = false
+        ) : PasscodeAction(cancellable)
+
+        data class EditPasscode(
+            override val cancellable: Boolean = true
+        ) : PasscodeAction(cancellable)
+
+        data class DeletePasscode(
+            override val cancellable: Boolean = true
         ) : PasscodeAction(cancellable)
     }
 
