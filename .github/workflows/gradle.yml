@@ -36,9 +36,8 @@ jobs:
       - name: Run Unit tests
         run: ./gradlew -PsigningKeyAlias='${{secrets.SIGNING_KEY_ALIAS}}' -PsigningStorePassword='${{secrets.SIGNING_STORE_PASSWORD}}' -PsigningKeyPassword='${{secrets.SIGNING_KEY_PASSWORD}}' -PpasswordEncryptionSecret='${{secrets.PASSWORD_ENCRYPTION_SECRET}}' :app:testDebugUnitTest
 
-
   build:
-    needs: test
+    needs: [passlock-unit-test, app-unit-test]
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
 
