@@ -1,5 +1,5 @@
 package dev.zabolotskikh.passlock.domain
 
-interface PasscodeEncoder {
+internal interface PasscodeEncoder {
     fun encode(input: String): ByteArray?
 }

@@ -21,6 +21,7 @@ barcodeScanning = "17.0.3"
 accompanistPermissions = "0.23.1"
 agp = "8.0.1"
 kotlin = "1.8.20"
+mockitoKotlin = "4.1.0"
 
 [libraries]
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
@@ -71,7 +72,7 @@ androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "a
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso" }
 
 junit = { group = "junit", name = "junit", version.ref = "junit" }
-
+mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockitoKotlin" }
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
