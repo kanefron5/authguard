@@ -20,7 +20,7 @@ jobs:
           distribution: 'corretto'
           cache: gradle
       - name: Run Unit tests
-        run: ./gradlew -PpasswordEncryptionSecret='${{secrets.PASSWORD_ENCRYPTION_SECRET}}' :passlock:testDebugUnitTest
+        run: ./gradlew -PsigningKeyAlias='${{secrets.SIGNING_KEY_ALIAS}}' -PsigningStorePassword='${{secrets.SIGNING_STORE_PASSWORD}}' -PsigningKeyPassword='${{secrets.SIGNING_KEY_PASSWORD}}' -PpasswordEncryptionSecret='${{secrets.PASSWORD_ENCRYPTION_SECRET}}' :passlock:testDebugUnitTest
 
   app-unit-test:
     runs-on: ubuntu-latest
