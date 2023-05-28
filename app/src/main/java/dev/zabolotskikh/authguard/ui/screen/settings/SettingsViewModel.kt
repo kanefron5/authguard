@@ -37,9 +37,6 @@ class SettingsViewModel @Inject constructor(
             SettingsEvent.BuildNumberClick -> {}
             SettingsEvent.ResetData -> resetData()
             is SettingsEvent.ChangeSection -> _state.update { it.copy(currentSection = event.section) }
-            SettingsEvent.DeletePasscode -> viewModelScope.launch(ioDispatcher) {
-//                passcodeRepository.deletePasscode()
-            }
         }
     }
 

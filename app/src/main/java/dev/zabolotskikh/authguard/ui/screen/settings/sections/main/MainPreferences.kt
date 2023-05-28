@@ -1,5 +1,6 @@
 package dev.zabolotskikh.authguard.ui.screen.settings.sections.main
 
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,6 +24,10 @@ import dev.zabolotskikh.authguard.R
 import dev.zabolotskikh.authguard.ui.screen.settings.PreferenceSection
 import dev.zabolotskikh.authguard.ui.screen.settings.SettingsEvent
 import dev.zabolotskikh.authguard.ui.screen.settings.sections.main.components.ResetConfirmationDialog
+import dev.zabolotskikh.passlock.ui.activity.PasscodeActivity
+import dev.zabolotskikh.passlock.ui.activity.PasscodeActivity.PasscodeAction.DeletePasscode
+import dev.zabolotskikh.passlock.ui.activity.PasscodeResult
+import dev.zabolotskikh.passlock.ui.provider.rememberPasscodeEnabled
 
 @Composable
 fun Preferences(
@@ -32,11 +37,18 @@ fun Preferences(
 ) {
     var resetConfirmationDialogShowed by rememberSaveable { mutableStateOf(false) }
 
+    val hasPasscode = rememberPasscodeEnabled()
+    val launcher = rememberLauncherForActivityResult(PasscodeActivity.PasscodeResultContract()) {
+        if(it == PasscodeResult.SUCCEED) onEvent(SettingsEvent.ResetData)
+    }
+
+
     if (resetConfirmationDialogShowed) {
-        ResetConfirmationDialog(
-            onDismiss = { resetConfirmationDialogShowed = false },
-            onConfirm = { onEvent(SettingsEvent.ResetData) }
-        )
+        ResetConfirmationDialog(onDismiss = { resetConfirmationDialogShowed = false }, onConfirm = {
+            resetConfirmationDialogShowed = false
+            if (!hasPasscode) onEvent(SettingsEvent.ResetData)
+            else launcher.launch(DeletePasscode())
+        })
     }
 
     LazyColumn(
@@ -86,8 +98,5 @@ fun Preferences(
 @Preview(device = Devices.PIXEL_4, showSystemUi = true)
 @Composable
 fun PreferencesPreview() {
-    Preferences(
-        paddingValues = PaddingValues(16.dp),
-        onEvent = {}
-    )
+    Preferences(paddingValues = PaddingValues(16.dp), onEvent = {})
 }

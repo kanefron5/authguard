@@ -1,5 +1,6 @@
 package dev.zabolotskikh.authguard.ui.screen.settings.sections.passcode
 
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,6 +18,9 @@ import dev.zabolotskikh.authguard.R
 import dev.zabolotskikh.authguard.ui.screen.settings.PreferenceSection
 import dev.zabolotskikh.authguard.ui.screen.settings.SettingsEvent
 import dev.zabolotskikh.authguard.ui.screen.settings.SettingsState
+import dev.zabolotskikh.passlock.ui.activity.PasscodeActivity
+import dev.zabolotskikh.passlock.ui.activity.PasscodeActivity.PasscodeAction.DeletePasscode
+import dev.zabolotskikh.passlock.ui.activity.PasscodeActivity.PasscodeAction.EditPasscode
 import dev.zabolotskikh.passlock.ui.provider.rememberPasscodeEnabled
 
 @Composable
@@ -26,6 +30,8 @@ fun PasscodePreferences(
     state: SettingsState = SettingsState(),
     onEvent: (SettingsEvent) -> Unit = {},
 ) {
+    val launcher = rememberLauncherForActivityResult(PasscodeActivity.PasscodeResultContract()) {}
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -40,12 +46,12 @@ fun PasscodePreferences(
                 SettingsMenuLink(title = {
                     Text(text = stringResource(id = R.string.edit_passcode))
                 }) {
-//                    onEvent(SettingsEvent.SetPasscode)
+                    launcher.launch(EditPasscode())
                 }
                 SettingsMenuLink(title = {
                     Text(text = stringResource(id = R.string.delete_passcode))
                 }) {
-                    onEvent(SettingsEvent.DeletePasscode)
+                    launcher.launch(DeletePasscode())
                 }
             } else {
                 SettingsMenuLink(title = {
