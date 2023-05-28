@@ -1,5 +1,8 @@
+import java.util.Properties
+
 val appCompileSdk: String by project
 val appMinSdk: String by project
+val passwordEncryptionSecret: String by rootProject.extra
 
 @Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
@@ -21,6 +24,22 @@ android {
     }
 
     buildTypes {
+        all {
+            var secret = passwordEncryptionSecret
+            if (secret.isBlank()) {
+                val passwordEncryptionSecretKey = "passwordEncryptionSecret"
+                val properties = Properties().apply {
+                    val file = project.file("$rootDir/encryption.properties")
+                    if (file.exists()) load(file.inputStream())
+                    else {
+                        this[passwordEncryptionSecretKey] = ""
+                    }
+                }
+                secret = properties.getProperty(passwordEncryptionSecretKey)
+            }
+
+            buildConfigField("String", "PASSWORD_SECRET", "\"$secret\"")
+        }
         release {
             isMinifyEnabled = true
             proguardFiles(
@@ -38,6 +57,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         // https://developer.android.com/jetpack/androidx/releases/compose-kotlin

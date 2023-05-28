@@ -1,12 +1,15 @@
 package dev.zabolotskikh.passlock.data.repository
 
 import android.content.Context
+import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import dev.zabolotskikh.passlock.BuildConfig
+import dev.zabolotskikh.passlock.domain.PasscodeEncoder
 import dev.zabolotskikh.passlock.domain.model.Passcode
 import dev.zabolotskikh.passlock.domain.model.PasscodeCheckStatus
 import dev.zabolotskikh.passlock.domain.repository.PasscodeRepository
@@ -15,6 +18,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import kotlin.math.max
+
 
 private const val STORE_NAME = "passcode"
 private const val BLOCK_TIME = 1 * 60 * 1000
@@ -27,8 +31,10 @@ private val PASSCODE_BLOCKED_UNTIL_NAME = longPreferencesKey("passcode_blocked_u
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = STORE_NAME)
 
+private const val LOG_TAG = "PasscodeRepositoryImpl"
+
 internal class PasscodeRepositoryImpl @Inject constructor(
-    private val context: Context
+    private val context: Context, private val encoder: PasscodeEncoder
 ) : PasscodeRepository {
     override suspend fun checkPasscode(
         passcode: String
@@ -38,25 +44,19 @@ internal class PasscodeRepositoryImpl @Inject constructor(
         var currentAttemptCount = (preferences[PASSCODE_ATTEMPT_COUNT_NAME] ?: 0) + 1
         val currentBlockedUntil = preferences[PASSCODE_BLOCKED_UNTIL_NAME] ?: 0
 
-        // TODO DEBUG ONLY
-        println(preferences)
-        if (currentHash == calculateHash(passcode)) {
-            context.dataStore.edit { prefs ->
-                prefs[PASSCODE_ATTEMPT_COUNT_NAME] = 0
+        if (BuildConfig.DEBUG) {
+            Log.d(LOG_TAG, "Preferences: $preferences")
+            if (currentHash == calculateHash(passcode)) {
+                resetBlock()
+                return PasscodeCheckStatus.Success
             }
-            return PasscodeCheckStatus.Success
         }
-        // TODO DEBUG ONLY
 
         if (System.currentTimeMillis() < currentBlockedUntil) {
             return PasscodeCheckStatus.BlockedUntil(currentBlockedUntil)
         } else if (currentBlockedUntil != 0L) {
-            // Значит были в блоке, при условии, что currentAttemptCount-1 == MAX
-            if (MAX_ATTEMPT_COUNT == currentAttemptCount - 1) {
-                // Снимаем блокировку
-                context.dataStore.edit { prefs ->
-                    prefs[PASSCODE_BLOCKED_UNTIL_NAME] = 0
-                }
+            if (isBlockExpired()) {
+                resetBlock()
                 currentAttemptCount = 1
             }
         }
@@ -67,14 +67,10 @@ internal class PasscodeRepositoryImpl @Inject constructor(
         }
 
         return if (currentHash == calculateHash(passcode)) {
-            context.dataStore.edit { prefs ->
-                prefs[PASSCODE_ATTEMPT_COUNT_NAME] = 0
-            }
+            resetBlock()
             PasscodeCheckStatus.Success
         } else {
             context.dataStore.edit { prefs ->
-                prefs[PASSCODE_ATTEMPT_COUNT_NAME] = currentAttemptCount
-
                 if (currentAttemptCount == MAX_ATTEMPT_COUNT) {
                     prefs[PASSCODE_BLOCKED_UNTIL_NAME] = System.currentTimeMillis() + BLOCK_TIME
                 }
@@ -88,11 +84,13 @@ internal class PasscodeRepositoryImpl @Inject constructor(
     }
 
     override fun getRemainingAttempts() = context.dataStore.data.map {
+        if (isBlockExpired()) resetBlock()
         val currentAttemptCount = it[PASSCODE_ATTEMPT_COUNT_NAME] ?: 0
         max(MAX_ATTEMPT_COUNT - currentAttemptCount, 0).toInt()
     }
 
     override fun getBlockEndTime() = context.dataStore.data.map {
+        if (isBlockExpired()) resetBlock()
         it[PASSCODE_BLOCKED_UNTIL_NAME] ?: 0
     }
 
@@ -111,9 +109,21 @@ internal class PasscodeRepositoryImpl @Inject constructor(
         }
     }
 
-
     private fun calculateHash(passcode: String): String {
-        // TODO("Not yet implemented")
-        return passcode.hashCode().toString()
+        return encoder.encode(passcode)?.decodeToString() ?: passcode
+    }
+
+    private suspend fun isBlockExpired(): Boolean {
+        val preferences = context.dataStore.data.first()
+        val currentBlockedUntil = preferences[PASSCODE_BLOCKED_UNTIL_NAME] ?: 0
+        val currentAttemptCount = preferences[PASSCODE_ATTEMPT_COUNT_NAME] ?: 0
+        return System.currentTimeMillis() >= currentBlockedUntil && MAX_ATTEMPT_COUNT == currentAttemptCount
+    }
+
+    private suspend fun resetBlock() {
+        context.dataStore.edit { prefs ->
+            prefs[PASSCODE_BLOCKED_UNTIL_NAME] = 0
+            prefs[PASSCODE_ATTEMPT_COUNT_NAME] = 0
+        }
     }
 }
