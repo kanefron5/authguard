@@ -1,6 +1,10 @@
 package dev.zabolotskikh.passlock.di
 
 import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStoreFile
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,8 +25,8 @@ internal object LibraryModule {
     @Provides
     @Singleton
     fun providePasscodeRepository(
-        @ApplicationContext context: Context, passcodeEncoder: PasscodeEncoder
-    ): PasscodeRepository = PasscodeRepositoryImpl(context, passcodeEncoder)
+        dataStore: DataStore<Preferences>, passcodeEncoder: PasscodeEncoder
+    ): PasscodeRepository = PasscodeRepositoryImpl(dataStore, passcodeEncoder)
 
     @LibraryScope
     @Singleton
@@ -33,4 +37,10 @@ internal object LibraryModule {
     @Provides
     fun provideEncoder(): PasscodeEncoder = PasscodeEncoderImpl(BuildConfig.PASSWORD_SECRET)
 
+    @Singleton
+    @Provides
+    fun provideStore(@ApplicationContext context: Context): DataStore<Preferences> =
+        PreferenceDataStoreFactory.create(produceFile = {
+            context.preferencesDataStoreFile("passcode")
+        })
 }
