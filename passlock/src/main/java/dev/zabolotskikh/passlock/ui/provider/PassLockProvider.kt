@@ -34,7 +34,6 @@ fun PassLockProvider(
 
     val launcher = rememberLauncherForActivityResult(PasscodeActivity.PasscodeResultContract()) {
         isActivityLaunched = false
-        println(it)
         when (it) {
             PasscodeResult.SUCCEED -> viewModel.onEvent(ProviderEvent.OnValidate)
             else -> {}
