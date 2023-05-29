@@ -1,7 +1,7 @@
 package dev.zabolotskikh.authguard
 
-import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
+import dev.zabolotskikh.passlock.WorkManagerApplication
 
 @HiltAndroidApp
-class App: Application()
+class App: WorkManagerApplication()
