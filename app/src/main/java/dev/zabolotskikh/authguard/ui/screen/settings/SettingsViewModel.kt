@@ -7,7 +7,11 @@ import dev.zabolotskikh.authguard.domain.model.AppState
 import dev.zabolotskikh.authguard.domain.repository.AppStateRepository
 import dev.zabolotskikh.authguard.domain.repository.ServiceRepository
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,21 +21,19 @@ class SettingsViewModel @Inject constructor(
     private val serviceRepository: ServiceRepository,
     private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
-    fun resetData() = viewModelScope.launch(ioDispatcher) {
-        stateRepository.update(AppState(isStarted = false, isAuthenticated = false, isPrivateMode = false))
-        serviceRepository.clear()
+    val state = MutableStateFlow(SettingsState())
+
+    fun onEvent(event: SettingsEvent) {
+        when (event) {
+            SettingsEvent.BuildNumberClick -> {}
+            SettingsEvent.ResetData -> resetData()
+            is SettingsEvent.ChangeSection -> state.update { it.copy(currentSection = event.section) }
+        }
     }
 
 
-    private var clickCounter = 0
-    fun easterEgg() {
-        if (++clickCounter >= 5) {
-            clickCounter = 0
-        } else {
-            viewModelScope.launch {
-                delay(3000)
-                if (clickCounter > 0) clickCounter--
-            }
-        }
+    private fun resetData() = viewModelScope.launch(ioDispatcher) {
+        stateRepository.update(AppState())
+        serviceRepository.clear()
     }
 }

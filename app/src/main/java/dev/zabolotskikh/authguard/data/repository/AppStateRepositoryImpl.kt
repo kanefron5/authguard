@@ -13,9 +13,11 @@ class AppStateRepositoryImpl @Inject constructor(
 ) : AppStateRepository {
     override fun getState() = appStateDao.getState().map { it.toAppState() }
 
-    override suspend fun update(appState: AppState) = appStateDao.updateState(
-        AppStateEntity(
-            appState.isStarted, appState.isAuthenticated, appState.isPrivateMode
+    override suspend fun update(appState: AppState) {
+        appStateDao.updateState(
+            AppStateEntity(
+                appState.isStarted, appState.isRemoteMode, appState.isPrivateMode
+            )
         )
-    )
+    }
 }

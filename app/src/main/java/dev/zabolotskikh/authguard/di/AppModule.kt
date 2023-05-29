@@ -44,8 +44,8 @@ object AppModule {
         return OtpRepositoryImpl(serviceRepository)
     }
 
-    @Singleton
     @Provides
+    @Singleton
     fun provideDispatchers(): CoroutineDispatcher = Dispatchers.IO
 
 }
