@@ -1,6 +1,5 @@
 package dev.zabolotskikh.passlock.data.repository
 
-import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
@@ -9,7 +8,6 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
-import dev.zabolotskikh.passlock.BuildConfig
 import dev.zabolotskikh.passlock.data.ResetBlockWorker
 import dev.zabolotskikh.passlock.domain.PasscodeEncoder
 import dev.zabolotskikh.passlock.domain.model.PasscodeCheckStatus
@@ -33,8 +31,6 @@ private val PASSCODE_BLOCKED_UNTIL_NAME = longPreferencesKey("passcode_blocked_u
 
 private val resetBlockKeys =
     arrayOf(PASSCODE_BLOCKED_UNTIL_NAME.name, PASSCODE_ATTEMPT_COUNT_NAME.name)
-
-private const val LOG_TAG = "PasscodeRepositoryImpl"
 
 internal class PasscodeRepositoryImpl @Inject constructor(
     private val dataStore: DataStore<Preferences>,
@@ -60,14 +56,6 @@ internal class PasscodeRepositoryImpl @Inject constructor(
         var currentAttemptCount = preferences.attemptCount + 1
         val currentBlockedUntil = preferences.blockedUntil
 
-        if (BuildConfig.DEBUG) {
-            Log.d(LOG_TAG, "Preferences: $preferences")
-            if (currentHash == calculateHash(passcode)) {
-                resetBlock()
-                return PasscodeCheckStatus.Success
-            }
-        }
-
         if (currentTimeRepository.now() < currentBlockedUntil) {
             return PasscodeCheckStatus.BlockedUntil(currentBlockedUntil)
         } else if (currentBlockedUntil != 0L) {
@@ -88,8 +76,9 @@ internal class PasscodeRepositoryImpl @Inject constructor(
         } else {
             if (currentAttemptCount == MAX_ATTEMPT_COUNT) {
                 PasscodeCheckStatus.BlockedUntil(setBlock())
+            } else {
+                PasscodeCheckStatus.NotMatch
             }
-            PasscodeCheckStatus.NotMatch
         }
     }
 

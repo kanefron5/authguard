@@ -2,13 +2,9 @@
 
 package dev.zabolotskikh.passlock
 
-import android.content.Context
-import android.os.Handler
-import android.os.Looper
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
-import androidx.work.Configuration
 import androidx.work.WorkManager
 import dev.zabolotskikh.passlock.data.TestPasscodeEncoder
 import dev.zabolotskikh.passlock.data.repository.CurrentTimeRepositoryImpl
@@ -21,11 +17,10 @@ import dev.zabolotskikh.passlock.ui.provider.ProviderViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import java.io.File
 
-private fun getDataStore(): DataStore<Preferences> {
+internal fun getDataStore(): DataStore<Preferences> {
     return PreferenceDataStoreFactory.create(produceFile = { File("test${System.currentTimeMillis()}.preferences_pb").apply { deleteOnExit() } })
 }
 

@@ -107,21 +107,6 @@ class PasscodeViewModelTests {
     }
 
     @Test
-    fun `test EnterPasscode event with NoPasscode`() = runTest(dispatcher) {
-        val repository = mock<PasscodeRepository> {
-            onBlocking { checkPasscode(any()) } doReturn PasscodeCheckStatus.NoPasscode
-        }
-        val viewModel = getPasscodeViewModel(
-            dispatcher = dispatcher, passcodeRepository = repository
-        )
-        val job = launch { viewModel.state.collect() }
-        viewModel.onEvent(PasscodeEvent.EnterPasscode("1"))
-
-        Assert.assertEquals(PasscodeResult.CANCELLED, viewModel.state.value.passcodeCheckStatus)
-        job.cancel()
-    }
-
-    @Test
     fun `test EnterPasscode event with NotMatch`() = runTest(dispatcher) {
         val repository = mock<PasscodeRepository> {
             onBlocking { checkPasscode(any()) } doReturn PasscodeCheckStatus.NotMatch

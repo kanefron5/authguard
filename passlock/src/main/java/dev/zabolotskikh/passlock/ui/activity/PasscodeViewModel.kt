@@ -80,10 +80,6 @@ internal class PasscodeViewModel @Inject constructor(
                         it.copy(passcodeCheckStatus = BLOCKED)
                     }
 
-                    PasscodeCheckStatus.NoPasscode -> _state.update {
-                        it.copy(passcodeCheckStatus = CANCELLED)
-                    }
-
                     PasscodeCheckStatus.NotMatch -> _state.update {
                         it.copy(passcodeCheckStatus = REJECTED)
                     }
