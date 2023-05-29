@@ -69,6 +69,7 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
 
     implementation(libs.dagger.hilt.hilt)
+    implementation(libs.dagger.hilt.work)
     kapt(libs.dagger.hilt.compiler)
     kapt(libs.dagger.hilt.androidx.compiler)
 
@@ -76,6 +77,8 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
 
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.work.runtime)
+    implementation(libs.androidx.work.testing)
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui.ui)

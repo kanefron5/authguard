@@ -28,6 +28,9 @@ android {
         versionCode = appVersionCode
         versionName = appVersionName
 
+        // https://developer.android.com/guide/topics/resources/providing-resources
+        resourceConfigurations.addAll(arrayOf("en", "ru"))
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -106,6 +109,8 @@ dependencies {
 
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
+
+    implementation(libs.androidx.work.runtime)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime)
