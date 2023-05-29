@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import dagger.hilt.android.AndroidEntryPoint
 import dev.zabolotskikh.authguard.ui.MyAppNavHost
 import dev.zabolotskikh.authguard.ui.theme.AuthGuardTheme
+import dev.zabolotskikh.passlock.ui.provider.PassLockProvider
 
 @AndroidEntryPoint
 @ExperimentalGetImage
@@ -19,11 +20,13 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             AuthGuardTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    MyAppNavHost()
+                PassLockProvider {
+                    Surface(
+                        modifier = Modifier.fillMaxSize(),
+                        color = MaterialTheme.colorScheme.background
+                    ) {
+                        MyAppNavHost()
+                    }
                 }
             }
         }

@@ -1,15 +1,11 @@
-package dev.zabolotskikh.authguard.ui.screen.settings.components
+package dev.zabolotskikh.authguard.ui.screen.settings.sections.main
 
-import androidx.camera.core.ExperimentalGetImage
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -25,22 +21,34 @@ import com.alorma.compose.settings.ui.SettingsGroup
 import com.alorma.compose.settings.ui.SettingsMenuLink
 import dev.zabolotskikh.authguard.BuildConfig
 import dev.zabolotskikh.authguard.R
-import dev.zabolotskikh.authguard.ui.screen.services.ServiceScreen
+import dev.zabolotskikh.authguard.ui.screen.settings.PreferenceSection
+import dev.zabolotskikh.authguard.ui.screen.settings.SettingsEvent
+import dev.zabolotskikh.authguard.ui.screen.settings.sections.main.components.ResetConfirmationDialog
+import dev.zabolotskikh.passlock.ui.activity.PasscodeActivity
+import dev.zabolotskikh.passlock.ui.activity.PasscodeActivity.PasscodeAction.DeletePasscode
+import dev.zabolotskikh.passlock.ui.activity.PasscodeResult
+import dev.zabolotskikh.passlock.ui.provider.rememberPasscodeEnabled
 
 @Composable
 fun Preferences(
     modifier: Modifier = Modifier,
     paddingValues: PaddingValues,
-    onResetData: () -> Unit,
-    onBuildNumberClick: () -> Unit
+    onEvent: (SettingsEvent) -> Unit,
 ) {
     var resetConfirmationDialogShowed by rememberSaveable { mutableStateOf(false) }
 
+    val hasPasscode = rememberPasscodeEnabled()
+    val launcher = rememberLauncherForActivityResult(PasscodeActivity.PasscodeResultContract()) {
+        if(it == PasscodeResult.SUCCEED) onEvent(SettingsEvent.ResetData)
+    }
+
+
     if (resetConfirmationDialogShowed) {
-        ResetConfirmationDialog(
-            onDismiss = { resetConfirmationDialogShowed = false },
-            onConfirm = onResetData
-        )
+        ResetConfirmationDialog(onDismiss = { resetConfirmationDialogShowed = false }, onConfirm = {
+            resetConfirmationDialogShowed = false
+            if (!hasPasscode) onEvent(SettingsEvent.ResetData)
+            else launcher.launch(DeletePasscode())
+        })
     }
 
     LazyColumn(
@@ -55,6 +63,11 @@ fun Preferences(
             SettingsGroup(title = {
                 Text(text = stringResource(id = R.string.settings_title_data))
             }) {
+                SettingsMenuLink(title = {
+                    Text(text = stringResource(id = R.string.settings_title_passcode))
+                }) {
+                    onEvent(SettingsEvent.ChangeSection(PreferenceSection.Passcode))
+                }
                 SettingsMenuLink(title = {
                     Text(text = stringResource(id = R.string.settings_reset))
                 }) {
@@ -75,7 +88,7 @@ fun Preferences(
                 }, subtitle = {
                     Text(text = BuildConfig.VERSION_CODE.toString())
                 }) {
-                    onBuildNumberClick()
+                    onEvent(SettingsEvent.BuildNumberClick)
                 }
             }
         }
@@ -85,9 +98,5 @@ fun Preferences(
 @Preview(device = Devices.PIXEL_4, showSystemUi = true)
 @Composable
 fun PreferencesPreview() {
-    Preferences(
-        paddingValues = PaddingValues(16.dp),
-        onResetData = {},
-        onBuildNumberClick = {}
-    )
+    Preferences(paddingValues = PaddingValues(16.dp), onEvent = {})
 }

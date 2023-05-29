@@ -1,4 +1,4 @@
-package dev.zabolotskikh.authguard.ui.screen.settings.components
+package dev.zabolotskikh.authguard.ui.screen.settings.sections.main.components
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button

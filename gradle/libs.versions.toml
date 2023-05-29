@@ -1,4 +1,5 @@
 [versions]
+datastorePreferences = "1.0.0"
 kotlinx = "1.6.4"
 dagger = "2.44"
 daggerAndroid = "1.0.0"
@@ -20,8 +21,13 @@ barcodeScanning = "17.0.3"
 accompanistPermissions = "0.23.1"
 agp = "8.0.1"
 kotlin = "1.8.20"
+mockitoKotlin = "4.1.0"
+workManager = "2.8.1"
 
 [libraries]
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
+androidx-work-testing = { module = "androidx.work:work-testing", version.ref = "workManager" }
+androidx-work-runtime = { module = "androidx.work:work-runtime-ktx", version.ref = "workManager" }
 apache-commons-codec = { group = "commons-codec", name = "commons-codec", version.ref = "apacheCodec" }
 google-barcode-scanning = { group = "com.google.mlkit", name = "barcode-scanning", version.ref = "barcodeScanning" }
 google-accompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanistPermissions" }
@@ -30,6 +36,7 @@ google-accompanist-permissions = { group = "com.google.accompanist", name = "acc
 dagger-hilt-hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "dagger" }
 dagger-hilt-androidx-lifecycle = { group = "androidx.hilt", name = "hilt-lifecycle-viewmodel", version.ref = "daggerAndroid" }
 dagger-hilt-androidx-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "daggerAndroid" }
+dagger-hilt-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "daggerAndroid" }
 dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "dagger" }
 dagger-hilt-plugin = { group = "com.google.dagger", name = "hilt-android-gradle-plugin", version.ref = "dagger" }
 
@@ -69,7 +76,7 @@ androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "a
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso" }
 
 junit = { group = "junit", name = "junit", version.ref = "junit" }
-
+mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockitoKotlin" }
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
