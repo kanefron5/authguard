@@ -99,6 +99,7 @@ android {
 
 dependencies {
     implementation(project(":passlock"))
+    implementation(project(":domain"))
 
     implementation(libs.androidx.room.ktx)
     kapt(libs.androidx.room.compiler)
@@ -132,7 +133,6 @@ dependencies {
     implementation(libs.androidx.compose.hilt.navigation)
     implementation(libs.androidx.compose.settings)
 
-    implementation(libs.apache.commons.codec)
     implementation(libs.google.barcode.scanning)
     implementation(libs.google.accompanist.permissions)
 
