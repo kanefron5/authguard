@@ -104,6 +104,8 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     kapt(libs.androidx.room.compiler)
 
+    implementation(libs.androidx.datastore.preferences)
+
     implementation(libs.dagger.hilt.hilt)
     kapt(libs.dagger.hilt.compiler)
     kapt(libs.dagger.hilt.androidx.compiler)
