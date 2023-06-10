@@ -53,6 +53,7 @@ internal object LibraryModule {
     @Provides
     fun provideEncoder(): PasscodeEncoder = PasscodeEncoderImpl(BuildConfig.PASSWORD_SECRET)
 
+    @LibraryScope
     @Singleton
     @Provides
     fun provideStore(@ApplicationContext context: Context): DataStore<Preferences> =
