@@ -73,7 +73,7 @@ fun SettingsScreen(
             navController = navController, startDestination = PreferenceSection.Main()
         ) {
             composable(PreferenceSection.Main()) {
-                Preferences(paddingValues = paddingValues, onEvent = viewModel::onEvent)
+                Preferences(paddingValues = paddingValues, onEvent = viewModel::onEvent, state = state)
             }
             composable(PreferenceSection.Passcode()) {
                 PasscodePreferences(

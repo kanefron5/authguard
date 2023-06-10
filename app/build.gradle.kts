@@ -142,3 +142,11 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
 }
+
+// Generate changelog file before realising a new apk
+tasks.whenTaskAdded {
+    if (name == "assembleRelease") {
+        dependsOn(rootProject.tasks.getByName("generateChangelog"))
+    }
+}
+
