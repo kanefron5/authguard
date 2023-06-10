@@ -42,4 +42,5 @@
     <string name="edit_passcode">Edit passcode</string>
     <string name="delete_passcode">Delete passcode</string>
     <string name="caution">Caution</string>
+    <string name="settings_changelog">Changelog</string>
 </resources>

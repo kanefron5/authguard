@@ -41,4 +41,5 @@
     <string name="edit_passcode">Изменить код-пароль</string>
     <string name="delete_passcode">Удалить код-пароль</string>
     <string name="caution">Предупреждение</string>
+    <string name="settings_changelog">История изменений</string>
 </resources>

@@ -5,12 +5,10 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.zabolotskikh.authguard.domain.model.AppState
 import dev.zabolotskikh.authguard.domain.repository.AppStateRepository
+import dev.zabolotskikh.authguard.domain.repository.ChangelogRepository
 import dev.zabolotskikh.authguard.domain.repository.ServiceRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,9 +17,10 @@ import javax.inject.Inject
 class SettingsViewModel @Inject constructor(
     private val stateRepository: AppStateRepository,
     private val serviceRepository: ServiceRepository,
+    changelogRepository: ChangelogRepository,
     private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
-    val state = MutableStateFlow(SettingsState())
+    val state = MutableStateFlow(SettingsState(changelog = changelogRepository.get()))
 
     fun onEvent(event: SettingsEvent) {
         when (event) {

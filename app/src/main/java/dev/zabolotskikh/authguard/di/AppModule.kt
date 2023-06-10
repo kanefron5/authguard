@@ -12,9 +12,11 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import dev.zabolotskikh.authguard.data.local.ServiceRoomDatabase
 import dev.zabolotskikh.authguard.data.repository.AppStateRepositoryImpl
+import dev.zabolotskikh.authguard.data.repository.ChangelogRepositoryImpl
 import dev.zabolotskikh.authguard.data.repository.OtpRepositoryImpl
 import dev.zabolotskikh.authguard.data.repository.ServiceRepositoryImpl
 import dev.zabolotskikh.authguard.domain.repository.AppStateRepository
+import dev.zabolotskikh.authguard.domain.repository.ChangelogRepository
 import dev.zabolotskikh.authguard.domain.repository.OtpRepository
 import dev.zabolotskikh.authguard.domain.repository.ServiceRepository
 import kotlinx.coroutines.CoroutineDispatcher
@@ -40,6 +42,12 @@ object AppModule {
     @Singleton
     fun provideAppStateRepository(dataStore: DataStore<Preferences>): AppStateRepository {
         return AppStateRepositoryImpl(dataStore)
+    }
+
+    @Provides
+    @Singleton
+    fun provideChangelogRepository(@ApplicationContext context: Context): ChangelogRepository {
+        return ChangelogRepositoryImpl(context)
     }
 
     @Provides

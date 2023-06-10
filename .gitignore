@@ -17,3 +17,4 @@ local.properties
 signing.properties
 encryption.properties
 /change_name.sh
+/app/src/main/assets/changelog.json
