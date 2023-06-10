@@ -13,6 +13,7 @@ import dev.zabolotskikh.passlock.domain.PasscodeEncoder
 import dev.zabolotskikh.passlock.domain.model.PasscodeCheckStatus
 import dev.zabolotskikh.passlock.domain.repository.CurrentTimeRepository
 import dev.zabolotskikh.passlock.domain.repository.PasscodeRepository
+import dev.zabolotskikh.passlock.preference
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -24,13 +25,7 @@ import kotlin.math.max
 private const val BLOCK_TIME = 5 * 60 * 1000L
 private const val MAX_ATTEMPT_COUNT = 5L
 
-private val PASSCODE_HASH_NAME = stringPreferencesKey("passcode_hash")
-private val PASSCODE_TIME_NAME = longPreferencesKey("passcode_last_entered")
-private val PASSCODE_ATTEMPT_COUNT_NAME = longPreferencesKey("passcode_attempt_count")
-private val PASSCODE_BLOCKED_UNTIL_NAME = longPreferencesKey("passcode_blocked_until")
-
-private val resetBlockKeys =
-    arrayOf(PASSCODE_BLOCKED_UNTIL_NAME.name, PASSCODE_ATTEMPT_COUNT_NAME.name)
+private val resetBlockKeys = arrayOf("passcode_blocked_until", "passcode_attempt_count")
 
 internal class PasscodeRepositoryImpl @Inject constructor(
     private val dataStore: DataStore<Preferences>,
@@ -38,14 +33,11 @@ internal class PasscodeRepositoryImpl @Inject constructor(
     private val currentTimeRepository: CurrentTimeRepository,
     private val workManager: WorkManager,
 ) : PasscodeRepository {
-    private val Preferences.passcodeHash: String?
-        get() = this[PASSCODE_HASH_NAME]
+    private var Preferences.passcodeHash by preference(stringPreferencesKey("passcode_hash"))
+    private var Preferences.passcodeTime by preference(longPreferencesKey("passcode_last_entered"))
+    private var Preferences.attemptCount by preference(longPreferencesKey("passcode_attempt_count"))
+    private var Preferences.blockedUntil by preference(longPreferencesKey("passcode_blocked_until"))
 
-    private val Preferences.attemptCount: Long
-        get() = this[PASSCODE_ATTEMPT_COUNT_NAME] ?: 0
-
-    private val Preferences.blockedUntil: Long
-        get() = this[PASSCODE_BLOCKED_UNTIL_NAME] ?: 0
 
     override suspend fun checkPasscode(
         passcode: String
@@ -53,8 +45,8 @@ internal class PasscodeRepositoryImpl @Inject constructor(
         val preferences = dataStore.data.first()
 
         val currentHash = preferences.passcodeHash
-        var currentAttemptCount = preferences.attemptCount + 1
-        val currentBlockedUntil = preferences.blockedUntil
+        var currentAttemptCount = (preferences.attemptCount ?: 0) + 1
+        val currentBlockedUntil = preferences.blockedUntil ?: 0
 
         if (currentTimeRepository.now() < currentBlockedUntil) {
             return PasscodeCheckStatus.BlockedUntil(currentBlockedUntil)
@@ -67,7 +59,7 @@ internal class PasscodeRepositoryImpl @Inject constructor(
 
         // Записываем количество попыток
         dataStore.edit { prefs ->
-            prefs[PASSCODE_ATTEMPT_COUNT_NAME] = currentAttemptCount
+            prefs.attemptCount = currentAttemptCount
         }
 
         return if (currentHash == calculateHash(passcode)) {
@@ -88,27 +80,27 @@ internal class PasscodeRepositoryImpl @Inject constructor(
 
     override fun getRemainingAttempts() = dataStore.data.map {
         if (isBlockExpired()) resetBlock()
-        max(MAX_ATTEMPT_COUNT - it.attemptCount, 0).toInt()
+        max(MAX_ATTEMPT_COUNT - (it.attemptCount ?: 0), 0).toInt()
     }
 
     override fun getBlockEndTime() = dataStore.data.map {
         if (isBlockExpired()) resetBlock()
-        it.blockedUntil
+        it.blockedUntil ?: 0
     }
 
     override suspend fun updatePasscode(passcode: String) {
         dataStore.edit { prefs ->
-            prefs[PASSCODE_HASH_NAME] = calculateHash(passcode)
-            prefs[PASSCODE_TIME_NAME] = currentTimeRepository.now()
+            prefs.passcodeHash = calculateHash(passcode)
+            prefs.passcodeTime = currentTimeRepository.now()
         }
     }
 
     override suspend fun deletePasscode() {
         dataStore.edit {
-            it.remove(PASSCODE_HASH_NAME)
-            it.remove(PASSCODE_TIME_NAME)
-            it.remove(PASSCODE_BLOCKED_UNTIL_NAME)
-            it.remove(PASSCODE_ATTEMPT_COUNT_NAME)
+            it.passcodeHash = null
+            it.passcodeTime = null
+            it.blockedUntil = null
+            it.attemptCount = null
         }
     }
 
@@ -118,12 +110,14 @@ internal class PasscodeRepositoryImpl @Inject constructor(
 
     private suspend fun isBlockExpired(): Boolean {
         val preferences = dataStore.data.first()
-        return currentTimeRepository.now() >= preferences.blockedUntil && MAX_ATTEMPT_COUNT == preferences.attemptCount
+        return currentTimeRepository.now() >= (preferences.blockedUntil
+            ?: 0) && MAX_ATTEMPT_COUNT == preferences.attemptCount
     }
 
     private suspend fun resetBlock() {
         dataStore.edit { prefs ->
-            resetBlockKeys.forEach { prefs.remove(stringPreferencesKey(it)) }
+            prefs.blockedUntil = null
+            prefs.attemptCount = null
         }
     }
 
@@ -131,17 +125,19 @@ internal class PasscodeRepositoryImpl @Inject constructor(
     private suspend fun setBlock(): Long {
         val endBlockTime = currentTimeRepository.now() + BLOCK_TIME
         dataStore.edit { prefs ->
-            prefs[PASSCODE_BLOCKED_UNTIL_NAME] = endBlockTime
+            prefs.blockedUntil = endBlockTime
         }
 
         try {
             workManager.enqueue(
-                OneTimeWorkRequestBuilder<ResetBlockWorker>().setInputData(workDataOf(ResetBlockWorker.PARAM_RESET_BLOCK_KEYS to resetBlockKeys))
-                    .setInitialDelay(BLOCK_TIME, TimeUnit.MILLISECONDS).build()
+                OneTimeWorkRequestBuilder<ResetBlockWorker>().setInputData(
+                    workDataOf(
+                        ResetBlockWorker.PARAM_RESET_BLOCK_KEYS to resetBlockKeys
+                    )
+                ).setInitialDelay(BLOCK_TIME, TimeUnit.MILLISECONDS).build()
             )
         } catch (ignored: Exception) {
         }
-
 
         return endBlockTime
     }
