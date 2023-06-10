@@ -1,6 +1,10 @@
 package dev.zabolotskikh.authguard.di
 
 import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStoreFile
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -34,8 +38,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideAppStateRepository(database: ServiceRoomDatabase): AppStateRepository {
-        return AppStateRepositoryImpl(database.appStateDao())
+    fun provideAppStateRepository(dataStore: DataStore<Preferences>): AppStateRepository {
+        return AppStateRepositoryImpl(dataStore)
     }
 
     @Provides
@@ -48,4 +52,10 @@ object AppModule {
     @Singleton
     fun provideDispatchers(): CoroutineDispatcher = Dispatchers.IO
 
+    @Singleton
+    @Provides
+    fun provideStore(@ApplicationContext context: Context): DataStore<Preferences> =
+        PreferenceDataStoreFactory.create(produceFile = {
+            context.preferencesDataStoreFile("authguard")
+        })
 }
