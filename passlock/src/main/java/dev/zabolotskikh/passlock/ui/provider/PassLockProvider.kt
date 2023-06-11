@@ -1,6 +1,10 @@
 package dev.zabolotskikh.passlock.ui.provider
 
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -9,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -60,4 +65,11 @@ fun PassLockProvider(
         }
     }
     if (state?.isLocked == false) content()
+    else {
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)) {
+
+        }
+    }
 }
