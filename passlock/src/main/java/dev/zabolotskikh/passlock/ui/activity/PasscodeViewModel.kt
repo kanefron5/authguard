@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.zabolotskikh.passlock.di.LibraryScope
 import dev.zabolotskikh.passlock.domain.model.PasscodeCheckStatus
+import dev.zabolotskikh.passlock.domain.repository.CurrentTimeRepository
 import dev.zabolotskikh.passlock.domain.repository.PasscodeRepository
 import dev.zabolotskikh.passlock.ui.activity.PasscodeResult.BLOCKED
 import dev.zabolotskikh.passlock.ui.activity.PasscodeResult.CANCELLED
@@ -23,6 +24,7 @@ import javax.inject.Inject
 @HiltViewModel
 internal class PasscodeViewModel @Inject constructor(
     private val passcodeRepository: PasscodeRepository,
+    private val currentTimeRepository: CurrentTimeRepository,
     @LibraryScope private val ioDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
     private val _state = MutableStateFlow(PasscodeState())
@@ -39,7 +41,7 @@ internal class PasscodeViewModel @Inject constructor(
         state.copy(
             remainingAttemptsCount = remainingAttemptsCount,
             isBlockedUntil = blockEndTime,
-            passcodeCheckStatus = if (blockEndTime > System.currentTimeMillis()) BLOCKED else state.passcodeCheckStatus
+            passcodeCheckStatus = if (blockEndTime > currentTimeRepository.now()) BLOCKED else state.passcodeCheckStatus
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), PasscodeState())
 

@@ -95,6 +95,7 @@ class PasscodeViewModelTests {
     fun `test EnterPasscode event with BlockedUntil`() = runTest(dispatcher) {
         val repository = mock<PasscodeRepository> {
             onBlocking { checkPasscode(any()) } doReturn PasscodeCheckStatus.BlockedUntil(0)
+            onBlocking { getBlockEndTime() } doReturn flow { emit((System.currentTimeMillis() + 100_000)) }
         }
         val viewModel = getPasscodeViewModel(
             dispatcher = dispatcher, passcodeRepository = repository
