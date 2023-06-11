@@ -1,4 +1,3 @@
-import dev.zabolotskikh.changelog
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -17,14 +16,9 @@ plugins {
     alias(libs.plugins.kotlin.kapt) apply false
     alias(libs.plugins.kotlin.jvm) apply false
     alias(libs.plugins.dagger) apply false
-    id("dev.zabolotskikh.changelog-gradle-plugin")
+    id("dev.zabolotskikh.changelog-gradle-plugin") apply false
 }
 
-changelog {
-    repositoryName = "authguard"
-    repositoryOwner = "kanefron5"
-    filePath = "app/src/main/assets/changelog.json"
-}
 
 ext {
     data class SemVer(

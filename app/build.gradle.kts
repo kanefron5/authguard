@@ -1,3 +1,4 @@
+import dev.zabolotskikh.changelog
 import java.util.Properties
 
 val signingKeyAlias: String by project
@@ -15,6 +16,13 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.dagger)
+    id("dev.zabolotskikh.changelog-gradle-plugin")
+}
+
+changelog {
+    repositoryName = "authguard"
+    repositoryOwner = "kanefron5"
+    filePath = "${projectDir}/src/main/assets/changelog.json"
 }
 
 android {
@@ -146,7 +154,7 @@ dependencies {
 // Generate changelog file before realising a new apk
 tasks.whenTaskAdded {
     if (name == "assembleRelease") {
-        dependsOn(rootProject.tasks.getByName("generateChangelog"))
+        dependsOn(tasks.getByName("generateChangelog"))
     }
 }
 

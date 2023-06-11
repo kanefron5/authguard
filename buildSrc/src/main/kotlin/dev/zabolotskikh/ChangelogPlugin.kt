@@ -19,7 +19,6 @@ class ChangelogPlugin : Plugin<Project> {
     override fun apply(project: Project) {
         rootDir = project.rootDir
 
-        println("Plugin ${this.javaClass.simpleName} applied on ${project.name}")
         project.tasks.register("generateChangelog") {
             doLast {
                 val extension =
@@ -29,8 +28,6 @@ class ChangelogPlugin : Plugin<Project> {
                 require(extension.repositoryName.isNotBlank()) { "Please specify repositoryName" }
                 require(extension.repositoryOwner.isNotBlank()) { "Please specify repositoryOwner" }
                 require(extension.filePath.isNotBlank()) { "Please specify filePath" }
-
-                println("Hello Gradle! Name: ${extension.repositoryName}")
 
                 val allTags = "git tag --sort=-committerdate".execute().trim().lines()
                 val releases = mutableListOf<Release>()
