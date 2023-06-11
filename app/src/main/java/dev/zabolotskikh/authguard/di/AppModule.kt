@@ -47,7 +47,7 @@ object AppModule {
     @Provides
     @Singleton
     fun provideChangelogRepository(@ApplicationContext context: Context): ChangelogRepository {
-        return ChangelogRepositoryImpl(context)
+        return ChangelogRepositoryImpl(context.assets)
     }
 
     @Provides

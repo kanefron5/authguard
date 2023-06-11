@@ -5,9 +5,6 @@ plugins {
     `java-gradle-plugin`
 }
 
-group = "dev.zabolotskikh"
-version = "1.0"
-
 repositories {
     mavenCentral()
     google()
