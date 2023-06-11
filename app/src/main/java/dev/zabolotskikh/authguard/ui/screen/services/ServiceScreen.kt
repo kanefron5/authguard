@@ -14,15 +14,16 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Devices.PIXEL_4
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import dev.zabolotskikh.authguard.R
+import dev.zabolotskikh.authguard.domain.model.Service
 import dev.zabolotskikh.authguard.ui.Screen
 import dev.zabolotskikh.authguard.ui.screen.services.components.AddServiceButton
+import dev.zabolotskikh.authguard.ui.screen.services.components.AppBarTitle
 import dev.zabolotskikh.authguard.ui.screen.services.components.ServicesList
 
 @Composable
@@ -33,13 +34,23 @@ fun ServiceScreen(
     val viewModel = hiltViewModel<ServiceViewModel>()
     val state by viewModel.state.collectAsState()
 
+    ServiceScreenContent(state, viewModel::onEvent, onNavigate)
+}
+
+@Composable
+@ExperimentalGetImage
+private fun ServiceScreenContent(
+    state: ServiceState = ServiceState(),
+    onEvent: (ServiceEvent) -> Unit = {},
+    onNavigate: (screen: Screen, clear: Boolean) -> Unit = { _, _ -> }
+) {
     Scaffold(
         topBar = {
-            CenterAlignedTopAppBar(title = { Text(text = stringResource(id = R.string.app_name)) },
+            CenterAlignedTopAppBar(title = { AppBarTitle() },
                 actions = {
                     if (state.services.isNotEmpty()) {
                         IconButton(onClick = {
-                            viewModel.onEvent(
+                            onEvent(
                                 if (state.isPrivateMode) ServiceEvent.PrivateModeOff
                                 else ServiceEvent.PrivateModeOn
                             )
@@ -62,10 +73,42 @@ fun ServiceScreen(
                 })
         },
         content = { paddingValues ->
-            ServicesList(state, viewModel::onEvent, paddingValues)
+            ServicesList(state, onEvent, paddingValues)
         },
         floatingActionButtonPosition = FabPosition.End,
-        floatingActionButton = { AddServiceButton(state, viewModel::onEvent) },
+        floatingActionButton = { AddServiceButton(state, onEvent) },
     )
 }
 
+@Preview(showSystemUi = true, showBackground = true, device = PIXEL_4)
+@Composable
+@ExperimentalGetImage
+private fun Preview() {
+    ServiceScreenContent()
+}
+
+@Preview(showSystemUi = true, showBackground = true, device = PIXEL_4)
+@Composable
+@ExperimentalGetImage
+private fun PreviewNotEmpty() {
+    ServiceScreenContent(
+        state = ServiceState(
+            services = listOf(
+                Service(
+                    "Name",
+                    "key",
+                    timeoutTime = 10,
+                    currentCode = "123456",
+                    codeTtl = 10
+                ),
+                Service(
+                    "Name 2",
+                    "key",
+                    timeoutTime = 15,
+                    currentCode = "123456",
+                    codeTtl = 5
+                )
+            )
+        )
+    )
+}
