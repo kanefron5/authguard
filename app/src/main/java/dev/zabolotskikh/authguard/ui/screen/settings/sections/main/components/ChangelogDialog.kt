@@ -2,6 +2,7 @@
 
 package dev.zabolotskikh.authguard.ui.screen.settings.sections.main.components
 
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
@@ -64,13 +65,15 @@ fun ChangelogDialog(
         }
     }
 
-    AlertDialog(onDismissRequest = onDismiss,
+    AlertDialog(modifier = Modifier.fillMaxHeight(.8f),
+        onDismissRequest = onDismiss,
         title = { Text(text = stringResource(id = R.string.settings_changelog)) },
         text = {
             val text = buildChangelogText(MaterialTheme.colorScheme.primary)
             val uriHandler = LocalUriHandler.current
-
-            ClickableText(modifier = Modifier.verticalScroll(rememberScrollState()),
+            ClickableText(modifier = Modifier
+                .fillMaxHeight()
+                .verticalScroll(rememberScrollState()),
                 text = text,
                 style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onBackground),
                 onClick = { offset ->
