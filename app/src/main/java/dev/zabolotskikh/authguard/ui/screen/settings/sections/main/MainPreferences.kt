@@ -23,6 +23,8 @@ import dev.zabolotskikh.authguard.BuildConfig
 import dev.zabolotskikh.authguard.R
 import dev.zabolotskikh.authguard.ui.screen.settings.PreferenceSection
 import dev.zabolotskikh.authguard.ui.screen.settings.SettingsEvent
+import dev.zabolotskikh.authguard.ui.screen.settings.SettingsState
+import dev.zabolotskikh.authguard.ui.screen.settings.sections.main.components.ChangelogDialog
 import dev.zabolotskikh.authguard.ui.screen.settings.sections.main.components.ResetConfirmationDialog
 import dev.zabolotskikh.passlock.ui.activity.PasscodeActivity
 import dev.zabolotskikh.passlock.ui.activity.PasscodeActivity.PasscodeAction.DeletePasscode
@@ -34,8 +36,10 @@ fun Preferences(
     modifier: Modifier = Modifier,
     paddingValues: PaddingValues,
     onEvent: (SettingsEvent) -> Unit,
+    state: SettingsState = SettingsState()
 ) {
     var resetConfirmationDialogShowed by rememberSaveable { mutableStateOf(false) }
+    var changelogDialogShowed by rememberSaveable { mutableStateOf(false) }
 
     val hasPasscode = rememberPasscodeEnabled()
     val launcher = rememberLauncherForActivityResult(PasscodeActivity.PasscodeResultContract()) {
@@ -49,6 +53,10 @@ fun Preferences(
             if (!hasPasscode) onEvent(SettingsEvent.ResetData)
             else launcher.launch(DeletePasscode())
         })
+    }
+
+    if (changelogDialogShowed) {
+        ChangelogDialog(onDismiss = { changelogDialogShowed = false }, state = state)
     }
 
     LazyColumn(
@@ -89,6 +97,11 @@ fun Preferences(
                     Text(text = BuildConfig.VERSION_CODE.toString())
                 }) {
                     onEvent(SettingsEvent.BuildNumberClick)
+                }
+                SettingsMenuLink(title = {
+                    Text(text = stringResource(id = R.string.settings_changelog))
+                }) {
+                    changelogDialogShowed = true
                 }
             }
         }
