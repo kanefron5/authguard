@@ -12,17 +12,13 @@ import dev.zabolotskikh.passlock.ui.activity.PasscodeResult.CONFIRMED
 import dev.zabolotskikh.passlock.ui.activity.PasscodeResult.REJECTED
 import dev.zabolotskikh.passlock.ui.activity.PasscodeResult.SUCCEED
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.coroutines.coroutineContext
 
 @HiltViewModel
 internal class PasscodeViewModel @Inject constructor(
@@ -76,9 +72,7 @@ internal class PasscodeViewModel @Inject constructor(
             PasscodeEvent.Cancel -> _state.update { it.copy(passcodeCheckStatus = CANCELLED) }
             is PasscodeEvent.EnterPasscode -> viewModelScope.launch(ioDispatcher) {
                 when (passcodeRepository.checkPasscode(event.passcode)) {
-                    is PasscodeCheckStatus.BlockedUntil -> _state.update {
-                        it.copy(passcodeCheckStatus = BLOCKED)
-                    }
+                    is PasscodeCheckStatus.BlockedUntil -> {  }
 
                     PasscodeCheckStatus.NotMatch -> _state.update {
                         it.copy(passcodeCheckStatus = REJECTED)
