@@ -10,10 +10,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import dev.zabolotskikh.authguard.domain.model.AppState
 import dev.zabolotskikh.authguard.ui.screen.services.ServiceScreen
 import dev.zabolotskikh.authguard.ui.screen.settings.SettingsScreen
 import dev.zabolotskikh.authguard.ui.screen.welcome.WelcomeScreen
-import dev.zabolotskikh.authguard.ui.screen.welcome.WelcomeViewModel
 
 sealed class Screen(private val route: String) {
     operator fun invoke() = route
@@ -26,11 +26,11 @@ sealed class Screen(private val route: String) {
 @Composable
 @ExperimentalGetImage
 fun MyAppNavHost(
-    modifier: Modifier = Modifier, navController: NavHostController = rememberNavController()
+    modifier: Modifier = Modifier,
+    navController: NavHostController = rememberNavController(),
+    state: AppState
 ) {
-    val viewModel = hiltViewModel<WelcomeViewModel>()
-    val state by viewModel.state.collectAsState()
-    val startDestination = if (state?.isStarted == true) Screen.Main() else Screen.Welcome()
+    val startDestination = if (state.isStarted) Screen.Main() else Screen.Welcome()
 
     fun onNavigate(screen: Screen, clear: Boolean) {
         navController.navigate(screen()) {
@@ -48,13 +48,11 @@ fun MyAppNavHost(
         }
     }
 
-    if (state != null) {
-        NavHost(
-            modifier = modifier, navController = navController, startDestination = startDestination
-        ) {
-            composable(Screen.Welcome()) { WelcomeScreen() }
-            composable(Screen.Settings()) { SettingsScreen(onNavigateBack = ::onNavigateBack) }
-            composable(Screen.Main()) { ServiceScreen(onNavigate = ::onNavigate) }
-        }
+    NavHost(
+        modifier = modifier, navController = navController, startDestination = startDestination
+    ) {
+        composable(Screen.Welcome()) { WelcomeScreen() }
+        composable(Screen.Settings()) { SettingsScreen(onNavigateBack = ::onNavigateBack) }
+        composable(Screen.Main()) { ServiceScreen(onNavigate = ::onNavigate) }
     }
 }
