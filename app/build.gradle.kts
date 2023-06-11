@@ -1,3 +1,4 @@
+import dev.zabolotskikh.changelog
 import java.util.Properties
 
 val signingKeyAlias: String by project
@@ -8,6 +9,7 @@ val appMinSdk: String by project
 val appTargetSdk: String by project
 val appVersionName: String by rootProject.extra
 val appVersionCode: Int by rootProject.extra
+val changelogFileName = "changelog.json"
 
 @Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
@@ -15,6 +17,13 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.dagger)
+    id("dev.zabolotskikh.changelog-gradle-plugin")
+}
+
+changelog {
+    repositoryName = "authguard"
+    repositoryOwner = "kanefron5"
+    filePath = "${projectDir}/src/main/assets/$changelogFileName"
 }
 
 android {
@@ -64,6 +73,7 @@ android {
     buildTypes {
         all {
             signingConfig = signingConfigs.getByName("config")
+            buildConfigField("String", "CHANGELOG_FILE_NAME", "\"$changelogFileName\"")
         }
 
         release {
@@ -142,3 +152,11 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
 }
+
+// Generate changelog file before realising a new apk
+tasks.whenTaskAdded {
+    if (name == "assembleRelease") {
+        dependsOn(tasks.getByName("generateChangelog"))
+    }
+}
+
