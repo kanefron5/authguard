@@ -37,9 +37,12 @@ internal fun getPasscodeRepository(
 
 internal fun getPasscodeViewModel(
     passcodeRepository: PasscodeRepository = getPasscodeRepository(),
-    dispatcher: CoroutineDispatcher = UnconfinedTestDispatcher()
+    dispatcher: CoroutineDispatcher = UnconfinedTestDispatcher(),
+    currentTimeRepository: CurrentTimeRepository = object : CurrentTimeRepository {
+        override fun now() = System.currentTimeMillis()
+    }
 ) = PasscodeViewModel(
-    passcodeRepository, dispatcher
+    passcodeRepository, currentTimeRepository, dispatcher
 )
 
 internal fun getProviderViewModel(

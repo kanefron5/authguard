@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.zabolotskikh.passlock.di.LibraryScope
 import dev.zabolotskikh.passlock.domain.model.PasscodeCheckStatus
+import dev.zabolotskikh.passlock.domain.repository.CurrentTimeRepository
 import dev.zabolotskikh.passlock.domain.repository.PasscodeRepository
 import dev.zabolotskikh.passlock.ui.activity.PasscodeResult.BLOCKED
 import dev.zabolotskikh.passlock.ui.activity.PasscodeResult.CANCELLED
@@ -12,21 +13,18 @@ import dev.zabolotskikh.passlock.ui.activity.PasscodeResult.CONFIRMED
 import dev.zabolotskikh.passlock.ui.activity.PasscodeResult.REJECTED
 import dev.zabolotskikh.passlock.ui.activity.PasscodeResult.SUCCEED
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.coroutines.coroutineContext
 
 @HiltViewModel
 internal class PasscodeViewModel @Inject constructor(
     private val passcodeRepository: PasscodeRepository,
+    private val currentTimeRepository: CurrentTimeRepository,
     @LibraryScope private val ioDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
     private val _state = MutableStateFlow(PasscodeState())
@@ -43,7 +41,7 @@ internal class PasscodeViewModel @Inject constructor(
         state.copy(
             remainingAttemptsCount = remainingAttemptsCount,
             isBlockedUntil = blockEndTime,
-            passcodeCheckStatus = if (blockEndTime > System.currentTimeMillis()) BLOCKED else state.passcodeCheckStatus
+            passcodeCheckStatus = if (blockEndTime > currentTimeRepository.now()) BLOCKED else state.passcodeCheckStatus
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), PasscodeState())
 
@@ -76,9 +74,7 @@ internal class PasscodeViewModel @Inject constructor(
             PasscodeEvent.Cancel -> _state.update { it.copy(passcodeCheckStatus = CANCELLED) }
             is PasscodeEvent.EnterPasscode -> viewModelScope.launch(ioDispatcher) {
                 when (passcodeRepository.checkPasscode(event.passcode)) {
-                    is PasscodeCheckStatus.BlockedUntil -> _state.update {
-                        it.copy(passcodeCheckStatus = BLOCKED)
-                    }
+                    is PasscodeCheckStatus.BlockedUntil -> {  }
 
                     PasscodeCheckStatus.NotMatch -> _state.update {
                         it.copy(passcodeCheckStatus = REJECTED)
