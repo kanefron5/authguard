@@ -9,6 +9,7 @@ val appMinSdk: String by project
 val appTargetSdk: String by project
 val appVersionName: String by rootProject.extra
 val appVersionCode: Int by rootProject.extra
+val changelogFileName = "changelog.json"
 
 @Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
@@ -22,7 +23,7 @@ plugins {
 changelog {
     repositoryName = "authguard"
     repositoryOwner = "kanefron5"
-    filePath = "${projectDir}/src/main/assets/changelog.json"
+    filePath = "${projectDir}/src/main/assets/$changelogFileName"
 }
 
 android {
@@ -72,6 +73,7 @@ android {
     buildTypes {
         all {
             signingConfig = signingConfigs.getByName("config")
+            buildConfigField("String", "CHANGELOG_FILE_NAME", "\"$changelogFileName\"")
         }
 
         release {
