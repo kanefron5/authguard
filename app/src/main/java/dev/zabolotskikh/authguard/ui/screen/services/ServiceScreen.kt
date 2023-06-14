@@ -19,9 +19,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Devices.PIXEL_4
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.zabolotskikh.authguard.domain.model.Service
 import dev.zabolotskikh.authguard.ui.Screen
+import dev.zabolotskikh.authguard.ui.preview.providers.FakeServiceStateProvider
 import dev.zabolotskikh.authguard.ui.screen.services.components.AddServiceButton
 import dev.zabolotskikh.authguard.ui.screen.services.components.AppBarTitle
 import dev.zabolotskikh.authguard.ui.screen.services.components.ServicesList
@@ -90,25 +92,8 @@ private fun Preview() {
 @Preview(showSystemUi = true, showBackground = true, device = PIXEL_4)
 @Composable
 @ExperimentalGetImage
-private fun PreviewNotEmpty() {
-    ServiceScreenContent(
-        state = ServiceState(
-            services = listOf(
-                Service(
-                    "Name",
-                    "key",
-                    timeoutTime = 10,
-                    currentCode = "123456",
-                    codeTtl = 10
-                ),
-                Service(
-                    "Name 2",
-                    "key",
-                    timeoutTime = 15,
-                    currentCode = "123456",
-                    codeTtl = 5
-                )
-            )
-        )
-    )
+private fun PreviewNotEmpty(
+    @PreviewParameter(FakeServiceStateProvider::class) state: ServiceState
+) {
+    ServiceScreenContent(state = state)
 }
