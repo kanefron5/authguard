@@ -40,7 +40,7 @@ class ServiceViewModel @Inject constructor(
             isPrivateMode = appState?.isPrivateMode ?: false
         )
     }.stateIn(
-        viewModelScope, SharingStarted.WhileSubscribed(5000), ServiceState()
+        viewModelScope, SharingStarted.WhileSubscribed(5000), ServiceState(isLoading = true)
     )
 
     fun onEvent(event: ServiceEvent) {
