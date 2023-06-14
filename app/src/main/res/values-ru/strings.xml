@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="settings">Настройки</string>
+    <string name="settings_title_main">Настройки</string>
     <string name="app_logo_content_description">Иконка приложения</string>
     <string name="welcome">Добро пожаловать в AuthGuard!</string>
     <string name="welcome_description">Сохраняйте доступ ко всем своим аккаунтам даже после смены устройства</string>
@@ -31,4 +31,15 @@
     <string name="camera_permission_denied">Для использования этой функции необходимы разрешения на использование камеры. Пожалуйста, перейдите в настройки и выдайте разрешения вручную</string>
     <string name="camera_permission_btn_first">Запросить разрешения</string>
     <string name="camera_permission_btn_denied">Перейти в настройки</string>
+    <string name="set_passcode">Установить код-пароль</string>
+    <string name="action_continue">Продолжить</string>
+    <string name="passcode_check_restore">Я понимаю, что, если я забуду код-пароль, то восстановить его не удастся</string>
+    <string name="passcode_check_restore_developer">Я понимаю, что разработчик не сможет помочь мне восстановить код-пароль</string>
+    <string name="passcode_check_lost_data">Я понимаю, что я потеряю доступ ко всем своим кодам авторизации, если я не смогу ввести код-пароль</string>
+    <string name="passcode_settings_info">Сейчас вам будет предложено защитить приложение код паролем. Перед выполнением данного действия ознакомьтесь с информацией ниже:</string>
+    <string name="settings_title_passcode">Код-пароль</string>
+    <string name="edit_passcode">Изменить код-пароль</string>
+    <string name="delete_passcode">Удалить код-пароль</string>
+    <string name="caution">Предупреждение</string>
+    <string name="settings_changelog">История изменений</string>
 </resources>

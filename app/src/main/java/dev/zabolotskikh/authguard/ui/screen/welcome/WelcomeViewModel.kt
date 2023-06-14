@@ -23,7 +23,7 @@ class WelcomeViewModel @Inject constructor(
     fun startLocal() = viewModelScope.launch(ioDispatcher) {
         repository.update(
             state.value?.copy(isStarted = true) ?: AppState(
-                isStarted = true, isAuthenticated = false, isPrivateMode = false
+                isStarted = true, isRemoteMode = false, isPrivateMode = false
             )
         )
     }

@@ -1,13 +1,12 @@
 package dev.zabolotskikh.authguard.data
 
-import dev.zabolotskikh.authguard.OtpInstance
+import dev.zabolotskikh.authguard.domain.OtpInstance
 import dev.zabolotskikh.authguard.domain.repository.OtpRepository
 import dev.zabolotskikh.authguard.domain.repository.ServiceRepository
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.isActive
 
 class TestOtpRepositoryImpl(

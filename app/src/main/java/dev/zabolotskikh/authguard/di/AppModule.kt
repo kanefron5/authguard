@@ -1,6 +1,10 @@
 package dev.zabolotskikh.authguard.di
 
 import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStoreFile
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -8,9 +12,11 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import dev.zabolotskikh.authguard.data.local.ServiceRoomDatabase
 import dev.zabolotskikh.authguard.data.repository.AppStateRepositoryImpl
+import dev.zabolotskikh.authguard.data.repository.ChangelogRepositoryImpl
 import dev.zabolotskikh.authguard.data.repository.OtpRepositoryImpl
 import dev.zabolotskikh.authguard.data.repository.ServiceRepositoryImpl
 import dev.zabolotskikh.authguard.domain.repository.AppStateRepository
+import dev.zabolotskikh.authguard.domain.repository.ChangelogRepository
 import dev.zabolotskikh.authguard.domain.repository.OtpRepository
 import dev.zabolotskikh.authguard.domain.repository.ServiceRepository
 import kotlinx.coroutines.CoroutineDispatcher
@@ -34,8 +40,14 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideAppStateRepository(database: ServiceRoomDatabase): AppStateRepository {
-        return AppStateRepositoryImpl(database.appStateDao())
+    fun provideAppStateRepository(dataStore: DataStore<Preferences>): AppStateRepository {
+        return AppStateRepositoryImpl(dataStore)
+    }
+
+    @Provides
+    @Singleton
+    fun provideChangelogRepository(@ApplicationContext context: Context): ChangelogRepository {
+        return ChangelogRepositoryImpl(context.assets)
     }
 
     @Provides
@@ -44,8 +56,14 @@ object AppModule {
         return OtpRepositoryImpl(serviceRepository)
     }
 
-    @Singleton
     @Provides
+    @Singleton
     fun provideDispatchers(): CoroutineDispatcher = Dispatchers.IO
 
+    @Singleton
+    @Provides
+    fun provideStore(@ApplicationContext context: Context): DataStore<Preferences> =
+        PreferenceDataStoreFactory.create(produceFile = {
+            context.preferencesDataStoreFile("authguard")
+        })
 }

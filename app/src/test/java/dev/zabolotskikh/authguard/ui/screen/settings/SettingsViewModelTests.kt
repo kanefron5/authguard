@@ -27,11 +27,11 @@ class SettingsViewModelTests {
             appStateRepository = stateRepositoryImpl
         )
 
-        settingsViewModel.resetData()
+        settingsViewModel.onEvent(SettingsEvent.ResetData)
 
         val appState = stateRepositoryImpl.state
         Assert.assertFalse(appState.isStarted)
-        Assert.assertFalse(appState.isAuthenticated)
+        Assert.assertFalse(appState.isRemoteMode)
         Assert.assertFalse(appState.isPrivateMode)
     }
 }

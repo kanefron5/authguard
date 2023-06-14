@@ -22,6 +22,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -30,7 +32,13 @@ import dev.zabolotskikh.authguard.R
 @Composable
 fun WelcomeScreen() {
     val viewModel = hiltViewModel<WelcomeViewModel>()
+    WelcomeScreenView(onStartLocal = viewModel::startLocal)
+}
 
+@Composable
+private fun WelcomeScreenView(
+    onStartLocal: () -> Unit = {}
+) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.SpaceAround,
@@ -84,10 +92,16 @@ fun WelcomeScreen() {
             ) {
                 Text(text = stringResource(id = R.string.login))
             }
-            TextButton(onClick = { viewModel.startLocal() }) {
+            TextButton(onClick = onStartLocal) {
                 Text(text = stringResource(id = R.string.local_mode))
             }
         }
 
     }
+}
+
+@Preview(device = Devices.PIXEL_4, showSystemUi = true)
+@Composable
+private fun WelcomeScreenPreview() {
+    WelcomeScreenView()
 }

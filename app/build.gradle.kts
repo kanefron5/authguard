@@ -1,3 +1,4 @@
+import dev.zabolotskikh.changelog
 import java.util.Properties
 
 val signingKeyAlias: String by project
@@ -8,6 +9,7 @@ val appMinSdk: String by project
 val appTargetSdk: String by project
 val appVersionName: String by rootProject.extra
 val appVersionCode: Int by rootProject.extra
+val changelogFileName = "changelog.json"
 
 @Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
@@ -17,6 +19,13 @@ plugins {
     alias(libs.plugins.dagger)
     alias(libs.plugins.firebase.crashlytics)
     alias(libs.plugins.firebase.services)
+    id("dev.zabolotskikh.changelog-gradle-plugin")
+}
+
+changelog {
+    repositoryName = "authguard"
+    repositoryOwner = "kanefron5"
+    filePath = "${projectDir}/src/main/assets/$changelogFileName"
 }
 
 android {
@@ -29,6 +38,9 @@ android {
         targetSdk = appTargetSdk.toInt()
         versionCode = appVersionCode
         versionName = appVersionName
+
+        // https://developer.android.com/guide/topics/resources/providing-resources
+        resourceConfigurations.addAll(arrayOf("en", "ru"))
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -63,6 +75,7 @@ android {
     buildTypes {
         all {
             signingConfig = signingConfigs.getByName("config")
+            buildConfigField("String", "CHANGELOG_FILE_NAME", "\"$changelogFileName\"")
         }
 
         release {
@@ -97,8 +110,13 @@ android {
 }
 
 dependencies {
+    implementation(project(":passlock"))
+    implementation(project(":domain"))
+
     implementation(libs.androidx.room.ktx)
     kapt(libs.androidx.room.compiler)
+
+    implementation(libs.androidx.datastore.preferences)
 
     implementation(libs.dagger.hilt.hilt)
     kapt(libs.dagger.hilt.compiler)
@@ -106,6 +124,8 @@ dependencies {
 
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
+
+    implementation(libs.androidx.work.runtime)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime)
@@ -127,9 +147,10 @@ dependencies {
     implementation(libs.androidx.compose.hilt.navigation)
     implementation(libs.androidx.compose.settings)
 
-    implementation(libs.apache.commons.codec)
     implementation(libs.google.barcode.scanning)
     implementation(libs.google.accompanist.permissions)
+
+    implementation(libs.androidx.core.splashscreen)
 
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
@@ -140,3 +161,11 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
 }
+
+// Generate changelog file before realising a new apk
+tasks.whenTaskAdded {
+    if (name == "assembleRelease") {
+        dependsOn(tasks.getByName("generateChangelog"))
+    }
+}
+

@@ -1,6 +1,6 @@
 package dev.zabolotskikh.authguard.data.repository
 
-import dev.zabolotskikh.authguard.OtpInstance
+import dev.zabolotskikh.authguard.domain.OtpInstance
 import dev.zabolotskikh.authguard.domain.repository.OtpRepository
 import dev.zabolotskikh.authguard.domain.repository.ServiceRepository
 import kotlinx.coroutines.currentCoroutineContext

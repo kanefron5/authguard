@@ -4,20 +4,16 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import dev.zabolotskikh.authguard.data.local.dao.AppStateDao
 import dev.zabolotskikh.authguard.data.local.entities.ServiceEntity
 import dev.zabolotskikh.authguard.data.local.dao.ServiceDao
-import dev.zabolotskikh.authguard.data.local.entities.AppStateEntity
 
 @Database(
-    entities = [ServiceEntity::class, AppStateEntity::class],
+    entities = [ServiceEntity::class],
     version = 1,
     exportSchema = false
 )
 abstract class ServiceRoomDatabase : RoomDatabase() {
     abstract fun serviceDao(): ServiceDao
-    abstract fun appStateDao(): AppStateDao
-
     companion object {
         @Volatile
         private var INSTANCE: ServiceRoomDatabase? = null

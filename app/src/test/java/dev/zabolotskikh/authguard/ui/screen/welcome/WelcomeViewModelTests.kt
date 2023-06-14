@@ -31,7 +31,7 @@ class WelcomeViewModelTests {
 
         val appState = localAppStateRepository.state
         Assert.assertTrue(appState.isStarted)
-        Assert.assertFalse(appState.isAuthenticated)
+        Assert.assertFalse(appState.isRemoteMode)
         Assert.assertFalse(appState.isPrivateMode)
     }
 }
