@@ -24,10 +24,12 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.sp
 import dev.zabolotskikh.authguard.R
 import dev.zabolotskikh.authguard.domain.model.ChangelogItem
 import dev.zabolotskikh.authguard.domain.model.Release
+import dev.zabolotskikh.authguard.ui.preview.providers.FakeChangelogProvider
 import dev.zabolotskikh.authguard.ui.screen.settings.SettingsState
 
 @Composable
@@ -91,30 +93,8 @@ fun ChangelogDialog(
 
 @Preview(device = Devices.PIXEL_4, showSystemUi = true)
 @Composable
-private fun ChangelogDialogDialogPreview() {
-    ChangelogDialog(
-        state = SettingsState(
-            changelog = listOf(
-                Release(
-                    "v0.1.0", setOf(
-                        ChangelogItem("TEST-1", "kdkfkdkogkodkgodkg", "https://example.com/"),
-                        ChangelogItem(
-                            "TEST-2",
-                            "kdkfkdkog kodkgodkgkdk fkdkogkodkgodkgkdkfkdkogkodkgodkgkdkfkdkogkodkgodkgkdkfkdkogkodkgodkg",
-                            "https://example.com/"
-                        ),
-                        ChangelogItem("TEST-3", "kdkfkdkogkodkgodkg", "https://example.com/"),
-                        ChangelogItem("TEST-4", "kdkfkdkogkodkgodkg", "https://example.com/"),
-                    )
-                ),
-                Release(
-                    "v0.0.1", setOf(
-                        ChangelogItem("TEST-1", "kdkfkdkogkodkgodkg", "https://example.com/"),
-                        ChangelogItem("TEST-2", "kdkfkdkogkodkgodkg", "https://example.com/"),
-                        ChangelogItem("TEST-3", "kdkfkdkogkodkgodkg", "https://example.com/"),
-                    )
-                ),
-            )
-        )
-    )
+private fun ChangelogDialogDialogPreview(
+    @PreviewParameter(FakeChangelogProvider::class) releases: List<Release>
+) {
+    ChangelogDialog(state = SettingsState(changelog = releases))
 }
