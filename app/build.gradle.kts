@@ -148,6 +148,8 @@ dependencies {
     implementation(libs.google.barcode.scanning)
     implementation(libs.google.accompanist.permissions)
 
+    implementation(libs.androidx.core.splashscreen)
+
 
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
