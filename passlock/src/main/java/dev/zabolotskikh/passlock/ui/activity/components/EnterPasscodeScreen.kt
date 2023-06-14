@@ -13,6 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices.PIXEL_4
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.zabolotskikh.passlock.R
@@ -22,6 +23,7 @@ import dev.zabolotskikh.passlock.ui.activity.PasscodeResult
 import dev.zabolotskikh.passlock.ui.activity.PasscodeResult.BLOCKED
 import dev.zabolotskikh.passlock.ui.activity.PasscodeResult.REJECTED
 import dev.zabolotskikh.passlock.ui.activity.PasscodeState
+import dev.zabolotskikh.passlock.ui.preview.providers.FakePasscodeStateProvider
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -82,26 +84,10 @@ internal fun EnterPasscodeScreen(
 
 @Composable
 @Preview(showSystemUi = true, device = PIXEL_4)
-private fun EnterPasscodeScreenPreview1() {
+private fun EnterPasscodeScreenPreview(
+    @PreviewParameter(FakePasscodeStateProvider::class) state: PasscodeState
+) {
     EnterPasscodeScreen(
-        options = PasscodeActivity.PasscodeAction.EnterPasscode(), state = PasscodeState()
-    )
-}
-
-@Composable
-@Preview(showSystemUi = true, device = PIXEL_4)
-private fun EnterPasscodeScreenPreview2() {
-    EnterPasscodeScreen(
-        options = PasscodeActivity.PasscodeAction.EnterPasscode(),
-        state = PasscodeState(passcodeCheckStatus = REJECTED)
-    )
-}
-
-@Composable
-@Preview(showSystemUi = true, device = PIXEL_4)
-private fun EnterPasscodeScreenPreview3() {
-    EnterPasscodeScreen(
-        options = PasscodeActivity.PasscodeAction.EnterPasscode(),
-        state = PasscodeState(isBlockedUntil = 1685050000000, passcodeCheckStatus = BLOCKED)
+        options = PasscodeActivity.PasscodeAction.EnterPasscode(), state = state
     )
 }
