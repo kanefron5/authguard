@@ -16,11 +16,13 @@ plugins {
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.kotlin.kapt) apply false
+    alias(libs.plugins.kotlin.jvm) apply false
     alias(libs.plugins.dagger) apply false
     alias(libs.plugins.firebase.crashlytics) apply false
     alias(libs.plugins.firebase.services) apply false
-
+    id("dev.zabolotskikh.changelog-gradle-plugin") apply false
 }
+
 
 ext {
     data class SemVer(

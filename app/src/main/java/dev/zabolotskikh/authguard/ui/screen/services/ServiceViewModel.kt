@@ -3,7 +3,7 @@ package dev.zabolotskikh.authguard.ui.screen.services
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.zabolotskikh.authguard.OtpInstance
+import dev.zabolotskikh.authguard.domain.OtpInstance
 import dev.zabolotskikh.authguard.domain.model.GenerationMethod
 import dev.zabolotskikh.authguard.domain.model.Service
 import dev.zabolotskikh.authguard.domain.repository.AppStateRepository
@@ -40,7 +40,7 @@ class ServiceViewModel @Inject constructor(
             isPrivateMode = appState?.isPrivateMode ?: false
         )
     }.stateIn(
-        viewModelScope, SharingStarted.WhileSubscribed(5000), ServiceState()
+        viewModelScope, SharingStarted.WhileSubscribed(5000), ServiceState(isLoading = true)
     )
 
     fun onEvent(event: ServiceEvent) {

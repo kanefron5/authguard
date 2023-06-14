@@ -14,3 +14,5 @@ dependencyResolutionManagement {
 }
 rootProject.name = "AuthGuard"
 include ':app'
+include ':passlock'
+include ':domain'

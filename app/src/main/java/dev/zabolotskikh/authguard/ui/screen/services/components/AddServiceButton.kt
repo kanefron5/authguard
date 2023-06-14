@@ -5,8 +5,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import dev.zabolotskikh.authguard.R
 import dev.zabolotskikh.authguard.domain.model.Service
+import dev.zabolotskikh.authguard.ui.preview.providers.FakeServiceStateProvider
 import dev.zabolotskikh.authguard.ui.screen.services.ServiceEvent
 import dev.zabolotskikh.authguard.ui.screen.services.ServiceState
 
@@ -26,6 +28,8 @@ fun AddServiceButton(
 
 @Preview
 @Composable
-fun AddServiceButtonPreview() {
-    AddServiceButton(state = ServiceState(services = listOf(Service("aa", "aa"))), onEvent = {})
+fun AddServiceButtonPreview(
+    @PreviewParameter(FakeServiceStateProvider::class) serviceState: ServiceState
+) {
+    AddServiceButton(state = serviceState, onEvent = {})
 }
