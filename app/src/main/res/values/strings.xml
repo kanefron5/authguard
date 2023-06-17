@@ -4,7 +4,7 @@
     <string name="app_logo_content_description">Application logo</string>
     <string name="welcome">Welcome to AuthGuard!</string>
     <string name="welcome_description">Keep access to all your accounts even after switching devices</string>
-    <string name="login">Log in / Sign up</string>
+    <string name="signup_email">Sign up with Email</string>
     <string name="local_mode">Continue locally</string>
     <string name="confirm_action">Confirm action</string>
     <string name="reset_warning">This action will delete authorization codes in all your services.\nIt will be impossible to restore them. \n\nAre you sure?</string>
@@ -43,4 +43,5 @@
     <string name="delete_passcode">Delete passcode</string>
     <string name="caution">Caution</string>
     <string name="settings_changelog">Changelog</string>
+    <string name="signup_already_have_account">Already have account? Sign In</string>
 </resources>

@@ -11,6 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dev.zabolotskikh.authguard.domain.model.AppState
+import dev.zabolotskikh.authguard.ui.screen.auth.AuthScreen
 import dev.zabolotskikh.authguard.ui.screen.services.ServiceScreen
 import dev.zabolotskikh.authguard.ui.screen.settings.SettingsScreen
 import dev.zabolotskikh.authguard.ui.screen.welcome.WelcomeScreen
@@ -18,6 +19,7 @@ import dev.zabolotskikh.authguard.ui.screen.welcome.WelcomeScreen
 sealed class Screen(private val route: String) {
     operator fun invoke() = route
 
+    object Auth : Screen("auth_screen")
     object Welcome : Screen("welcome_screen")
     object Main : Screen("main_screen")
     object Settings : Screen("settings_screen")
@@ -51,8 +53,9 @@ fun MyAppNavHost(
     NavHost(
         modifier = modifier, navController = navController, startDestination = startDestination
     ) {
-        composable(Screen.Welcome()) { WelcomeScreen() }
+        composable(Screen.Welcome()) { WelcomeScreen(onNavigate = ::onNavigate) }
         composable(Screen.Settings()) { SettingsScreen(onNavigateBack = ::onNavigateBack) }
         composable(Screen.Main()) { ServiceScreen(onNavigate = ::onNavigate) }
+        composable(Screen.Auth()) { AuthScreen() }
     }
 }
