@@ -44,4 +44,8 @@
     <string name="caution">Caution</string>
     <string name="settings_changelog">Changelog</string>
     <string name="signup_already_have_account">Already have account? Sign In</string>
+    <string name="back">Back</string>
+    <string name="auth_password_recovery_title">Password recovery</string>
+    <string name="send">Send</string>
+    <string name="auth_password_recovery_message">An email with instructions will be sent to your email to reset your password. Do you want to continue?</string>
 </resources>

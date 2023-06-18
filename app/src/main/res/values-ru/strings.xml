@@ -43,4 +43,8 @@
     <string name="caution">Предупреждение</string>
     <string name="settings_changelog">История изменений</string>
     <string name="signup_already_have_account">Уже зарегистрированы? Войти</string>
+    <string name="back">Назад</string>
+    <string name="auth_password_recovery_title">Востановление пароля</string>
+    <string name="send">Отправить</string>
+    <string name="auth_password_recovery_message">Для восстановления пароля на вашу почту будет отправлено письмо с инструкцией. Вы хотите продолжить?</string>
 </resources>
