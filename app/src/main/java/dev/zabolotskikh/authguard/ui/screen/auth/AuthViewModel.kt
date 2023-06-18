@@ -62,8 +62,14 @@ class AuthViewModel @Inject constructor(
                     e.printStackTrace()
                 }
             }
+
             is AuthEvent.OnEditEmail -> _state.update { it.copy(email = event.value) }
             is AuthEvent.OnEditPassword -> _state.update { it.copy(password = event.value) }
+            is AuthEvent.OnForgotPasswordDialog -> _state.update {
+                it.copy(
+                    isResetPasswordDialogShown = event.isShown
+                )
+            }
         }
     }
 }
