@@ -21,21 +21,33 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.zabolotskikh.authguard.R
+import dev.zabolotskikh.authguard.ui.Screen
 import dev.zabolotskikh.authguard.ui.screen.auth.signin.SignInScreen
+import dev.zabolotskikh.authguard.ui.screen.auth.signup.SignUpScreen
 
 // https://dribbble.com/shots/11693634-Onboarding-UI-Kit-Preview
 @Composable
-fun AuthScreen() {
+fun AuthScreen(
+    onNavigate: (screen: Screen, clear: Boolean) -> Unit = { _, _ -> },
+    screen: Screen.Auth
+) {
     val viewModel = hiltViewModel<AuthViewModel>()
     val state by viewModel.state.collectAsState()
 
-    AuthScreenView(onEvent = viewModel::onEvent, state = state)
+    AuthScreenView(
+        onEvent = viewModel::onEvent,
+        state = state,
+        onNavigate = onNavigate,
+        screen = screen
+    )
 }
 
 @Composable
 private fun AuthScreenView(
     onEvent: (AuthEvent) -> Unit,
     state: AuthState,
+    screen: Screen.Auth,
+    onNavigate: (screen: Screen, clear: Boolean) -> Unit = { _, _ -> }
 ) {
     Column {
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
@@ -47,16 +59,34 @@ private fun AuthScreenView(
             Text(text = stringResource(id = R.string.back))
         }
 
-        SignInScreen(
-            modifier = Modifier.padding(top = 16.dp),
-            onEvent = onEvent,
-            state = state
-        )
+        when (screen) {
+            Screen.Auth.SignIn -> {
+                SignInScreen(
+                    modifier = Modifier.padding(top = 16.dp),
+                    onEvent = onEvent,
+                    state = state,
+                    onNavigate = onNavigate
+                )
+            }
+            Screen.Auth.SignUp -> {
+                SignUpScreen(
+                    modifier = Modifier.padding(top = 16.dp),
+                    onEvent = onEvent,
+                    state = state,
+                )
+            }
+        }
     }
 }
 
 @Preview(device = Devices.PIXEL_4, showSystemUi = true)
 @Composable
 private fun AuthScreenPreview() {
-    AuthScreenView(onEvent = {}, state = AuthState())
+    AuthScreenView(onEvent = {}, state = AuthState(), screen = Screen.Auth.SignUp)
+}
+
+@Preview(device = Devices.PIXEL_4, showSystemUi = true)
+@Composable
+private fun AuthScreenPreview2() {
+    AuthScreenView(onEvent = {}, state = AuthState(), screen = Screen.Auth.SignIn)
 }

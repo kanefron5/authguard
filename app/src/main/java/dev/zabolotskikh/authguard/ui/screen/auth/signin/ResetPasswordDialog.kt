@@ -1,4 +1,4 @@
-package dev.zabolotskikh.authguard.ui.screen.auth.signup
+package dev.zabolotskikh.authguard.ui.screen.auth.signin
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
