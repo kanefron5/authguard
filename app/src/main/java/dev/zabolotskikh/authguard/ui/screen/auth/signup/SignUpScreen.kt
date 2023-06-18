@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -24,12 +25,25 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.zabolotskikh.authguard.R
+import dev.zabolotskikh.authguard.ui.preview.providers.FakeAuthStateProvider
+import dev.zabolotskikh.authguard.ui.screen.auth.AuthEvent
+import dev.zabolotskikh.authguard.ui.screen.auth.AuthState
 import dev.zabolotskikh.authguard.ui.screen.auth.components.LabeledTextField
+import dev.zabolotskikh.authguard.ui.screen.auth.components.TextFieldType
+
+private const val PRIVACY_POLICY_TAG = "privacy_policy"
+private const val TERMS_OF_USE_TAG = "terms_of_use"
 
 @Composable
-fun SignUpScreen(modifier: Modifier = Modifier) {
+fun SignUpScreen(
+    modifier: Modifier = Modifier,
+    onEvent: (AuthEvent) -> Unit,
+    state: AuthState
+) {
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -37,17 +51,17 @@ fun SignUpScreen(modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Sign Up",
+            text = stringResource(id = R.string.signup),
             modifier = Modifier.fillMaxWidth(),
-            fontSize = 24.sp,
+            fontSize = 26.sp,
             style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Start,
             color = MaterialTheme.colorScheme.primary
         )
         Text(
-            text = "Create an account so you can synchronize 2FA codes between devices",
+            text = stringResource(id = R.string.auth_signup_message),
             modifier = Modifier.fillMaxWidth(),
-            fontSize = 18.sp,
+            fontSize = 17.sp,
             textAlign = TextAlign.Start,
             color = MaterialTheme.colorScheme.secondary
         )
@@ -55,12 +69,26 @@ fun SignUpScreen(modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.height(24.dp))
 
         Column {
-            LabeledTextField(modifier = Modifier.fillMaxWidth(), label = "Email")
+            LabeledTextField(
+                modifier = Modifier.fillMaxWidth(),
+                label = stringResource(id = R.string.auth_placeholder_email),
+                value = state.email,
+                isValid = state.isEmailValid,
+                onValueChanged = { onEvent(AuthEvent.OnEditEmail(it)) },
+                type = TextFieldType.EMAIL
+            )
             Spacer(modifier = Modifier.height(8.dp))
-            LabeledTextField(modifier = Modifier.fillMaxWidth(), label = "Password")
+            LabeledTextField(
+                modifier = Modifier.fillMaxWidth(),
+                label = stringResource(id = R.string.auth_placeholder_password),
+                value = state.password,
+                type = TextFieldType.PASSWORD,
+                onValueChanged = { onEvent(AuthEvent.OnEditPassword(it)) },
+                isValid = state.isPasswordValid
+            )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Your password must be 8 or more characters long and contains a mix of upper and lower case letters, numbers and symbols",
+                text = stringResource(id = R.string.auth_password_requirements),
                 style = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.secondary),
                 fontSize = 10.sp,
                 textAlign = TextAlign.Justify
@@ -73,6 +101,7 @@ fun SignUpScreen(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp),
+            enabled = state.isEmailValid && state.isPasswordValid && state.email.isNotBlank() && state.password.isNotBlank(),
             shape = RoundedCornerShape(8.dp),
             onClick = { },
             colors = ButtonDefaults.buttonColors(
@@ -80,11 +109,11 @@ fun SignUpScreen(modifier: Modifier = Modifier) {
                 contentColor = MaterialTheme.colorScheme.onPrimary
             )
         ) {
-            Text(text = "Create an account")
+            Text(text = stringResource(id = R.string.auth_create_account))
         }
 
-        val signUpText = buildAnnotatedString {
-            append("By signing up, you're agree to our")
+        val text = buildAnnotatedString {
+            append(stringResource(id = R.string.auth_signup_text))
             append(" ")
             val style = SpanStyle(
                 fontWeight = FontWeight.Bold,
@@ -92,27 +121,29 @@ fun SignUpScreen(modifier: Modifier = Modifier) {
                 textDecoration = TextDecoration.Underline
             )
             withStyle(style) {
-                append("Terms of Use")
-                this.pushStringAnnotation("terms_of_use", "Terms of Use")
+                this.pushStringAnnotation(TERMS_OF_USE_TAG, "")
+                append(stringResource(id = R.string.auth_terms_of_use))
                 pop()
             }
             append(" ")
-            append("and")
+            append(stringResource(id = R.string.and))
             append(" ")
             withStyle(style) {
-                append("Privacy Policy")
-                this.pushStringAnnotation("privacy_policy", "Privacy Policy")
+                this.pushStringAnnotation(PRIVACY_POLICY_TAG, "")
+                append(stringResource(id = R.string.auth_privacy_policy))
                 pop()
             }
         }
         ClickableText(
-            modifier = Modifier.padding(24.dp).fillMaxWidth(.7f),
-            text = signUpText,
+            modifier = Modifier
+                .padding(24.dp)
+                .fillMaxWidth(.7f),
+            text = text,
             onClick = { offset ->
-                signUpText.getStringAnnotations("terms_of_use", offset, offset).firstOrNull()?.let {
+                text.getStringAnnotations(TERMS_OF_USE_TAG, offset, offset).firstOrNull()?.let {
                     // TODO
                 }
-                signUpText.getStringAnnotations("privacy_policy", offset, offset).firstOrNull()?.let {
+                text.getStringAnnotations(PRIVACY_POLICY_TAG, offset, offset).firstOrNull()?.let {
                     // TODO
                 }
             },
@@ -123,6 +154,8 @@ fun SignUpScreen(modifier: Modifier = Modifier) {
 
 @Preview(device = Devices.PIXEL_4, showSystemUi = true)
 @Composable
-private fun SignUpScreenPreview() {
-    SignUpScreen()
+private fun SignUpScreenPreview(
+    @PreviewParameter(FakeAuthStateProvider::class) authState: AuthState
+) {
+    SignUpScreen(onEvent = {}, state = authState)
 }

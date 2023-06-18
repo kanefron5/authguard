@@ -93,7 +93,7 @@ private fun WelcomeScreenView(
                     .fillMaxWidth()
                     .height(48.dp),
                 shape = RoundedCornerShape(8.dp),
-                onClick = { onNavigate(Screen.Auth, false) }, colors = ButtonDefaults.buttonColors(
+                onClick = { onNavigate(Screen.Auth.SignUp, false) }, colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = MaterialTheme.colorScheme.onPrimary
                 )
@@ -106,7 +106,7 @@ private fun WelcomeScreenView(
                     .fillMaxWidth()
                     .height(48.dp),
                 shape = RoundedCornerShape(8.dp),
-                onClick = { onNavigate(Screen.Auth, false) }
+                onClick = { onNavigate(Screen.Auth.SignIn, false) }
             ) {
                 Text(text = stringResource(id = R.string.signup_already_have_account))
             }

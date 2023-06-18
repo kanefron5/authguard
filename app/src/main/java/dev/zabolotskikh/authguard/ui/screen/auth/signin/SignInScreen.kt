@@ -19,6 +19,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -30,15 +31,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.zabolotskikh.authguard.R
+import dev.zabolotskikh.authguard.ui.Screen
 import dev.zabolotskikh.authguard.ui.preview.providers.FakeAuthStateProvider
 import dev.zabolotskikh.authguard.ui.screen.auth.AuthEvent
 import dev.zabolotskikh.authguard.ui.screen.auth.AuthState
 import dev.zabolotskikh.authguard.ui.screen.auth.components.LabeledTextField
 import dev.zabolotskikh.authguard.ui.screen.auth.components.TextFieldType
 
+private const val SIGN_UP_TAG = "sign_up"
+
 @Composable
 fun SignInScreen(
-    modifier: Modifier = Modifier, onEvent: (AuthEvent) -> Unit, state: AuthState
+    modifier: Modifier = Modifier,
+    onEvent: (AuthEvent) -> Unit, state: AuthState,
+    onNavigate: (screen: Screen, clear: Boolean) -> Unit = { _, _ -> }
 ) {
     Column(
         modifier = modifier
@@ -47,17 +54,17 @@ fun SignInScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Welcome back!",
+            text = stringResource(id = R.string.auth_welcome_back),
             modifier = Modifier.fillMaxWidth(),
-            fontSize = 24.sp,
+            fontSize = 26.sp,
             style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Start,
             color = MaterialTheme.colorScheme.primary
         )
         Text(
-            text = "Sign In to your account",
+            text = stringResource(id = R.string.auth_signin_to_account),
             modifier = Modifier.fillMaxWidth(),
-            fontSize = 18.sp,
+            fontSize = 17.sp,
             textAlign = TextAlign.Start,
             color = MaterialTheme.colorScheme.secondary
         )
@@ -67,7 +74,7 @@ fun SignInScreen(
         Column {
             LabeledTextField(
                 modifier = Modifier.fillMaxWidth(),
-                label = "Email",
+                label = stringResource(id = R.string.auth_placeholder_email),
                 value = state.email,
                 isValid = state.isEmailValid,
                 onValueChanged = { onEvent(AuthEvent.OnEditEmail(it)) },
@@ -76,7 +83,7 @@ fun SignInScreen(
             Spacer(modifier = Modifier.height(8.dp))
             LabeledTextField(
                 modifier = Modifier.fillMaxWidth(),
-                label = "Password",
+                label = stringResource(id = R.string.auth_placeholder_password),
                 value = state.password,
                 type = TextFieldType.PASSWORD,
                 onValueChanged = { onEvent(AuthEvent.OnEditPassword(it)) },
@@ -87,8 +94,10 @@ fun SignInScreen(
         Spacer(modifier = Modifier.height(8.dp))
 
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-            TextButton(onClick = { }) {
-                Text(text = "Forgot password?")
+            TextButton(onClick = {
+                TODO("Add alert fro this action!")
+            }) {
+                Text(text = stringResource(id = R.string.auth_forgot_password))
             }
         }
 
@@ -106,11 +115,11 @@ fun SignInScreen(
                 contentColor = MaterialTheme.colorScheme.onPrimary
             )
         ) {
-            Text(text = "Continue")
+            Text(text = stringResource(id = R.string.action_continue))
         }
 
         val signUpText = buildAnnotatedString {
-            append("Don't have account?")
+            append(stringResource(id = R.string.auth_no_account))
             append(" ")
             withStyle(
                 SpanStyle(
@@ -119,8 +128,8 @@ fun SignInScreen(
                     textDecoration = TextDecoration.Underline
                 )
             ) {
-                append("Sign up")
-                this.pushStringAnnotation("sign_up", "Sign up")
+                pushStringAnnotation(SIGN_UP_TAG, "")
+                append(stringResource(id = R.string.signup))
                 pop()
             }
         }
@@ -128,9 +137,8 @@ fun SignInScreen(
             modifier = Modifier.padding(24.dp),
             text = signUpText,
             onClick = { offset ->
-                signUpText.getStringAnnotations("sig_up", offset, offset).firstOrNull()?.let {
-                    onEvent(AuthEvent.OnForgotPassword)
-                    // todo alert
+                signUpText.getStringAnnotations(SIGN_UP_TAG, offset, offset).firstOrNull()?.let {
+                    onNavigate(Screen.Auth.SignUp, false)
                 }
             },
             style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onBackground)

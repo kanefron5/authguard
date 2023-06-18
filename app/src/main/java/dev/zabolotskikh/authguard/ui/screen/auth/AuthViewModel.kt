@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -38,21 +39,31 @@ class AuthViewModel @Inject constructor(
 
     fun onEvent(event: AuthEvent) {
         when (event) {
-            AuthEvent.OnForgotPassword -> TODO()
-            AuthEvent.OnSignIn -> TODO()
-            AuthEvent.OnSignUp -> TODO()
+            AuthEvent.OnForgotPassword -> viewModelScope.launch(coroutineDispatcher) {
+                try {
+                    authRepository.sendResetPasswordEmail(_state.value.email)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+
+            AuthEvent.OnSignIn -> viewModelScope.launch(coroutineDispatcher) {
+                try {
+                    authRepository.signIn(_state.value.email, _state.value.password)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+
+            AuthEvent.OnSignUp -> viewModelScope.launch(coroutineDispatcher) {
+                try {
+                    authRepository.signUp(_state.value.email, _state.value.password)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
             is AuthEvent.OnEditEmail -> _state.update { it.copy(email = event.value) }
             is AuthEvent.OnEditPassword -> _state.update { it.copy(password = event.value) }
         }
-    }
-
-    private fun checkPasswordValid(password: String): Boolean {
-        if (password.isEmpty()) return true
-        return password.matches(Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,}$"))
-    }
-
-    private fun checkEmailValid(email: String): Boolean {
-        if (email.isEmpty()) return true
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 }
