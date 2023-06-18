@@ -9,6 +9,7 @@ class FakeAuthStateProvider : PreviewParameterProvider<AuthState> {
     override val values: Sequence<AuthState>
         get() = sequenceOf(
             AuthState(),
+            AuthState(isResetPasswordDialogShown = true),
             AuthState("example@zabolotskikh.dev", "##qwertYUIOP123@@"),
             AuthState("example@zabolotskikh", "##qwertYUIOP123@@", isEmailValid = false),
             AuthState("example@zabolotskikh.dev", "12345", isPasswordValid = false),

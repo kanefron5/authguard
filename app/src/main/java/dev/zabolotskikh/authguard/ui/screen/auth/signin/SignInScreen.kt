@@ -47,6 +47,10 @@ fun SignInScreen(
     onEvent: (AuthEvent) -> Unit, state: AuthState,
     onNavigate: (screen: Screen, clear: Boolean) -> Unit = { _, _ -> }
 ) {
+    if (state.isResetPasswordDialogShown) {
+        ResetPasswordDialog(state = state, onEvent = onEvent)
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -95,7 +99,7 @@ fun SignInScreen(
 
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
             TextButton(onClick = {
-                TODO("Add alert fro this action!")
+                onEvent(AuthEvent.OnForgotPasswordDialog(true))
             }) {
                 Text(text = stringResource(id = R.string.auth_forgot_password))
             }
