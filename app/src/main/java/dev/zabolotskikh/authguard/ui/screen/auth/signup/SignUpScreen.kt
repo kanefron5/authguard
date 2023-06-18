@@ -103,7 +103,7 @@ fun SignUpScreen(
                 .height(48.dp),
             enabled = state.isEmailValid && state.isPasswordValid && state.email.isNotBlank() && state.password.isNotBlank(),
             shape = RoundedCornerShape(8.dp),
-            onClick = { },
+            onClick = { onEvent(AuthEvent.OnSignUp) },
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary
