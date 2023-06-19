@@ -7,4 +7,5 @@ sealed interface AuthEvent {
     object OnSignIn: AuthEvent
     data class OnEditPassword(val value: String): AuthEvent
     data class OnEditEmail(val value: String): AuthEvent
+    object DismissError: AuthEvent
 }

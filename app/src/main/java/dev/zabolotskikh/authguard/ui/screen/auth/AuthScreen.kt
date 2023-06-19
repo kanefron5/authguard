@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.zabolotskikh.authguard.R
 import dev.zabolotskikh.authguard.ui.Screen
+import dev.zabolotskikh.authguard.ui.screen.auth.components.AuthErrorDialog
 import dev.zabolotskikh.authguard.ui.screen.auth.signin.SignInScreen
 import dev.zabolotskikh.authguard.ui.screen.auth.signup.SignUpScreen
 
@@ -49,6 +50,12 @@ private fun AuthScreenView(
     screen: Screen.Auth,
     onNavigate: (screen: Screen, clear: Boolean) -> Unit = { _, _ -> }
 ) {
+    state.error?.let { error ->
+        AuthErrorDialog(exception = error, onDismiss = {
+            onEvent(AuthEvent.DismissError)
+        })
+    }
+
     Column {
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             val onBackPressedDispatcher =
@@ -68,6 +75,7 @@ private fun AuthScreenView(
                     onNavigate = onNavigate
                 )
             }
+
             Screen.Auth.SignUp -> {
                 SignUpScreen(
                     modifier = Modifier.padding(top = 16.dp),
