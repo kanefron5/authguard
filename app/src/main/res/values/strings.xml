@@ -62,4 +62,6 @@
     <string name="auth_terms_of_use">Terms of Use</string>
     <string name="and">and</string>
     <string name="auth_privacy_policy">Privacy Policy</string>
+    <string name="hide_password">Hide password</string>
+    <string name="show_password">Show password</string>
 </resources>
