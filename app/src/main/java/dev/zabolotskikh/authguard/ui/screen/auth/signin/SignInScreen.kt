@@ -23,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
@@ -37,7 +38,6 @@ import dev.zabolotskikh.authguard.ui.preview.providers.FakeAuthStateProvider
 import dev.zabolotskikh.authguard.ui.screen.auth.AuthEvent
 import dev.zabolotskikh.authguard.ui.screen.auth.AuthState
 import dev.zabolotskikh.authguard.ui.screen.auth.components.LabeledTextField
-import dev.zabolotskikh.authguard.ui.screen.auth.components.TextFieldType
 
 private const val SIGN_UP_TAG = "sign_up"
 
@@ -82,14 +82,14 @@ fun SignInScreen(
                 value = state.email,
                 isValid = state.isEmailValid,
                 onValueChanged = { onEvent(AuthEvent.OnEditEmail(it)) },
-                type = TextFieldType.EMAIL
+                type = KeyboardType.Email
             )
             Spacer(modifier = Modifier.height(8.dp))
             LabeledTextField(
                 modifier = Modifier.fillMaxWidth(),
                 label = stringResource(id = R.string.auth_placeholder_password),
                 value = state.password,
-                type = TextFieldType.PASSWORD,
+                type = KeyboardType.Password,
                 onValueChanged = { onEvent(AuthEvent.OnEditPassword(it)) },
                 isValid = state.isPasswordValid
             )

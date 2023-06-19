@@ -61,4 +61,6 @@
     <string name="auth_terms_of_use">Условия Использования</string>
     <string name="and">и</string>
     <string name="auth_privacy_policy">Политику Конфиденциальности</string>
+    <string name="hide_password">Скрыть пароль</string>
+    <string name="show_password">Показать пароль</string>
 </resources>
