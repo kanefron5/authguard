@@ -61,6 +61,7 @@ class AuthViewModel @Inject constructor(
                     authRepository.sendResetPasswordEmail(_state.value.email)
                 } catch (e: Exception) {
                     e.printStackTrace()
+                    _state.update { it.copy(error = e) }
                 } finally {
                     _state.update { it.copy(isResetPasswordDialogShown = false) }
                     _state.updateProgress(false)
@@ -73,6 +74,7 @@ class AuthViewModel @Inject constructor(
                     authRepository.signIn(_state.value.email, _state.value.password)
                 } catch (e: Exception) {
                     e.printStackTrace()
+                    _state.update { it.copy(error = e) }
                 } finally {
                     _state.updateProgress(false)
                 }
@@ -84,6 +86,7 @@ class AuthViewModel @Inject constructor(
                     authRepository.signUp(_state.value.email, _state.value.password)
                 } catch (e: Exception) {
                     e.printStackTrace()
+                    _state.update { it.copy(error = e) }
                 } finally {
                     _state.updateProgress(false)
                 }
@@ -94,6 +97,8 @@ class AuthViewModel @Inject constructor(
             is AuthEvent.OnForgotPasswordDialog -> _state.update {
                 it.copy(isResetPasswordDialogShown = event.isShown)
             }
+
+            AuthEvent.DismissError -> _state.update { it.copy(error = null) }
         }
     }
 

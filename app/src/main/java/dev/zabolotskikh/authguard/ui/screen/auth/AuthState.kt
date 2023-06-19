@@ -6,5 +6,6 @@ data class AuthState(
     val isPasswordValid: Boolean = true,
     val isEmailValid: Boolean = true,
     val isResetPasswordDialogShown: Boolean = false,
-    val isProgress: Boolean = false
+    val isProgress: Boolean = false,
+    val error: Exception? = null
 )

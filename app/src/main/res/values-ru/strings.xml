@@ -63,4 +63,6 @@
     <string name="auth_privacy_policy">Политику Конфиденциальности</string>
     <string name="hide_password">Скрыть пароль</string>
     <string name="show_password">Показать пароль</string>
+    <string name="auth_error_occurred">Произошла ошибка</string>
+    <string name="auth_unknown_error">Неизвестная ошибка. Повторите попытку позднее.</string>
 </resources>
