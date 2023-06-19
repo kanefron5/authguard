@@ -5,12 +5,15 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.zabolotskikh.authguard.di.EmailValidator
 import dev.zabolotskikh.authguard.di.PasswordValidator
+import dev.zabolotskikh.authguard.domain.model.AppState
 import dev.zabolotskikh.authguard.domain.repository.AppStateRepository
 import dev.zabolotskikh.authguard.domain.repository.AuthRepository
 import dev.zabolotskikh.authguard.domain.repository.DataValidator
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -37,39 +40,64 @@ class AuthViewModel @Inject constructor(
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), _state.value)
 
+    init {
+        viewModelScope.launch {
+            authRepository.isAuthenticated().filter { it }.collectLatest {
+                stateRepository.update(
+                    (_appState.value ?: AppState()).copy(
+                        isStarted = true,
+                        isRemoteMode = true
+                    )
+                )
+            }
+        }
+    }
+
     fun onEvent(event: AuthEvent) {
         when (event) {
             AuthEvent.OnForgotPassword -> viewModelScope.launch(coroutineDispatcher) {
                 try {
+                    _state.updateProgress(true)
                     authRepository.sendResetPasswordEmail(_state.value.email)
                 } catch (e: Exception) {
                     e.printStackTrace()
+                } finally {
+                    _state.update { it.copy(isResetPasswordDialogShown = false) }
+                    _state.updateProgress(false)
                 }
             }
 
             AuthEvent.OnSignIn -> viewModelScope.launch(coroutineDispatcher) {
                 try {
+                    _state.updateProgress(true)
                     authRepository.signIn(_state.value.email, _state.value.password)
                 } catch (e: Exception) {
                     e.printStackTrace()
+                } finally {
+                    _state.updateProgress(false)
                 }
             }
 
             AuthEvent.OnSignUp -> viewModelScope.launch(coroutineDispatcher) {
                 try {
+                    _state.updateProgress(true)
                     authRepository.signUp(_state.value.email, _state.value.password)
                 } catch (e: Exception) {
                     e.printStackTrace()
+                } finally {
+                    _state.updateProgress(false)
                 }
             }
 
             is AuthEvent.OnEditEmail -> _state.update { it.copy(email = event.value) }
             is AuthEvent.OnEditPassword -> _state.update { it.copy(password = event.value) }
             is AuthEvent.OnForgotPasswordDialog -> _state.update {
-                it.copy(
-                    isResetPasswordDialogShown = event.isShown
-                )
+                it.copy(isResetPasswordDialogShown = event.isShown)
             }
         }
+    }
+
+    private fun MutableStateFlow<AuthState>.updateProgress(value: Boolean) {
+        update { it.copy(isProgress = value) }
     }
 }

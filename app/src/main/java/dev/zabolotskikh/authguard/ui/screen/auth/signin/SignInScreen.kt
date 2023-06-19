@@ -38,6 +38,7 @@ import dev.zabolotskikh.authguard.ui.preview.providers.FakeAuthStateProvider
 import dev.zabolotskikh.authguard.ui.screen.auth.AuthEvent
 import dev.zabolotskikh.authguard.ui.screen.auth.AuthState
 import dev.zabolotskikh.authguard.ui.screen.auth.components.LabeledTextField
+import dev.zabolotskikh.authguard.ui.screen.auth.components.ProgressButton
 
 private const val SIGN_UP_TAG = "sign_up"
 
@@ -107,20 +108,15 @@ fun SignInScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        Button(
+        ProgressButton(
             enabled = state.isEmailValid && state.isPasswordValid && state.email.isNotBlank() && state.password.isNotBlank(),
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp),
-            shape = RoundedCornerShape(8.dp),
             onClick = { onEvent(AuthEvent.OnSignIn) },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary
-            )
-        ) {
-            Text(text = stringResource(id = R.string.action_continue))
-        }
+            text = stringResource(id = R.string.action_continue),
+            isProgress = state.isProgress
+        )
 
         val signUpText = buildAnnotatedString {
             append(stringResource(id = R.string.auth_no_account))

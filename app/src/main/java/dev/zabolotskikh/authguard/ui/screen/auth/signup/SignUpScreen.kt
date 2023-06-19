@@ -34,6 +34,7 @@ import dev.zabolotskikh.authguard.ui.preview.providers.FakeAuthStateProvider
 import dev.zabolotskikh.authguard.ui.screen.auth.AuthEvent
 import dev.zabolotskikh.authguard.ui.screen.auth.AuthState
 import dev.zabolotskikh.authguard.ui.screen.auth.components.LabeledTextField
+import dev.zabolotskikh.authguard.ui.screen.auth.components.ProgressButton
 
 private const val PRIVACY_POLICY_TAG = "privacy_policy"
 private const val TERMS_OF_USE_TAG = "terms_of_use"
@@ -97,20 +98,15 @@ fun SignUpScreen(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        Button(
+        ProgressButton(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp),
             enabled = state.isEmailValid && state.isPasswordValid && state.email.isNotBlank() && state.password.isNotBlank(),
-            shape = RoundedCornerShape(8.dp),
+            text = stringResource(id = R.string.auth_create_account),
             onClick = { onEvent(AuthEvent.OnSignUp) },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary
-            )
-        ) {
-            Text(text = stringResource(id = R.string.auth_create_account))
-        }
+            isProgress = state.isProgress
+        )
 
         val text = buildAnnotatedString {
             append(stringResource(id = R.string.auth_signup_text))

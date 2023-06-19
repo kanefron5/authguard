@@ -18,6 +18,7 @@ import dev.zabolotskikh.authguard.ui.preview.providers.FakeAuthStateProvider
 import dev.zabolotskikh.authguard.ui.screen.auth.AuthEvent
 import dev.zabolotskikh.authguard.ui.screen.auth.AuthState
 import dev.zabolotskikh.authguard.ui.screen.auth.components.LabeledTextField
+import dev.zabolotskikh.authguard.ui.screen.auth.components.ProgressButton
 
 @Composable
 fun ResetPasswordDialog(
@@ -25,7 +26,8 @@ fun ResetPasswordDialog(
     state: AuthState,
     onEvent: (AuthEvent) -> Unit = {},
 ) {
-    AlertDialog(onDismissRequest = { },
+    AlertDialog(
+        onDismissRequest = { },
         title = { Text(text = stringResource(id = R.string.auth_password_recovery_title)) },
         text = {
             Column {
@@ -43,15 +45,18 @@ fun ResetPasswordDialog(
             }
         },
         confirmButton = {
-            Button(enabled = state.isEmailValid && state.email.isNotBlank(),
-                onClick = { onEvent(AuthEvent.OnForgotPassword) }) {
-                Text(text = stringResource(id = R.string.send))
-            }
+            ProgressButton(
+                enabled = state.isEmailValid && state.email.isNotBlank(),
+                onClick = { onEvent(AuthEvent.OnForgotPassword) },
+                text = stringResource(id = R.string.send),
+                isProgress = state.isProgress
+            )
         },
         dismissButton = {
-            Button(onClick = { onEvent(AuthEvent.OnForgotPasswordDialog(false)) }) {
-                Text(text = stringResource(id = R.string.cancel))
-            }
+            ProgressButton(
+                onClick = { onEvent(AuthEvent.OnForgotPasswordDialog(false)) },
+                text = stringResource(id = R.string.cancel)
+            )
         },
         modifier = modifier
     )
