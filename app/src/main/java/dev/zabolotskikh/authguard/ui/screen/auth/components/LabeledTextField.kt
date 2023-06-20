@@ -37,13 +37,15 @@ fun LabeledTextField(
     isValid: Boolean = true,
     type: KeyboardType = KeyboardType.Text
 ) {
-    var passwordVisible by rememberSaveable { mutableStateOf(false) }
-
-    val transformation = if (type != KeyboardType.Password && type != KeyboardType.NumberPassword) {
-        VisualTransformation.None
-    } else {
-        if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation()
+    var passwordVisible by rememberSaveable {
+        mutableStateOf(
+            type != KeyboardType.Password && type != KeyboardType.NumberPassword
+        )
     }
+
+    val transformation = if (passwordVisible) VisualTransformation.None
+    else PasswordVisualTransformation()
+
 
     TextField(
         modifier = modifier

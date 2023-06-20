@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name" translatable="false">AuthGuard</string>
+    <string name="url_terms_of_use" translatable="false">https://authguard-android.web.app/terms_of_use.html</string>
+    <string name="url_privacy_policy" translatable="false">https://authguard-android.web.app/privacy_policy.html</string>
     <string name="settings_title_main">Settings</string>
     <string name="app_logo_content_description">Application logo</string>
     <string name="welcome">Welcome to AuthGuard!</string>

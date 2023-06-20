@@ -52,7 +52,7 @@ private fun AuthScreenView(
 ) {
     state.error?.let { error ->
         AuthErrorDialog(exception = error, onDismiss = {
-            onEvent(AuthEvent.DismissError)
+            onEvent(AuthEvent.OnDismissError)
         })
     }
 

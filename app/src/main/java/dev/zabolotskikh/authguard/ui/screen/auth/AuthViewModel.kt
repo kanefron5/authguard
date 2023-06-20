@@ -56,39 +56,21 @@ class AuthViewModel @Inject constructor(
     fun onEvent(event: AuthEvent) {
         when (event) {
             AuthEvent.OnForgotPassword -> viewModelScope.launch(coroutineDispatcher) {
-                try {
-                    _state.updateProgress(true)
+                safeExecuteWithProgress {
                     authRepository.sendResetPasswordEmail(_state.value.email)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    _state.update { it.copy(error = e) }
-                } finally {
-                    _state.update { it.copy(isResetPasswordDialogShown = false) }
-                    _state.updateProgress(false)
                 }
+                _state.update { it.copy(isResetPasswordDialogShown = false) }
             }
 
             AuthEvent.OnSignIn -> viewModelScope.launch(coroutineDispatcher) {
-                try {
-                    _state.updateProgress(true)
+                safeExecuteWithProgress {
                     authRepository.signIn(_state.value.email, _state.value.password)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    _state.update { it.copy(error = e) }
-                } finally {
-                    _state.updateProgress(false)
                 }
             }
 
             AuthEvent.OnSignUp -> viewModelScope.launch(coroutineDispatcher) {
-                try {
-                    _state.updateProgress(true)
+                safeExecuteWithProgress {
                     authRepository.signUp(_state.value.email, _state.value.password)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    _state.update { it.copy(error = e) }
-                } finally {
-                    _state.updateProgress(false)
                 }
             }
 
@@ -98,7 +80,19 @@ class AuthViewModel @Inject constructor(
                 it.copy(isResetPasswordDialogShown = event.isShown)
             }
 
-            AuthEvent.DismissError -> _state.update { it.copy(error = null) }
+            AuthEvent.OnDismissError -> _state.update { it.copy(error = null) }
+        }
+    }
+
+    private suspend fun safeExecuteWithProgress(action: suspend () -> Unit) {
+        try {
+            _state.updateProgress(true)
+            action.invoke()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            _state.update { it.copy(error = e) }
+        } finally {
+            _state.updateProgress(false)
         }
     }
 
