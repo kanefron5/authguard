@@ -17,6 +17,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.dagger)
+    alias(libs.plugins.firebase.crashlytics)
+    alias(libs.plugins.firebase.services)
     id("dev.zabolotskikh.changelog-gradle-plugin")
 }
 
@@ -149,6 +151,11 @@ dependencies {
     implementation(libs.google.accompanist.permissions)
 
     implementation(libs.androidx.core.splashscreen)
+
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.crashlytics)
 
 
     testImplementation(libs.junit)

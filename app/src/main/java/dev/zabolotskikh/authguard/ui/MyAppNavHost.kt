@@ -2,21 +2,24 @@ package dev.zabolotskikh.authguard.ui
 
 import androidx.camera.core.ExperimentalGetImage
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dev.zabolotskikh.authguard.domain.model.AppState
+import dev.zabolotskikh.authguard.ui.screen.auth.AuthScreen
 import dev.zabolotskikh.authguard.ui.screen.services.ServiceScreen
 import dev.zabolotskikh.authguard.ui.screen.settings.SettingsScreen
 import dev.zabolotskikh.authguard.ui.screen.welcome.WelcomeScreen
 
 sealed class Screen(private val route: String) {
     operator fun invoke() = route
+
+    sealed class Auth(route: String) : Screen(route) {
+        object SignIn : Auth("sign_in_screen")
+        object SignUp : Auth("sign_up_screen")
+    }
 
     object Welcome : Screen("welcome_screen")
     object Main : Screen("main_screen")
@@ -51,8 +54,10 @@ fun MyAppNavHost(
     NavHost(
         modifier = modifier, navController = navController, startDestination = startDestination
     ) {
-        composable(Screen.Welcome()) { WelcomeScreen() }
+        composable(Screen.Welcome()) { WelcomeScreen(onNavigate = ::onNavigate) }
         composable(Screen.Settings()) { SettingsScreen(onNavigateBack = ::onNavigateBack) }
         composable(Screen.Main()) { ServiceScreen(onNavigate = ::onNavigate) }
+        composable(Screen.Auth.SignIn()) { AuthScreen(::onNavigate, Screen.Auth.SignIn) }
+        composable(Screen.Auth.SignUp()) { AuthScreen(::onNavigate, Screen.Auth.SignUp) }
     }
 }

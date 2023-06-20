@@ -4,7 +4,7 @@
     <string name="app_logo_content_description">Иконка приложения</string>
     <string name="welcome">Добро пожаловать в AuthGuard!</string>
     <string name="welcome_description">Сохраняйте доступ ко всем своим аккаунтам даже после смены устройства</string>
-    <string name="login">Войти / Зарегистрироваться</string>
+    <string name="signup_email">Зарегистрироваться</string>
     <string name="local_mode">Продолжить локально</string>
     <string name="confirm_action">Подтвердите действие</string>
     <string name="reset_warning">Это действие приведет к удалению кодов для авторизации во всех ваших сервисах.\nВосстановить их будет невозможно. \n\nВы уверены?</string>
@@ -42,4 +42,27 @@
     <string name="delete_passcode">Удалить код-пароль</string>
     <string name="caution">Предупреждение</string>
     <string name="settings_changelog">История изменений</string>
+    <string name="signup_already_have_account">Уже зарегистрированы? Войти</string>
+    <string name="back">Назад</string>
+    <string name="auth_password_recovery_title">Восстановление пароля</string>
+    <string name="send">Отправить</string>
+    <string name="auth_password_recovery_message">Для восстановления пароля на вашу почту будет отправлено письмо с инструкцией. Вы хотите продолжить?</string>
+    <string name="auth_welcome_back">С возвращением!</string>
+    <string name="auth_signin_to_account">Войдите в свой аккаунт</string>
+    <string name="auth_placeholder_email">Email</string>
+    <string name="auth_placeholder_password">Пароль</string>
+    <string name="auth_forgot_password">Забыли пароль?</string>
+    <string name="auth_no_account">Еще не зарегистрированы?</string>
+    <string name="signup">Зарегистрироваться</string>
+    <string name="auth_signup_message">Создайте аккаунт, и вы сможете синхронизировать ваши 2FA коды между различными устройствами</string>
+    <string name="auth_password_requirements">Пароль должен содержать не менее 8 символов. Должен включать прописные и строчные буквы, числа и спецсимволы</string>
+    <string name="auth_create_account">Создать аккаунт</string>
+    <string name="auth_signup_text">Регистрируясь, вы принимаете</string>
+    <string name="auth_terms_of_use">Условия Использования</string>
+    <string name="and">и</string>
+    <string name="auth_privacy_policy">Политику Конфиденциальности</string>
+    <string name="hide_password">Скрыть пароль</string>
+    <string name="show_password">Показать пароль</string>
+    <string name="auth_error_occurred">Произошла ошибка</string>
+    <string name="auth_unknown_error">Неизвестная ошибка. Повторите попытку позднее.</string>
 </resources>
