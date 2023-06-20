@@ -4,9 +4,11 @@ package dev.zabolotskikh.authguard.ui.screen
 
 import dev.zabolotskikh.authguard.data.ChangelogRepositoryImpl
 import dev.zabolotskikh.authguard.data.TestAppStateRepositoryImpl
+import dev.zabolotskikh.authguard.data.TestAuthRepositoryImpl
 import dev.zabolotskikh.authguard.data.TestOtpRepositoryImpl
 import dev.zabolotskikh.authguard.data.TestServiceRepositoryImpl
 import dev.zabolotskikh.authguard.domain.repository.AppStateRepository
+import dev.zabolotskikh.authguard.domain.repository.AuthRepository
 import dev.zabolotskikh.authguard.domain.repository.ChangelogRepository
 import dev.zabolotskikh.authguard.domain.repository.OtpRepository
 import dev.zabolotskikh.authguard.domain.repository.ServiceRepository
@@ -29,9 +31,10 @@ fun getServiceViewModelInstance(
 fun getSettingsViewModelInstance(
     appStateRepository: AppStateRepository = TestAppStateRepositoryImpl(),
     serviceRepository: ServiceRepository = TestServiceRepositoryImpl(),
+    authRepository: AuthRepository = TestAuthRepositoryImpl(),
     changelogRepository: ChangelogRepository = ChangelogRepositoryImpl(),
     dispatcher: CoroutineDispatcher = UnconfinedTestDispatcher()
-) = SettingsViewModel(appStateRepository, serviceRepository, changelogRepository, dispatcher)
+) = SettingsViewModel(appStateRepository, authRepository, serviceRepository, changelogRepository, dispatcher)
 
 fun getWelcomeViewModelInstance(
     appStateRepository: AppStateRepository = TestAppStateRepositoryImpl(),
