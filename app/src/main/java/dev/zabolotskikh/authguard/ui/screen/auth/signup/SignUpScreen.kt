@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalTextApi::class)
+
 package dev.zabolotskikh.authguard.ui.screen.auth.signup
 
 import androidx.compose.foundation.layout.Column
@@ -7,17 +9,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.UrlAnnotation
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -36,15 +38,14 @@ import dev.zabolotskikh.authguard.ui.screen.auth.AuthState
 import dev.zabolotskikh.authguard.ui.screen.auth.components.LabeledTextField
 import dev.zabolotskikh.authguard.ui.screen.auth.components.ProgressButton
 
-private const val PRIVACY_POLICY_TAG = "privacy_policy"
-private const val TERMS_OF_USE_TAG = "terms_of_use"
-
 @Composable
 fun SignUpScreen(
     modifier: Modifier = Modifier,
     onEvent: (AuthEvent) -> Unit,
     state: AuthState
 ) {
+    val uriHandler = LocalUriHandler.current
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -117,7 +118,7 @@ fun SignUpScreen(
                 textDecoration = TextDecoration.Underline
             )
             withStyle(style) {
-                this.pushStringAnnotation(TERMS_OF_USE_TAG, "")
+                pushUrlAnnotation(UrlAnnotation(stringResource(R.string.url_terms_of_use)))
                 append(stringResource(id = R.string.auth_terms_of_use))
                 pop()
             }
@@ -125,7 +126,7 @@ fun SignUpScreen(
             append(stringResource(id = R.string.and))
             append(" ")
             withStyle(style) {
-                this.pushStringAnnotation(PRIVACY_POLICY_TAG, "")
+                pushUrlAnnotation(UrlAnnotation(stringResource(R.string.url_privacy_policy)))
                 append(stringResource(id = R.string.auth_privacy_policy))
                 pop()
             }
@@ -136,11 +137,8 @@ fun SignUpScreen(
                 .fillMaxWidth(.7f),
             text = text,
             onClick = { offset ->
-                text.getStringAnnotations(TERMS_OF_USE_TAG, offset, offset).firstOrNull()?.let {
-                    // TODO
-                }
-                text.getStringAnnotations(PRIVACY_POLICY_TAG, offset, offset).firstOrNull()?.let {
-                    // TODO
+                text.getUrlAnnotations(offset, offset).firstOrNull()?.let { url ->
+                    uriHandler.openUri(url.item.url)
                 }
             },
             style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.secondary)

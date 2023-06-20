@@ -44,7 +44,7 @@
     <string name="settings_changelog">История изменений</string>
     <string name="signup_already_have_account">Уже зарегистрированы? Войти</string>
     <string name="back">Назад</string>
-    <string name="auth_password_recovery_title">Востановление пароля</string>
+    <string name="auth_password_recovery_title">Восстановление пароля</string>
     <string name="send">Отправить</string>
     <string name="auth_password_recovery_message">Для восстановления пароля на вашу почту будет отправлено письмо с инструкцией. Вы хотите продолжить?</string>
     <string name="auth_welcome_back">С возвращением!</string>
@@ -55,7 +55,7 @@
     <string name="auth_no_account">Еще не зарегистрированы?</string>
     <string name="signup">Зарегистрироваться</string>
     <string name="auth_signup_message">Создайте аккаунт, и вы сможете синхронизировать ваши 2FA коды между различными устройствами</string>
-    <string name="auth_password_requirements">Пароль должен содержать не менее 8 символов. Долен включать прописные и строчные буквы, числа и спецсимволы</string>
+    <string name="auth_password_requirements">Пароль должен содержать не менее 8 символов. Должен включать прописные и строчные буквы, числа и спецсимволы</string>
     <string name="auth_create_account">Создать аккаунт</string>
     <string name="auth_signup_text">Регистрируясь, вы принимаете</string>
     <string name="auth_terms_of_use">Условия Использования</string>
