@@ -3,6 +3,7 @@ package dev.zabolotskikh.auth.ui.provider
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.zabolotskikh.auth.di.FirebaseAuthScope
 import dev.zabolotskikh.authguard.domain.repository.AuthRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -12,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class ProviderViewModel @Inject constructor(
-    authRepository: AuthRepository,
+    @FirebaseAuthScope authRepository: AuthRepository,
 ) : ViewModel() {
     private val _state = MutableStateFlow(ProviderState())
     private val _userAccount = authRepository.getUser()

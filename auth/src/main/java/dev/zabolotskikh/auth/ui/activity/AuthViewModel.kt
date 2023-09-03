@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.zabolotskikh.auth.di.EmailValidator
+import dev.zabolotskikh.auth.di.FirebaseAuthScope
 import dev.zabolotskikh.auth.di.PasswordValidator
 import dev.zabolotskikh.authguard.domain.model.AppState
 import dev.zabolotskikh.authguard.domain.repository.AppStateRepository
@@ -23,7 +24,7 @@ import javax.inject.Inject
 @HiltViewModel
 internal class AuthViewModel @Inject constructor(
     private val stateRepository: AppStateRepository,
-    private val authRepository: AuthRepository,
+    @FirebaseAuthScope private val authRepository: AuthRepository,
     private val coroutineDispatcher: CoroutineDispatcher,
     @PasswordValidator private val passwordValidator: DataValidator<String>,
     @EmailValidator private val emailValidator: DataValidator<String>

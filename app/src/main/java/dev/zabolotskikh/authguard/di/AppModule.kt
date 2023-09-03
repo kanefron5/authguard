@@ -66,6 +66,4 @@ object AppModule {
         PreferenceDataStoreFactory.create(produceFile = {
             context.preferencesDataStoreFile("authguard")
         })
-
-
 }

@@ -26,6 +26,7 @@ internal object LibraryModule {
     fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
 
     @Singleton
+    @FirebaseAuthScope
     @Provides
     fun provideAuthRepository(auth: FirebaseAuth): AuthRepository = AuthRepositoryImpl(auth)
 
