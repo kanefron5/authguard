@@ -33,8 +33,8 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.zabolotskikh.auth.R
-import dev.zabolotskikh.auth.ui.activity.auth.AuthEvent
-import dev.zabolotskikh.auth.ui.activity.auth.AuthState
+import dev.zabolotskikh.auth.ui.activity.AuthEvent
+import dev.zabolotskikh.auth.ui.activity.AuthState
 import dev.zabolotskikh.auth.ui.activity.auth.components.LabeledTextField
 import dev.zabolotskikh.auth.ui.activity.auth.components.ProgressButton
 import dev.zabolotskikh.auth.ui.preview.provider.FakeAuthStateProvider

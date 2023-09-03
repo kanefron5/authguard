@@ -12,7 +12,11 @@ import androidx.annotation.CallSuper
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import dev.zabolotskikh.auth.ui.theme.AuthTheme
 import java.io.Serializable
@@ -31,7 +35,14 @@ class AuthActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
-                    AuthNavHost(action = action)
+                    val viewModel = hiltViewModel<AuthViewModel>()
+                    val state by viewModel.state.collectAsState()
+
+                    LaunchedEffect(state.userAccount) {
+                        if (state.userAccount != null) setResultAndFinish(AuthResult.SUCCEED)
+                    }
+
+                    AuthNavHost(action = action, state = state, onEvent = viewModel::onEvent)
                 }
             }
         }

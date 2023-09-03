@@ -1,11 +1,9 @@
 package dev.zabolotskikh.auth.di
 
-import android.content.Context
 import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import dev.zabolotskikh.auth.data.repository.AuthRepositoryImpl
 import dev.zabolotskikh.authguard.domain.repository.AuthRepository
@@ -25,8 +23,7 @@ internal object LibraryModule {
 
     @Singleton
     @Provides
-    fun provideFirebaseAuth(@ApplicationContext context: Context): FirebaseAuth =
-        FirebaseAuth.getInstance()
+    fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
 
     @Singleton
     @Provides

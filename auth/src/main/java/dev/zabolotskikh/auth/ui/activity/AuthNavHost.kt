@@ -22,6 +22,8 @@ fun AuthNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     action: AuthActivity.AuthAction,
+    onEvent: (AuthEvent) -> Unit,
+    state: AuthState,
 ) {
     val startDestination = when (action) {
         is SignIn -> Screen.SignIn()
@@ -47,7 +49,15 @@ fun AuthNavHost(
     NavHost(
         modifier = modifier, navController = navController, startDestination = startDestination
     ) {
-        composable(Screen.SignIn()) { AuthScreen(::onNavigate, Screen.SignIn) }
-        composable(Screen.SignUp()) { AuthScreen(::onNavigate, Screen.SignUp) }
+        composable(Screen.SignIn()) {
+            AuthScreen(
+                onNavigate = ::onNavigate, screen = Screen.SignIn, onEvent = onEvent, state = state
+            )
+        }
+        composable(Screen.SignUp()) {
+            AuthScreen(
+                onNavigate = ::onNavigate, screen = Screen.SignUp, onEvent = onEvent, state = state
+            )
+        }
     }
 }

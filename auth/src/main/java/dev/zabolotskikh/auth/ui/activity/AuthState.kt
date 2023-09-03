@@ -1,4 +1,6 @@
-package dev.zabolotskikh.auth.ui.activity.auth
+package dev.zabolotskikh.auth.ui.activity
+
+import dev.zabolotskikh.authguard.domain.model.UserAccount
 
 data class AuthState(
     val email: String = "",
@@ -7,5 +9,6 @@ data class AuthState(
     val isEmailValid: Boolean = true,
     val isResetPasswordDialogShown: Boolean = false,
     val isProgress: Boolean = false,
-    val error: Exception? = null
+    val error: Exception? = null,
+    val userAccount: UserAccount? = null,
 )

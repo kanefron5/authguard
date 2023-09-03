@@ -1,7 +1,7 @@
 package dev.zabolotskikh.auth.ui.preview.provider
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import dev.zabolotskikh.auth.ui.activity.auth.AuthState
+import dev.zabolotskikh.auth.ui.activity.AuthState
 
 class FakeAuthStateProvider : PreviewParameterProvider<AuthState> {
     override val values: Sequence<AuthState>

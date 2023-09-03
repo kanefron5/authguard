@@ -11,16 +11,15 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import dev.zabolotskikh.auth.R
+import dev.zabolotskikh.auth.ui.activity.AuthEvent
+import dev.zabolotskikh.auth.ui.activity.AuthState
 import dev.zabolotskikh.auth.ui.activity.Screen
 import dev.zabolotskikh.auth.ui.activity.auth.components.AuthErrorDialog
 import dev.zabolotskikh.auth.ui.activity.auth.signin.SignInScreen
@@ -29,22 +28,6 @@ import dev.zabolotskikh.auth.ui.activity.auth.signup.SignUpScreen
 // https://dribbble.com/shots/11693634-Onboarding-UI-Kit-Preview
 @Composable
 fun AuthScreen(
-    onNavigate: (screen: Screen, clear: Boolean) -> Unit = { _, _ -> },
-    screen: Screen
-) {
-    val viewModel = hiltViewModel<AuthViewModel>()
-    val state by viewModel.state.collectAsState()
-
-    AuthScreenView(
-        onEvent = viewModel::onEvent,
-        state = state,
-        onNavigate = onNavigate,
-        screen = screen
-    )
-}
-
-@Composable
-private fun AuthScreenView(
     onEvent: (AuthEvent) -> Unit,
     state: AuthState,
     screen: Screen,
@@ -90,11 +73,11 @@ private fun AuthScreenView(
 @Preview(device = Devices.PIXEL_4, showSystemUi = true)
 @Composable
 private fun AuthScreenPreview() {
-    AuthScreenView(onEvent = {}, state = AuthState(), screen = Screen.SignUp)
+    AuthScreen(onEvent = {}, state = AuthState(), screen = Screen.SignUp)
 }
 
 @Preview(device = Devices.PIXEL_4, showSystemUi = true)
 @Composable
 private fun AuthScreenPreview2() {
-    AuthScreenView(onEvent = {}, state = AuthState(), screen = Screen.SignIn)
+    AuthScreen(onEvent = {}, state = AuthState(), screen = Screen.SignIn)
 }

@@ -1,4 +1,4 @@
-package dev.zabolotskikh.auth.ui.activity.auth
+package dev.zabolotskikh.auth.ui.activity
 
 sealed interface AuthEvent {
     object OnForgotPassword: AuthEvent
