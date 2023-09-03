@@ -17,6 +17,6 @@ internal inline fun <T : Any> JSONArray.mapNotNull(transform: (JSONObject) -> T)
     return toObjectList().map(transform)
 }
 
-fun FirebaseUser.toUser() = UserAccount(
-    displayName ?: "", email ?: "", photoUrl.toString(), isEmailVerified, uid
+fun FirebaseUser.toUser(isOffline: Boolean = false) = UserAccount(
+    displayName ?: email ?: "", email ?: "", photoUrl.toString(), isEmailVerified, uid, isOffline
 )

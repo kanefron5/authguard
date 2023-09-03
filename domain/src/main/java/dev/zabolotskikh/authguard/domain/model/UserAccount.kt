@@ -5,5 +5,6 @@ data class UserAccount(
     val email: String,
     val photoUrl: String,
     val isEmailVerified: Boolean,
-    val uid: String
+    val uid: String,
+    val isOffline: Boolean = false
 )

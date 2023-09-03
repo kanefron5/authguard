@@ -24,6 +24,7 @@ import dev.zabolotskikh.authguard.R
 import dev.zabolotskikh.authguard.ui.screen.settings.PreferenceSection
 import dev.zabolotskikh.authguard.ui.screen.settings.SettingsEvent
 import dev.zabolotskikh.authguard.ui.screen.settings.SettingsState
+import dev.zabolotskikh.authguard.ui.screen.settings.sections.main.account.AccountSettingsGroup
 import dev.zabolotskikh.authguard.ui.screen.settings.sections.main.components.ChangelogDialog
 import dev.zabolotskikh.authguard.ui.screen.settings.sections.main.components.ResetConfirmationDialog
 import dev.zabolotskikh.passlock.ui.activity.PasscodeActivity
@@ -68,6 +69,8 @@ fun Preferences(
             ), verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         item {
+            AccountSettingsGroup()
+
             SettingsGroup(title = {
                 Text(text = stringResource(id = R.string.settings_title_data))
             }) {

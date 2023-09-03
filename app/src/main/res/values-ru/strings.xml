@@ -65,4 +65,8 @@
     <string name="show_password">Показать пароль</string>
     <string name="auth_error_occurred">Произошла ошибка</string>
     <string name="auth_unknown_error">Неизвестная ошибка. Повторите попытку позднее.</string>
+    <string name="settings_title_account">Аккаунт и синхронизация</string>
+    <string name="click_to_send_confirmation_email">Нажмите, чтобы отправить письмо c подтверждением</string>
+    <string name="email_not_confirmed">Email не подтвержден</string>
+    <string name="email_confirmed">Email подтвержден</string>
 </resources>

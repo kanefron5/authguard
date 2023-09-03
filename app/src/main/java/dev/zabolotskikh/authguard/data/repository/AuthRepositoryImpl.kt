@@ -8,6 +8,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -32,11 +33,23 @@ class AuthRepositoryImpl @Inject constructor(
         firebaseAuth.sendPasswordResetEmail(email).await()
     }
 
+    override suspend fun sendVerificationEmail() {
+        firebaseAuth.currentUser?.sendEmailVerification()?.await()
+    }
+
     override fun isAuthenticated() = getUser().map { it != null }.distinctUntilChanged()
 
     override fun getUser() = callbackFlow {
         val listener = AuthStateListener {
-            trySend(it.currentUser?.toUser())
+            launch {
+                trySend(it.currentUser?.toUser(true))
+                try {
+                    it.currentUser?.reload()?.await()
+                    trySend(it.currentUser?.toUser())
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
         }
         firebaseAuth.addAuthStateListener(listener)
 
