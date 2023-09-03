@@ -1,5 +1,6 @@
 package dev.zabolotskikh.authguard.ui.screen.settings.sections.main.account
 
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -14,11 +15,10 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.alorma.compose.settings.ui.SettingsGroup
 import com.alorma.compose.settings.ui.SettingsMenuLink
+import dev.zabolotskikh.auth.ui.activity.AuthActivity
+import dev.zabolotskikh.auth.ui.preview.provider.FakeUserAccountProvider
 import dev.zabolotskikh.authguard.R
 import dev.zabolotskikh.authguard.domain.model.UserAccount
-import dev.zabolotskikh.authguard.ui.preview.providers.FakeUserAccountProvider
-import dev.zabolotskikh.authguard.ui.screen.settings.SettingsEvent
-import dev.zabolotskikh.authguard.ui.screen.settings.SettingsState
 
 @Composable
 fun AccountSettingsGroup() {
@@ -33,6 +33,8 @@ private fun AccountSettingsGroupView(
     state: AccountState,
     onEvent: (AccountEvent) -> Unit,
 ) {
+    val authLauncher = rememberLauncherForActivityResult(AuthActivity.AuthResultContract()) {}
+
     SettingsGroup(title = {
         Text(text = stringResource(R.string.settings_title_account))
     }) {
@@ -62,7 +64,9 @@ private fun AccountSettingsGroupView(
         } else {
             SettingsMenuLink(title = {
                 Text(text = stringResource(R.string.auth_signin_to_account))
-            }, enabled = true) {}
+            }, enabled = true) {
+                authLauncher.launch(AuthActivity.AuthAction.SignIn())
+            }
         }
     }
 }

@@ -27,6 +27,8 @@ workManager = "2.8.1"
 firebase = "32.0.0"
 firebaseCrashlyticsGradle = "2.9.5"
 googleServices = "4.3.15"
+appcompat = "1.6.1"
+material = "1.9.0"
 
 [libraries]
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
@@ -89,6 +91,8 @@ firebase-auth = { group = "com.google.firebase", name = "firebase-auth"}
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
 firebase-services = { module = "com.google.gms:google-services", version.ref = "googleServices" }
 firebase-gradle = { module = "com.google.firebase:firebase-crashlytics-gradle", version.ref = "firebaseCrashlyticsGradle" }
+appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 
 [plugins]

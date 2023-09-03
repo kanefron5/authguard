@@ -1,5 +1,6 @@
 package dev.zabolotskikh.authguard.ui.screen.welcome
 
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,22 +29,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import dev.zabolotskikh.auth.ui.activity.AuthActivity
+import dev.zabolotskikh.auth.ui.activity.AuthActivity.AuthAction
 import dev.zabolotskikh.authguard.R
-import dev.zabolotskikh.authguard.ui.Screen
 
 @Composable
-fun WelcomeScreen(
-    onNavigate: (screen: Screen, clear: Boolean) -> Unit = { _, _ -> }
-) {
+fun WelcomeScreen() {
     val viewModel = hiltViewModel<WelcomeViewModel>()
-    WelcomeScreenView(onStartLocal = viewModel::startLocal, onNavigate = onNavigate)
+    WelcomeScreenView(onStartLocal = viewModel::startLocal)
 }
 
 @Composable
-private fun WelcomeScreenView(
-    onStartLocal: () -> Unit = {},
-    onNavigate: (screen: Screen, clear: Boolean) -> Unit = { _, _ -> }
-) {
+private fun WelcomeScreenView(onStartLocal: () -> Unit = {}) {
+    val authLauncher = rememberLauncherForActivityResult(AuthActivity.AuthResultContract()) {}
+
+
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.SpaceAround,
@@ -93,7 +93,7 @@ private fun WelcomeScreenView(
                     .fillMaxWidth()
                     .height(48.dp),
                 shape = RoundedCornerShape(8.dp),
-                onClick = { onNavigate(Screen.Auth.SignUp, false) }, colors = ButtonDefaults.buttonColors(
+                onClick = { authLauncher.launch(AuthAction.SignUp()) }, colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = MaterialTheme.colorScheme.onPrimary
                 )
@@ -106,7 +106,7 @@ private fun WelcomeScreenView(
                     .fillMaxWidth()
                     .height(48.dp),
                 shape = RoundedCornerShape(8.dp),
-                onClick = { onNavigate(Screen.Auth.SignIn, false) }
+                onClick = { authLauncher.launch(AuthAction.SignIn()) }
             ) {
                 Text(text = stringResource(id = R.string.signup_already_have_account))
             }

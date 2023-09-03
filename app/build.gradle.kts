@@ -112,6 +112,7 @@ android {
 dependencies {
     implementation(project(":passlock"))
     implementation(project(":domain"))
+    implementation(project(":auth"))
 
     implementation(libs.androidx.room.ktx)
     kapt(libs.androidx.room.compiler)
@@ -154,7 +155,6 @@ dependencies {
 
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
-    implementation(libs.firebase.auth)
     implementation(libs.firebase.crashlytics)
 
 

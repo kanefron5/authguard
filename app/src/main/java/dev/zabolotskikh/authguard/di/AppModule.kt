@@ -5,8 +5,6 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.ktx.Firebase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,16 +12,11 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import dev.zabolotskikh.authguard.data.local.ServiceRoomDatabase
 import dev.zabolotskikh.authguard.data.repository.AppStateRepositoryImpl
-import dev.zabolotskikh.authguard.data.repository.AuthRepositoryImpl
 import dev.zabolotskikh.authguard.data.repository.ChangelogRepositoryImpl
-import dev.zabolotskikh.authguard.data.repository.EmailValidator
 import dev.zabolotskikh.authguard.data.repository.OtpRepositoryImpl
-import dev.zabolotskikh.authguard.data.repository.PasswordValidator
 import dev.zabolotskikh.authguard.data.repository.ServiceRepositoryImpl
 import dev.zabolotskikh.authguard.domain.repository.AppStateRepository
-import dev.zabolotskikh.authguard.domain.repository.AuthRepository
 import dev.zabolotskikh.authguard.domain.repository.ChangelogRepository
-import dev.zabolotskikh.authguard.domain.repository.DataValidator
 import dev.zabolotskikh.authguard.domain.repository.OtpRepository
 import dev.zabolotskikh.authguard.domain.repository.ServiceRepository
 import kotlinx.coroutines.CoroutineDispatcher
@@ -74,22 +67,5 @@ object AppModule {
             context.preferencesDataStoreFile("authguard")
         })
 
-    @Singleton
-    @Provides
-    fun provideFirebaseAuth(@ApplicationContext context: Context): FirebaseAuth =
-        FirebaseAuth.getInstance()
 
-    @Singleton
-    @Provides
-    fun provideAuthRepository(auth: FirebaseAuth): AuthRepository = AuthRepositoryImpl(auth)
-
-    @Singleton
-    @Provides
-    @dev.zabolotskikh.authguard.di.PasswordValidator
-    fun providePasswordValidator(): DataValidator<String> = PasswordValidator()
-
-    @Singleton
-    @Provides
-    @dev.zabolotskikh.authguard.di.EmailValidator
-    fun provideEmailValidator(): DataValidator<String> = EmailValidator()
 }
