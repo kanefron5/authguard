@@ -3,8 +3,6 @@ package dev.zabolotskikh.authguard.ui.screen.settings.sections.main.account
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -17,20 +15,21 @@ import com.alorma.compose.settings.ui.SettingsGroup
 import com.alorma.compose.settings.ui.SettingsMenuLink
 import dev.zabolotskikh.auth.ui.activity.AuthActivity
 import dev.zabolotskikh.auth.ui.preview.provider.FakeUserAccountProvider
+import dev.zabolotskikh.auth.ui.provider.rememberAuth
 import dev.zabolotskikh.authguard.R
 import dev.zabolotskikh.authguard.domain.model.UserAccount
 
 @Composable
 fun AccountSettingsGroup() {
     val viewModel = hiltViewModel<AccountSettingsViewModel>()
-    val state by viewModel.state.collectAsState()
+    val userAccount = rememberAuth()
 
-    AccountSettingsGroupView(state = state, onEvent = viewModel::onEvent)
+    AccountSettingsGroupView(userAccount = userAccount, onEvent = viewModel::onEvent)
 }
 
 @Composable
 private fun AccountSettingsGroupView(
-    state: AccountState,
+    userAccount: UserAccount? = null,
     onEvent: (AccountEvent) -> Unit,
 ) {
     val authLauncher = rememberLauncherForActivityResult(AuthActivity.AuthResultContract()) {}
@@ -38,17 +37,17 @@ private fun AccountSettingsGroupView(
     SettingsGroup(title = {
         Text(text = stringResource(R.string.settings_title_account))
     }) {
-        if (state.userAccount != null) {
+        if (userAccount != null) {
             SettingsMenuLink(title = {
                 Text(text = buildAnnotatedString {
                     withStyle(SpanStyle(fontWeight = FontWeight.SemiBold)) {
                         append(stringResource(id = R.string.auth_placeholder_email))
                         append(": ")
                     }
-                    append(state.userAccount.email)
+                    append(userAccount.email)
                 })
             }) {}
-            if (state.userAccount.isEmailVerified) {
+            if (userAccount.isEmailVerified) {
                 SettingsMenuLink(title = {
                     Text(text = stringResource(R.string.email_confirmed))
                 }, enabled = false) {}
@@ -76,11 +75,11 @@ private fun AccountSettingsGroupView(
 private fun AccountSettingsGroupPreview(
     @PreviewParameter(FakeUserAccountProvider::class) userAccount: UserAccount
 ) {
-    AccountSettingsGroupView(AccountState(userAccount = userAccount)) {}
+    AccountSettingsGroupView(userAccount = userAccount) {}
 }
 
 @Preview
 @Composable
 private fun AccountSettingsGroupPreviewNoAccount() {
-    AccountSettingsGroupView(AccountState(userAccount = null)) {}
+    AccountSettingsGroupView(userAccount = null) {}
 }

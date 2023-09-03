@@ -15,9 +15,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import dev.zabolotskikh.auth.ui.provider.rememberAuth
 import dev.zabolotskikh.auth.ui.theme.AuthTheme
 import java.io.Serializable
 
@@ -37,9 +39,10 @@ class AuthActivity : ComponentActivity() {
                 ) {
                     val viewModel = hiltViewModel<AuthViewModel>()
                     val state by viewModel.state.collectAsState()
+                    val authState = rememberAuth()
 
-                    LaunchedEffect(state.userAccount) {
-                        if (state.userAccount != null) setResultAndFinish(AuthResult.SUCCEED)
+                    LaunchedEffect(authState) {
+                        if (authState != null) setResultAndFinish(AuthResult.SUCCEED)
                     }
 
                     AuthNavHost(action = action, state = state, onEvent = viewModel::onEvent)

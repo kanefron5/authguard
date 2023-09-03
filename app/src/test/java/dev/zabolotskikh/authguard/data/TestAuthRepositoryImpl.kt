@@ -19,6 +19,10 @@ class TestAuthRepositoryImpl : AuthRepository {
         TODO("Not yet implemented")
     }
 
+    override suspend fun sendVerificationEmail() {
+        TODO("Not yet implemented")
+    }
+
     override fun isAuthenticated(): Flow<Boolean> {
         TODO("Not yet implemented")
     }

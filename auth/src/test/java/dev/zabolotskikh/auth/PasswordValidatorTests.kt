@@ -1,6 +1,6 @@
-package dev.zabolotskikh.authguard.data
+package dev.zabolotskikh.auth
 
-import dev.zabolotskikh.authguard.data.repository.PasswordValidator
+import dev.zabolotskikh.auth.data.repository.PasswordValidator
 import org.junit.Assert
 import org.junit.Test
 

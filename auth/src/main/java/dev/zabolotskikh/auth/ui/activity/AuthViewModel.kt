@@ -13,8 +13,8 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -32,14 +32,11 @@ class AuthViewModel @Inject constructor(
     private val _appState = stateRepository.getState().stateIn(
         viewModelScope, SharingStarted.WhileSubscribed(), null
     )
-    private val _userAccount = authRepository.getUser()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
-    val state = combine(_state, _userAccount) { authState, userAccount ->
-        authState.copy(
-            isPasswordValid = passwordValidator.check(authState.password),
-            isEmailValid = emailValidator.check(authState.email),
-            userAccount = userAccount
+    val state = _state.map {
+        it.copy(
+            isPasswordValid = passwordValidator.check(it.password),
+            isEmailValid = emailValidator.check(it.email)
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), _state.value)
 
