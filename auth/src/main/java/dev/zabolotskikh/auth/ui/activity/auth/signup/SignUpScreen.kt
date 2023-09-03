@@ -40,7 +40,7 @@ import dev.zabolotskikh.auth.ui.activity.auth.components.ProgressButton
 import dev.zabolotskikh.auth.ui.preview.provider.FakeAuthStateProvider
 
 @Composable
-fun SignUpScreen(
+internal fun SignUpScreen(
     modifier: Modifier = Modifier,
     onEvent: (AuthEvent) -> Unit,
     state: AuthState

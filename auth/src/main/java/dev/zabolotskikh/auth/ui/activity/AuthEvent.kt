@@ -1,6 +1,6 @@
 package dev.zabolotskikh.auth.ui.activity
 
-sealed interface AuthEvent {
+internal sealed interface AuthEvent {
     object OnForgotPassword: AuthEvent
     data class OnForgotPasswordDialog(val isShown: Boolean): AuthEvent
     object OnSignUp: AuthEvent

@@ -10,7 +10,7 @@ import dev.zabolotskikh.auth.ui.activity.AuthActivity.AuthAction.SignIn
 import dev.zabolotskikh.auth.ui.activity.AuthActivity.AuthAction.SignUp
 import dev.zabolotskikh.auth.ui.activity.auth.AuthScreen
 
-sealed class Screen(private val route: String) {
+internal sealed class Screen(private val route: String) {
     operator fun invoke() = route
 
     object SignIn : Screen("sign_in_screen")
@@ -18,7 +18,7 @@ sealed class Screen(private val route: String) {
 }
 
 @Composable
-fun AuthNavHost(
+internal fun AuthNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     action: AuthActivity.AuthAction,

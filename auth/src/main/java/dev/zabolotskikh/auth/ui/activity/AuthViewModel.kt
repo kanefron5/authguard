@@ -8,7 +8,7 @@ import dev.zabolotskikh.auth.di.PasswordValidator
 import dev.zabolotskikh.authguard.domain.model.AppState
 import dev.zabolotskikh.authguard.domain.repository.AppStateRepository
 import dev.zabolotskikh.authguard.domain.repository.AuthRepository
-import dev.zabolotskikh.authguard.domain.repository.DataValidator
+import dev.zabolotskikh.auth.domain.DataValidator
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AuthViewModel @Inject constructor(
+internal class AuthViewModel @Inject constructor(
     private val stateRepository: AppStateRepository,
     private val authRepository: AuthRepository,
     private val coroutineDispatcher: CoroutineDispatcher,

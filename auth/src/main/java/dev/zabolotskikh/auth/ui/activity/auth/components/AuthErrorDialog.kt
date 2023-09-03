@@ -10,7 +10,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import dev.zabolotskikh.auth.R
 
 @Composable
-fun AuthErrorDialog(
+internal fun AuthErrorDialog(
     modifier: Modifier = Modifier,
     exception: Exception,
     onDismiss: () -> Unit = {},

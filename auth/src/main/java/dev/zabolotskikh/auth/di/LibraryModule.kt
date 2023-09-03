@@ -7,7 +7,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dev.zabolotskikh.auth.data.repository.AuthRepositoryImpl
 import dev.zabolotskikh.authguard.domain.repository.AuthRepository
-import dev.zabolotskikh.authguard.domain.repository.DataValidator
+import dev.zabolotskikh.auth.domain.DataValidator
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Singleton

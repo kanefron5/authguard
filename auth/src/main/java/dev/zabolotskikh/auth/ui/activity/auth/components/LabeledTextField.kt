@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import dev.zabolotskikh.auth.R
 
 @Composable
-fun LabeledTextField(
+internal fun LabeledTextField(
     modifier: Modifier = Modifier,
     label: String,
     value: String = "",

@@ -1,9 +1,9 @@
 package dev.zabolotskikh.auth.data.repository
 
 import android.util.Patterns.EMAIL_ADDRESS
-import dev.zabolotskikh.authguard.domain.repository.DataValidator
+import dev.zabolotskikh.auth.domain.DataValidator
 
-class EmailValidator: DataValidator<String> {
+internal class EmailValidator: DataValidator<String> {
     override fun check(input: String): Boolean {
         if (input.isEmpty()) return true
         return input.matches(EMAIL_ADDRESS.toRegex())

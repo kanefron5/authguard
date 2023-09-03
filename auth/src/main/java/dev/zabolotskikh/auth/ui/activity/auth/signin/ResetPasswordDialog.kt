@@ -20,7 +20,7 @@ import dev.zabolotskikh.auth.ui.activity.auth.components.ProgressButton
 import dev.zabolotskikh.auth.ui.preview.provider.FakeAuthStateProvider
 
 @Composable
-fun ResetPasswordDialog(
+internal fun ResetPasswordDialog(
     modifier: Modifier = Modifier,
     state: AuthState,
     onEvent: (AuthEvent) -> Unit = {},

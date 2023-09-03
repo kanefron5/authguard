@@ -40,7 +40,7 @@ import dev.zabolotskikh.auth.ui.preview.provider.FakeAuthStateProvider
 private const val SIGN_UP_TAG = "sign_up"
 
 @Composable
-fun SignInScreen(
+internal fun SignInScreen(
     modifier: Modifier = Modifier,
     onEvent: (AuthEvent) -> Unit, state: AuthState,
     onNavigate: (screen: Screen, clear: Boolean) -> Unit = { _, _ -> }

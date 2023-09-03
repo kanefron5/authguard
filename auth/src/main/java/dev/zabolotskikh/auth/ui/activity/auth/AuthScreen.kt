@@ -27,7 +27,7 @@ import dev.zabolotskikh.auth.ui.activity.auth.signup.SignUpScreen
 
 // https://dribbble.com/shots/11693634-Onboarding-UI-Kit-Preview
 @Composable
-fun AuthScreen(
+internal fun AuthScreen(
     onEvent: (AuthEvent) -> Unit,
     state: AuthState,
     screen: Screen,
