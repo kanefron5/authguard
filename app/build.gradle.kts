@@ -157,7 +157,7 @@ dependencies {
 
 // Generate changelog file before realising a new apk
 tasks.whenTaskAdded {
-    if (name == "assembleRelease") {
+    if (arrayOf("assembleRelease", "bundleRelease").contains(name)) {
         dependsOn(tasks.getByName("generateChangelog"))
     }
 }

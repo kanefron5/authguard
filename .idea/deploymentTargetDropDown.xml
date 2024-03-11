@@ -2,15 +2,6 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="PasscodeRepositoryImplTest">
-        <State />
-      </entry>
-      <entry key="Passlock Unit Tests">
-        <State />
-      </entry>
-      <entry key="Unit Tests">
-        <State />
-      </entry>
       <entry key="app">
         <State />
       </entry>
