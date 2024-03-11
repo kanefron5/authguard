@@ -24,6 +24,11 @@ agp = "8.0.1"
 kotlin = "1.8.20"
 mockitoKotlin = "4.1.0"
 workManager = "2.8.1"
+firebase = "32.0.0"
+firebaseCrashlyticsGradle = "2.9.5"
+googleServices = "4.3.15"
+appcompat = "1.6.1"
+material = "1.9.0"
 
 [libraries]
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
@@ -79,6 +84,17 @@ androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-co
 
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockitoKotlin" }
+
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase" }
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx" }
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth"}
+firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
+firebase-services = { module = "com.google.gms:google-services", version.ref = "googleServices" }
+firebase-gradle = { module = "com.google.firebase:firebase-crashlytics-gradle", version.ref = "firebaseCrashlyticsGradle" }
+appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
@@ -86,4 +102,6 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 dagger = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
+firebase-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
+firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlyticsGradle" }
 

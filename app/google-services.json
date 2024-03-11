@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "559001462663",
+    "project_id": "authguard-android",
+    "storage_bucket": "authguard-android.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:559001462663:android:beb2a1fa947643c4f25522",
+        "android_client_info": {
+          "package_name": "dev.zabolotskikh.authguard"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "559001462663-kg2lma25r0dg9okpoke0a06uu6s17hi9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "dev.zabolotskikh.authguard",
+            "certificate_hash": "c16ac2b08759eaa478a116506d1bea78b1ab6bb5"
+          }
+        },
+        {
+          "client_id": "559001462663-aeqa0nkmsoa41tlc108j7qrf3dre2i0e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVLLFk5Kg-Q57bCjUO86TeiDy6ygc70nY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "559001462663-aeqa0nkmsoa41tlc108j7qrf3dre2i0e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

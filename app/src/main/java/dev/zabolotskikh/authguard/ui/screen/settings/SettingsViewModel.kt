@@ -3,8 +3,10 @@ package dev.zabolotskikh.authguard.ui.screen.settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.zabolotskikh.auth.di.FirebaseAuthScope
 import dev.zabolotskikh.authguard.domain.model.AppState
 import dev.zabolotskikh.authguard.domain.repository.AppStateRepository
+import dev.zabolotskikh.authguard.domain.repository.AuthRepository
 import dev.zabolotskikh.authguard.domain.repository.ChangelogRepository
 import dev.zabolotskikh.authguard.domain.repository.ServiceRepository
 import kotlinx.coroutines.CoroutineDispatcher
@@ -16,6 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val stateRepository: AppStateRepository,
+    @FirebaseAuthScope private val authRepository: AuthRepository,
     private val serviceRepository: ServiceRepository,
     changelogRepository: ChangelogRepository,
     private val ioDispatcher: CoroutineDispatcher
@@ -34,5 +37,6 @@ class SettingsViewModel @Inject constructor(
     private fun resetData() = viewModelScope.launch(ioDispatcher) {
         stateRepository.update(AppState())
         serviceRepository.clear()
+        authRepository.signOut()
     }
 }

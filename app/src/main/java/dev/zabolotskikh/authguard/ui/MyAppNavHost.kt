@@ -2,10 +2,7 @@ package dev.zabolotskikh.authguard.ui
 
 import androidx.camera.core.ExperimentalGetImage
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -52,7 +49,9 @@ fun MyAppNavHost(
         modifier = modifier, navController = navController, startDestination = startDestination
     ) {
         composable(Screen.Welcome()) { WelcomeScreen() }
-        composable(Screen.Settings()) { SettingsScreen(onNavigateBack = ::onNavigateBack) }
+        composable(Screen.Settings()) {
+            SettingsScreen(onNavigateBack = ::onNavigateBack)
+        }
         composable(Screen.Main()) { ServiceScreen(onNavigate = ::onNavigate) }
     }
 }

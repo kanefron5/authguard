@@ -1,5 +1,6 @@
 package dev.zabolotskikh.authguard.ui.screen.welcome
 
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,6 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -27,6 +29,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import dev.zabolotskikh.auth.ui.activity.AuthActivity
+import dev.zabolotskikh.auth.ui.activity.AuthActivity.AuthAction
 import dev.zabolotskikh.authguard.R
 
 @Composable
@@ -36,9 +40,10 @@ fun WelcomeScreen() {
 }
 
 @Composable
-private fun WelcomeScreenView(
-    onStartLocal: () -> Unit = {}
-) {
+private fun WelcomeScreenView(onStartLocal: () -> Unit = {}) {
+    val authLauncher = rememberLauncherForActivityResult(AuthActivity.AuthResultContract()) {}
+
+
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.SpaceAround,
@@ -58,6 +63,7 @@ private fun WelcomeScreenView(
                 text = stringResource(id = R.string.welcome),
                 modifier = Modifier.fillMaxWidth(),
                 fontSize = 28.sp,
+                style = MaterialTheme.typography.titleMedium,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.primary
             )
@@ -69,7 +75,7 @@ private fun WelcomeScreenView(
             Text(
                 text = stringResource(id = R.string.welcome_description),
                 modifier = Modifier.fillMaxWidth(),
-                fontSize = 18.sp,
+                fontSize = 22.sp,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.secondary
             )
@@ -83,15 +89,29 @@ private fun WelcomeScreenView(
             verticalArrangement = Arrangement.Center
         ) {
             Button(
-                onClick = {
-
-                }, colors = ButtonDefaults.buttonColors(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp),
+                shape = RoundedCornerShape(8.dp),
+                onClick = { authLauncher.launch(AuthAction.SignUp()) }, colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = MaterialTheme.colorScheme.onPrimary
                 )
             ) {
-                Text(text = stringResource(id = R.string.login))
+                Text(text = stringResource(id = R.string.signup_email))
             }
+            Spacer(modifier = Modifier.height(12.dp))
+            OutlinedButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp),
+                shape = RoundedCornerShape(8.dp),
+                onClick = { authLauncher.launch(AuthAction.SignIn()) }
+            ) {
+                Text(text = stringResource(id = R.string.signup_already_have_account))
+            }
+            Spacer(modifier = Modifier.height(24.dp))
+
             TextButton(onClick = onStartLocal) {
                 Text(text = stringResource(id = R.string.local_mode))
             }
